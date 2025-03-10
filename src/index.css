@@ -10,7 +10,7 @@
   --color-black: #1c1c1c;
   --color-red: #c3001f;
   --color-blue: #07246d;
-  --color-bright-blue: #0E3599;
+  --color-bright-blue: #0e3599;
 
   --font-roboto: Roboto, sans-serif;
 }
@@ -26,10 +26,25 @@
     @apply text-[#1c1c1c] font-bold italic text-6xl inline-block tracking-[-1.28px];
   }
   p {
-    @apply text-[#1c1c1c] text-2xl
+    @apply text-[#1c1c1c] text-2xl;
+  }
+
+  button {
+    @apply hover:cursor-pointer;
   }
 }
 
-@utility text-gradient {
-  @apply bg-linear-to-r from-[#1c1c1c] to-[#0E3599] bg-clip-text text-transparent;
+@layer components {
+  .brand {
+    @apply flex flex-col justify-center items-center bg-white px-3 md:py-6 min-w-[170px] min-h-[70px] max-w-[180px] h-[90px] rounded-[6px] shadow-md shadow-grey;
+  }
+  .HomeCard {
+    @apply rounded-md bg-white flex flex-col items-start shrink-0 w-[170px] h-[250px] shadow-md shadow-grey hover:cursor-pointer;
+  }
+}
+
+@layer utility {
+  .text-gradient {
+    @apply bg-linear-to-r from-[#1c1c1c] to-[#0E3599] bg-clip-text text-transparent;
+  }
 }

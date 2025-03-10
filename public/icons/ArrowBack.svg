@@ -1,0 +1,11 @@
+<svg width="30" height="41" viewBox="0 0 30 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="arrow back" clip-path="url(#clip0_155_922)">
+<rect id="Rectangle 2" y="0.881592" width="30" height="40" rx="4" fill="#1B1B1E" fill-opacity="0.9"/>
+<path id="Vector" d="M21.8924 32.8294C21.2591 33.4757 20.2186 33.4757 19.5853 32.8294L10.0575 23.1063C8.91449 21.9398 8.91449 20.0734 10.0575 18.9069L19.5853 9.18375C20.2186 8.53752 21.2591 8.53752 21.8924 9.18375C22.5077 9.8117 22.5077 10.8165 21.8924 11.4444L14.5798 18.9069C13.4368 20.0734 13.4368 21.9398 14.5798 23.1063L21.8924 30.5688C22.5077 31.1967 22.5077 32.2015 21.8924 32.8294Z" fill="#FBFFFE"/>
+</g>
+<defs>
+<clipPath id="clip0_155_922">
+<rect width="30" height="40" fill="white" transform="translate(0 0.881592)"/>
+</clipPath>
+</defs>
+</svg>
