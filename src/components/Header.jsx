@@ -1,20 +1,11 @@
 import React from "react";
 import { Link } from "react-router";
-import Home from "../pages/Home";
-import Sell from "../pages/Sell";
-import About from "../pages/About";
-import Browse from "../pages/Browse";
-import Login from "../pages/Login";
+import Logo from "./Logo";
 
 const Header = () => {
   return (
     <div className="flex justify-between items-center border-b-1 border-grey pb-4">
-      <Link to={"/"}>
-        <div className="flex justify-center items-center gap-1.5">
-          <img src="/icons/black-logo.svg" alt="" />
-          <div className="font-bold text-4xl hidden md:block">RevNow</div>
-        </div>
-      </Link>
+      <Logo></Logo>
 
       {/* Right Section */}
       <div className="flex justify-center items-center gap-10 md:gap-5">

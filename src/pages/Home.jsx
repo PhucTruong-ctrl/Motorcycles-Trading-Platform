@@ -3,6 +3,8 @@ import Header from "../components/Header";
 import HomePageBanner from "../components/HomeBanner";
 import HomeBrandList from "../components/HomeBrandList";
 import HomeProductList from "../components/HomeProductList";
+import HomeSell from "../components/HomeSell";
+import Footer from "../components/Footer";
 
 const HomePage = () => {
   return (
@@ -22,6 +24,12 @@ const HomePage = () => {
         </div>
         <div className="mb-5">
           <HomeProductList />
+        </div>
+        <div className="mb-5">
+          <HomeSell />
+        </div>
+        <div>
+          <Footer />
         </div>
       </main>
     </div>
