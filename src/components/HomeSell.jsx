@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "./Button";
 
 const HomeSell = () => {
   return (
@@ -14,9 +15,7 @@ const HomeSell = () => {
           <div>Safe – Secure and hassle-free selling.</div>
           <div>Affordable – Budget-friendly listing options.</div>
         </div>
-        <button className="flex justify-center items-center rounded-[6px] bg-blue p-3 shadow-md shadow-grey">
-          <div className="text-white font-bold text-xl">Sell My Motorcycle</div>
-        </button>
+        <Button textValue={"Sell My Motorcycles"} bg_color={"blue"} text_color={"white"} icons={"icons/WhiteSell.svg"}/>
       </div>
     </div>
   );

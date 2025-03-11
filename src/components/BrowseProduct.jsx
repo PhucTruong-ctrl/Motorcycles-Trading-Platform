@@ -4,7 +4,7 @@ const BrowseProduct = () => {
   return (
     <div
       id="BrowseProduct"
-      className="flex justify-center items-center gap-3.5 bg-white rounded-[6px] p-6 shadow-md shadow-grey"
+      className="flex flex-col md:flex-row justify-center items-center gap-3.5 bg-white rounded-[6px] p-6 shadow-md shadow-grey"
     >
       <img
         src="/img/R7_Sample.jpg"
@@ -13,13 +13,17 @@ const BrowseProduct = () => {
       />
       <div
         id="Detail"
-        className="text-nowrap flex flex-col items-start justify-center gap-3.5 max-h-[200px] pr-3.5 border-r-1 border-grey"
+        className="text-nowrap flex flex-col items-start justify-center gap-3.5 max-h-[200px] pr-3.5 md:border-r-1 border-grey"
       >
         <div id="Top" className="flex flex-col justify-end items-start gap-1">
           <div id="Name" className="font-extrabold text-2xl text-black">
             text name text name
           </div>
-          <div id="Location" className="text-[13px] font-light text-black">
+          <div
+            id="Location"
+            className="text-[13px] font-light text-black flex flex-row gap-1"
+          >
+            <img src="/icons/Location.svg" alt="" />
             some where on the goddamn earth
           </div>
         </div>
@@ -36,7 +40,8 @@ const BrowseProduct = () => {
             </div>
           </div>
         </div>
-        <div id="Bot" className="flex items-end">
+        <div id="Bot" className="flex gap-1">
+          <img src="/icons/Time.svg" alt="" className="opacity-70" />
           <div className="font-light text-[13px] text-grey">16/2/2025</div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "./Button";
 
 const HomePageBanner = () => {
   return (
@@ -9,7 +10,7 @@ const HomePageBanner = () => {
       {/* Left Section */}
       <div
         id="LefSection"
-        className="flex flex-col items-start gap-8 text-center md:text-left"
+        className="flex flex-col items-center md:items-start gap-8 text-center md:text-left"
       >
         <div
           id="BannerGroupText"
@@ -32,10 +33,7 @@ const HomePageBanner = () => {
             make it yours.
           </p>
         </div>
-        <button className="flex py-1.5 px-2.5 w-full md:w-fit justify-center items-center gap-1.5 shadow-md shadow-grey bg-blue rounded-[6px] hover:bg-black hover:text-white hover:cursor-pointer transition">
-          <img className="w-6 h-auto" src="/icons/Search.svg" alt="" />
-          <div className="text-white text-[28px] font-[500]">Browse</div>
-        </button>
+        <Button textValue={"Browse"} bg_color={"blue"} text_color={"white"} icons={"icons/Search.svg"}/>
       </div>
 
       {/* Right Section */}

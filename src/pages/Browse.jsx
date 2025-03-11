@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import FilterBar from "../components/FilterBar";
 import BrowseProduct from "../components/BrowseProduct";
+import BrowseNavbar from "../components/BrowseNavbar";
 
 const BrowsingPage = () => {
   return (
@@ -11,24 +12,29 @@ const BrowsingPage = () => {
         <div className="mb-5">
           <Header />
         </div>
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start self-stretch gap-3.5 pb-4">
-          {/* Filter bar */}
-          <FilterBar />
+        <div className="flex flex-col justify-center items-center gap-3.5 self-stretch mb-5">
+          <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start self-stretch gap-3.5 pb-4">
+            {/* Filter bar */}
+            <FilterBar />
 
-          {/* Product list */}
-          <div className="flex flex-col items-center self-stretch gap-3.5 ">
-            <BrowseProduct />
-            <BrowseProduct />
-            <BrowseProduct />
-            <BrowseProduct />
-            <BrowseProduct />
-            <BrowseProduct />
-            <BrowseProduct />
-            <BrowseProduct />
-            <BrowseProduct />
-            <BrowseProduct />
+            {/* Product list */}
+            <div className="flex flex-col items-center self-stretch gap-5 md:gap-3.5 ">
+              <BrowseProduct />
+              <BrowseProduct />
+              <BrowseProduct />
+              <BrowseProduct />
+              <BrowseProduct />
+              <BrowseProduct />
+              <BrowseProduct />
+              <BrowseProduct />
+              <BrowseProduct />
+              <BrowseProduct />
+            </div>
           </div>
+
+          <BrowseNavbar />
         </div>
+
         <div className="mb-5">
           <Footer />
         </div>
