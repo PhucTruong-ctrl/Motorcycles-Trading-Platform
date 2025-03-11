@@ -9,7 +9,7 @@ const Header = () => {
 
       {/* Right Section */}
       <div className="flex justify-center items-center gap-10 md:gap-5">
-        <Link to={"Browse"}>
+        <Link to={"/browse"}>
           <div className="text-[18px] md:text-2xl text-nowrap">
             <img
               src="/icons/BlackSearch.svg"
@@ -18,7 +18,7 @@ const Header = () => {
             <span className="hidden md:block">Browse All</span>
           </div>
         </Link>
-        <Link to={"Sell"}>
+        <Link to={"/sell"}>
           <div className="text-[18px] md:text-2xl text-nowrap">
             <img
               src="/icons/Sell.svg"
@@ -27,7 +27,7 @@ const Header = () => {
             <span className="hidden md:block">Sell Your Motorcycle</span>
           </div>
         </Link>
-        <Link to={"About"}>
+        <Link to={"/about"}>
           <button className="text-[18px] md:text-2xl text-nowrap">
             <img
               src="/icons/About.svg"
@@ -36,7 +36,7 @@ const Header = () => {
             <span className="hidden md:block">About Us</span>
           </button>
         </Link>
-        <Link to={"Login"}>
+        <Link to={"/login"}>
           <div className="text-[18px] md:text-2xl text-nowrap">
             <img
               src="/icons/User.svg"

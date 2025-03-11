@@ -1,9 +1,18 @@
-import React from 'react'
+import React from 'react';
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const Login = () => {
   return (
     <div>
-      Login
+       <main className="my-[15px] mx-[25px]">
+        <header className="mb-5">
+          <Header />
+        </header>
+        <div className="mb-5">
+          <Footer />
+        </div>
+      </main>
     </div>
   )
 }
