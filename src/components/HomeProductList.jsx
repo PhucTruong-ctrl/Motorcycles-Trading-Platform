@@ -3,7 +3,7 @@ import HomeProduct from "./HomeProduct";
 
 const HomeProductList = () => {
   return (
-    <div className="self-stretch border-2 border-grey p-4">
+    <div className="self-stretch border-b-1 border-grey px-4 pb-5">
       <div className="flex flex-col items-start gap-1 mb-2">
         <div className="flex gap-2">
           <div className="font-bold text-[16px]">Brand New</div>

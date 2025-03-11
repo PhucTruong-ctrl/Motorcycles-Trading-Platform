@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../components/Header";
-import HomePageBanner from "../components/HomeBanner";
+import HomeBanner from "../components/HomeBanner";
 import HomeBrandList from "../components/HomeBrandList";
 import HomeProductList from "../components/HomeProductList";
 import HomeSell from "../components/HomeSell";
@@ -14,7 +14,7 @@ const HomePage = () => {
           <Header />
         </header>
         <div className="mb-5">
-          <HomePageBanner />
+          <HomeBanner />
         </div>
         <div className="mb-5">
           <HomeBrandList />

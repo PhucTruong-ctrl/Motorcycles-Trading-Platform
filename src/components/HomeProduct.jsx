@@ -4,7 +4,7 @@ const HomeProduct = () => {
   return (
     <div
       id="product"
-      className="HomeCard"
+      className="home-card"
     >
       <div id="img">
         <img

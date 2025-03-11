@@ -2,7 +2,7 @@ import React from "react";
 
 const HomeSell = () => {
   return (
-    <div className="border-2 flex flex-col md:flex-row p-10 justify-center items-center self-stretch gap-6">
+    <div className=" flex flex-col md:flex-row px-4 pb-5 justify-center items-center self-stretch gap-6">
       <img className=" md:w-[450px] lg:w-[550px]" src="/img/CBR650R.png" alt="" />
       <div className="flex flex-col justify-center items-center text-center md:items-start md:text-left self-stretch gap-4 text-black">
         <div className=" text-[36px] md:text-[48px] font-extrabold -tracking-[-0.96]">
