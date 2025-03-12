@@ -56,16 +56,12 @@ const MotoDetail = () => {
           <Header />
         </header>
 
-        <div>
-          {" "}
-          <h1>
-            {moto.brand} {moto.model} {moto.trim}
-          </h1>
-          <img src={moto.image_url} alt={moto.type} />
-          <p>Price: ${moto.price}</p>
-          <p>Mileage: {moto.mile} Miles</p>
-          <p>Year: {moto.year}</p>
-          <p>Description: {moto.desc}</p>
+        <div className="font-light ">
+          {moto.type} / {moto.brand} / {moto.model} / {moto.trim} / {moto.year}
+        </div>
+
+        <div className="w-[700px] h-[600px]">
+          <img src={moto.image_url} alt="" />
         </div>
 
         <div className="mb-5">

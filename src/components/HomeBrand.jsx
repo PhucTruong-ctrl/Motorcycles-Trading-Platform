@@ -1,13 +1,9 @@
 import React from "react";
 
-const HomeBrand = () => {
+const HomeBrand = ({ brand }) => {
   return (
-    <div className="brand">
-      <img
-        className="object-fill"
-        src="/img/BMW-Motorrad-Logo.png"
-        alt=""
-      />
+    <div className="brand border-1 border-grey p-4">
+      <img className="object-fit w-[80px]" src={brand.logo_url} alt="" />
     </div>
   );
 };

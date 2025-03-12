@@ -21,10 +21,10 @@ const FilterBar = () => {
         </div>
       </div>
 
-      <FilterTextboxDropdown title={"Brand"} />
-      <FilterTextboxDropdown title={"Model"} />
-      <FilterTextboxDropdown title={"Trim"} />
-      <FilterTextboxDropdown title={"Type"} />
+      <FilterTextboxDropdown title={"Brand"} type={"make"} />
+      <FilterTextboxDropdown title={"Model"} type={"model"}/>
+      <FilterTextboxDropdown title={"Trim"} type={"trim"}/>
+      <FilterTextboxDropdown title={"Type"} type={"type"}/>
 
       <div className="flex flex-col items-start gap-1 self-stretch">
         <div className="font-bold text-[20px]">Condition</div>
