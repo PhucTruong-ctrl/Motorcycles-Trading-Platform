@@ -17,14 +17,13 @@ const Sell = () => {
     engine_num: "",
     chassis_num: "",
     registration: false,
-    condition: "", // "used" hoặc "new"
+    condition: "",
     desc: "",
     price: "",
-    image_url: "", // Link hình ảnh
-    video_url: "", // Link video
+    image_url: "",
   });
+  const [selectedFile, setSelectedFile] = useState(null);
 
-  // Lấy thông tin user khi component được render
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -35,7 +34,7 @@ const Sell = () => {
           setUser(user);
           setNewMoto((prevState) => ({
             ...prevState,
-            uid: user.id, // Cập nhật uid vào state newMoto
+            uid: user.id,
           }));
         }
       } catch (error) {
@@ -46,7 +45,6 @@ const Sell = () => {
     fetchUser();
   }, []);
 
-  // Hàm xử lý thay đổi giá trị của các input
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setNewMoto({
@@ -55,16 +53,19 @@ const Sell = () => {
     });
   };
 
-  // Hàm xử lý upload file (hình ảnh hoặc video)
-  const handleFileUpload = async (e, fileType) => {
+  const handleFileSelect = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
 
-    // Tạo tên file duy nhất (ví dụ: sử dụng user ID và timestamp)
+  const uploadFile = async (file) => {
+    if (!file) return null;
+
     const fileName = `${user.id}-${Date.now()}-${file.name}`;
 
     try {
-      // Upload file vào bucket `motorcycle-media`
       const { data, error } = await supabase.storage
         .from("motorcycle-media")
         .upload(fileName, file);
@@ -73,39 +74,39 @@ const Sell = () => {
         throw error;
       }
 
-      // Lấy URL công khai của file
       const { data: publicUrl } = supabase.storage
         .from("motorcycle-media")
         .getPublicUrl(fileName);
 
-      // Cập nhật link vào state newMoto
-      if (fileType === "image") {
-        setNewMoto({ ...newMoto, image_url: publicUrl.publicUrl });
-      } else if (fileType === "video") {
-        setNewMoto({ ...newMoto, video_url: publicUrl.publicUrl });
-      }
-
-      console.log(`${fileType} uploaded successfully:`, publicUrl.publicUrl);
+      return publicUrl.publicUrl;
     } catch (error) {
-      console.error(`Error uploading ${fileType}:`, error);
-      alert(`Error uploading ${fileType}. Please try again.`);
+      console.error("Error uploading file:", error);
+      return null;
     }
   };
 
-  // Hàm thêm xe máy vào Supabase
   const addMoto = async (e) => {
-    e.preventDefault(); // Ngăn chặn form submit mặc định
+    e.preventDefault();
 
-    // Kiểm tra xem uid đã được lấy thành công chưa
     if (!newMoto.uid) {
       alert("User not found. Please log in again.");
       return;
     }
 
     try {
+      let imageUrl = newMoto.image_url;
+
+      if (selectedFile) {
+        imageUrl = await uploadFile(selectedFile);
+        if (!imageUrl) {
+          alert("Error uploading image. Please try again.");
+          return;
+        }
+      }
+
       const { data, error } = await supabase
         .from("MOTORCYCLE")
-        .insert([newMoto]);
+        .insert([{ ...newMoto, image_url: imageUrl }]);
 
       if (error) {
         throw error;
@@ -114,7 +115,6 @@ const Sell = () => {
       console.log("Motorcycle added successfully:", data);
       alert("Motorcycle added successfully!");
 
-      // Reset form sau khi thêm thành công
       setNewMoto({
         uid: user.id,
         brand: "",
@@ -130,9 +130,9 @@ const Sell = () => {
         condition: "",
         desc: "",
         price: "",
-        image_url: "", // Reset link hình ảnh
-        video_url: "", // Reset link video
+        image_url: "",
       });
+      setSelectedFile(null);
     } catch (error) {
       console.error("Error adding motorcycle:", error);
       alert("Error adding motorcycle. Please try again.");
@@ -263,18 +263,14 @@ const Sell = () => {
             value={newMoto.price}
             onChange={handleInputChange}
           />
-          {/* Nút upload hình ảnh */}
+          {}
           <div>
             <label>Upload Image:</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleFileUpload(e, "image")}
-            />
-            {newMoto.image_url && (
+            <input type="file" accept="image/*" onChange={handleFileSelect} />
+            {selectedFile && (
               <img
-                src={newMoto.image_url}
-                alt="Uploaded"
+                src={URL.createObjectURL(selectedFile)}
+                alt="Selected"
                 className="w-32 h-32 object-cover"
               />
             )}

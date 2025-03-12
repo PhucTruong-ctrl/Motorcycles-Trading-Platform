@@ -39,7 +39,7 @@
     @apply flex flex-col justify-center items-center bg-white px-3 md:py-6 min-w-[170px] min-h-[70px] max-w-[180px] h-[90px] rounded-[6px] shadow-md shadow-grey;
   }
   .home-card {
-    @apply rounded-md bg-white flex flex-col items-start shrink-0 w-[170px] h-[250px] shadow-md shadow-grey hover:cursor-pointer;
+    @apply rounded-md bg-white flex flex-col items-start shrink-0 w-[170px] h-[250px] shadow-md shadow-grey hover:cursor-pointer hover:scale-105 transition;
   }
   .icon {
     @apply w-[25px] h-[25px] opacity-60;
