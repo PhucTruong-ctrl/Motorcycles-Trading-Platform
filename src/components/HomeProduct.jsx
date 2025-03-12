@@ -1,16 +1,13 @@
 import React from "react";
 
-const HomeProduct = () => {
+const HomeProduct = ({ moto }) => {
   return (
-    <div
-      id="product"
-      className="home-card"
-    >
+    <div id="product" className="home-card">
       <div id="img">
         <img
-          className="rounded-t-md h-[145px] object-cover "
-          src="/img/R7_Sample.jpg"
-          alt=""
+          className="rounded-t-md h-[145px] object-cover"
+          src={moto.image_url || "/img/R7_Sample.jpg"}
+          alt={moto.type}
         />
       </div>
       <div
@@ -22,27 +19,27 @@ const HomeProduct = () => {
           className="flex justify-between items-start self-stretch"
         >
           <span id="price" className="flex-[1,0,0] text-[16px] font-extrabold">
-            $12,456
+            ${moto.price}
           </span>
           <span
             id="status"
             className="text-[16px] font-[700] text-red stroke-2 stroke-black"
           >
-            NEW
+            {moto.condition.toUpperCase()}
           </span>
         </div>
 
         <span id="name" className="text-[14px] text-grey font-[500]">
-          Motorcycle Name
+          {moto.brand} {moto.model} {moto.trim}
         </span>
         <div
           id="odo-year"
-          className="flex justify-between items-start self-stretch  text-[12px] text-grey font-[500]"
+          className="flex justify-between items-start self-stretch text-[12px] text-grey font-[500]"
         >
           <span id="odo" className="flex-[1,0,0]">
-            0,000 Miles
+            {moto.mile} Miles
           </span>
-          <span id="year">2025</span>
+          <span id="year">{moto.year}</span>
         </div>
       </div>
     </div>
