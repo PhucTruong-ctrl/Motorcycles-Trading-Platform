@@ -27,9 +27,9 @@ const HomeProductList = ({ condition }) => {
     fetchMotorcycles();
   }, [condition]);
 
-  const title = condition === "new" ? "Brand New" : "Used Motorcycles";
+  const title = condition === "New" ? "Brand New" : "Used Motorcycles";
   const description =
-    condition === "new"
+    condition === "New"
       ? "No miles, no worries—just pure riding joy."
       : "Pre-loved bikes with stories to tell.";
 

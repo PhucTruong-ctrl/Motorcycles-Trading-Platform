@@ -5,7 +5,7 @@ import supabase from "../supabase-client";
 
 const Sell = () => {
   const [user, setUser] = useState(null);
-  const [newMoto, setNewMoto] = useState({
+  const [NewMoto, setNewMoto] = useState({
     uid: "",
     brand: "",
     type: "",
@@ -20,7 +20,7 @@ const Sell = () => {
     condition: "",
     desc: "",
     price: "",
-    image_url: "",
+    image_url: [],
   });
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -48,65 +48,67 @@ const Sell = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setNewMoto({
-      ...newMoto,
+      ...NewMoto,
       [name]: type === "checkbox" ? checked : value,
     });
   };
 
   const handleFileSelect = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setSelectedFile(file);
+    const files = Array.from(e.target.files);
+    if (files) {
+      setSelectedFile(files);
     }
   };
 
-  const uploadFile = async (file) => {
-    if (!file) return null;
+  const uploadFiles = async (files) => {
+    if (!files || files.length === 0) return [];
 
-    const fileName = `${user.id}-${Date.now()}-${file.name}`;
+    const urls = [];
 
-    try {
-      const { data, error } = await supabase.storage
-        .from("motorcycle-media")
-        .upload(fileName, file);
+    for (const file of files) {
+      const fileName = `${user.id}-${Date.now()}-${file.name}`;
+      try {
+        const { error } = await supabase.storage
+          .from("motorcycle-media")
+          .upload(fileName, file);
 
-      if (error) {
-        throw error;
+        if (error) throw error;
+
+        const { data: publicUrl } = supabase.storage
+          .from("motorcycle-media")
+          .getPublicUrl(fileName);
+
+        urls.push(publicUrl.publicUrl);
+      } catch (error) {
+        console.error("Error uploading file:", error);
       }
-
-      const { data: publicUrl } = supabase.storage
-        .from("motorcycle-media")
-        .getPublicUrl(fileName);
-
-      return publicUrl.publicUrl;
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      return null;
     }
+
+    return urls;
   };
 
   const addMoto = async (e) => {
     e.preventDefault();
 
-    if (!newMoto.uid) {
+    if (!NewMoto.uid) {
       alert("User not found. Please log in again.");
       return;
     }
 
     try {
-      let imageUrl = newMoto.image_url;
+      let imageUrls = NewMoto.image_url;
 
-      if (selectedFile) {
-        imageUrl = await uploadFile(selectedFile);
-        if (!imageUrl) {
-          alert("Error uploading image. Please try again.");
+      if (selectedFile && selectedFile.length > 0) {
+        imageUrls = await uploadFiles(selectedFile);
+        if (imageUrls.length === 0) {
+          alert("Error uploading images. Please try again.");
           return;
         }
       }
 
       const { data, error } = await supabase
         .from("MOTORCYCLE")
-        .insert([{ ...newMoto, image_url: imageUrl }]);
+        .insert([{ ...NewMoto, image_url: imageUrls }]); // Lưu mảng ảnh vào DB
 
       if (error) {
         throw error;
@@ -130,9 +132,9 @@ const Sell = () => {
         condition: "",
         desc: "",
         price: "",
-        image_url: "",
+        image_url: [],
       });
-      setSelectedFile(null);
+      setSelectedFile([]);
     } catch (error) {
       console.error("Error adding motorcycle:", error);
       alert("Error adding motorcycle. Please try again.");
@@ -151,7 +153,7 @@ const Sell = () => {
             name="type"
             className="border-2"
             placeholder="type"
-            value={newMoto.type}
+            value={NewMoto.type}
             onChange={handleInputChange}
           />
           <input
@@ -159,7 +161,7 @@ const Sell = () => {
             name="brand"
             className="border-2"
             placeholder="brand"
-            value={newMoto.brand}
+            value={NewMoto.brand}
             onChange={handleInputChange}
           />
           <input
@@ -167,7 +169,7 @@ const Sell = () => {
             name="model"
             className="border-2"
             placeholder="model"
-            value={newMoto.model}
+            value={NewMoto.model}
             onChange={handleInputChange}
           />
           <input
@@ -175,7 +177,7 @@ const Sell = () => {
             name="trim"
             className="border-2"
             placeholder="trim"
-            value={newMoto.trim}
+            value={NewMoto.trim}
             onChange={handleInputChange}
           />
           <input
@@ -183,7 +185,7 @@ const Sell = () => {
             name="mile"
             className="border-2"
             placeholder="mile"
-            value={newMoto.mile}
+            value={NewMoto.mile}
             onChange={handleInputChange}
           />
           <input
@@ -191,7 +193,7 @@ const Sell = () => {
             name="year"
             className="border-2"
             placeholder="year"
-            value={newMoto.year}
+            value={NewMoto.year}
             onChange={handleInputChange}
           />
           <input
@@ -199,7 +201,7 @@ const Sell = () => {
             name="engine_size"
             className="border-2"
             placeholder="engine size"
-            value={newMoto.engine_size}
+            value={NewMoto.engine_size}
             onChange={handleInputChange}
           />
           <input
@@ -207,7 +209,7 @@ const Sell = () => {
             name="engine_num"
             className="border-2"
             placeholder="engine num"
-            value={newMoto.engine_num}
+            value={NewMoto.engine_num}
             onChange={handleInputChange}
           />
           <input
@@ -215,7 +217,7 @@ const Sell = () => {
             name="chassis_num"
             className="border-2"
             placeholder="chassis num"
-            value={newMoto.chassis_num}
+            value={NewMoto.chassis_num}
             onChange={handleInputChange}
           />
           <div>
@@ -224,26 +226,26 @@ const Sell = () => {
               type="checkbox"
               name="registration"
               className="border-2"
-              checked={newMoto.registration}
+              checked={NewMoto.registration}
               onChange={handleInputChange}
             />
           </div>
           <div>
             condition <br />
-            used
+            Used
             <input
               type="radio"
               name="condition"
-              value="used"
-              checked={newMoto.condition === "used"}
+              value="Used"
+              checked={NewMoto.condition === "Used"}
               onChange={handleInputChange}
             />
-            new
+            New
             <input
               type="radio"
               name="condition"
-              value="new"
-              checked={newMoto.condition === "new"}
+              value="New"
+              checked={NewMoto.condition === "New"}
               onChange={handleInputChange}
             />
           </div>
@@ -252,7 +254,7 @@ const Sell = () => {
             name="desc"
             className="border-2"
             placeholder="desc"
-            value={newMoto.desc}
+            value={NewMoto.desc}
             onChange={handleInputChange}
           />
           <input
@@ -260,21 +262,31 @@ const Sell = () => {
             name="price"
             className="border-2"
             placeholder="price"
-            value={newMoto.price}
+            value={NewMoto.price}
             onChange={handleInputChange}
           />
           {}
           <div>
-            <label>Upload Image:</label>
-            <input type="file" accept="image/*" onChange={handleFileSelect} />
-            {selectedFile && (
-              <img
-                src={URL.createObjectURL(selectedFile)}
-                alt="Selected"
-                className="w-32 h-32 object-cover"
-              />
-            )}
+            <label>Upload Images:</label>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileSelect}
+            />
+            <div className="flex gap-2 mt-2">
+              {selectedFile &&
+                selectedFile.map((file, index) => (
+                  <img
+                    key={index}
+                    src={URL.createObjectURL(file)}
+                    alt="Selected"
+                    className="w-32 h-32 object-cover"
+                  />
+                ))}
+            </div>
           </div>
+
           <button type="submit" className="bg-amber-800">
             Add Motorcycle
           </button>

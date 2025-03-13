@@ -18,16 +18,20 @@ const BrowseProduct = ({ moto }) => {
     <Link to={`/${moto.uid}/${moto.id}`}>
       <div
         id="BrowseProduct"
-        className="flex flex-col md:flex-row justify-start items-center content-center gap-3.5 bg-white rounded-[6px] p-2 sm:p-4 md:p-6 shadow-md shadow-grey"
+        className="flex flex-col md:flex-row justify-start items-center content-center gap-3.5 bg-white rounded-[6px] p-4 sm:p-5 md:p-6 shadow-md shadow-grey"
       >
         <img
-          src={moto.image_url || "/img/R7_Sample.jpg"}
+          src={
+            Array.isArray(moto.image_url) && moto.image_url.length > 0
+              ? moto.image_url[moto.image_url.length - 1]
+              : "/img/R7_Sample.jpg"
+          }
           alt={moto.type}
-          className="w-[100%] h-[180px] md:w-[250px] rounded-[6px] object-contain"
+          className="w-full h-[200px] md:w-[250px] rounded-[6px] object-cover"
         />
         <div
           id="Detail"
-          className="flex flex-col items-start justify-center gap-3.5 w-full md:w-[250px] min-h-[200px] pr-3.5 md:border-r-1 border-grey"
+          className="flex flex-col items-start justify-center gap-3.5 w-full md:min-w-[250px] max-h-[200px] pr-3.5 lg:border-r-1 border-grey"
         >
           <div id="Top" className="flex flex-col justify-end items-start gap-1">
             <div id="Name" className="font-extrabold text-2xl text-black">
@@ -65,7 +69,12 @@ const BrowseProduct = ({ moto }) => {
 
         <div
           id="Desc"
-          className="hidden md:block text-black text-[13px] line-clamp-9 self-center"
+          className="hidden md:block text-black text-[13px] max-w-[900px] line-clamp-4 overflow-hidden"
+          style={{
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 4, // Giới hạn số dòng
+          }}
         >
           {moto.desc}
         </div>

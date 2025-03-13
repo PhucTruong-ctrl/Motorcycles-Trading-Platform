@@ -3,7 +3,7 @@ import React from "react";
 const HomeBrand = ({ brand }) => {
   return (
     <div className="brand border-1 border-grey p-4">
-      <img className="object-fit w-[80px]" src={brand.logo_url} alt="" />
+      <img className="min-w-[80px] w-[80px]" src={brand.logo_url} alt="" />
     </div>
   );
 };

@@ -14,7 +14,11 @@ const HomeProduct = ({ moto }) => {
         <div id="img">
           <img
             className="rounded-t-md h-[145px] object-cover"
-            src={moto.image_url || "/img/R7_Sample.jpg"}
+            src={
+              Array.isArray(moto.image_url) && moto.image_url.length > 0
+                ? moto.image_url[moto.image_url.length - 1]
+                : "/img/R7_Sample.jpg"
+            }
             alt={moto.type}
           />
         </div>

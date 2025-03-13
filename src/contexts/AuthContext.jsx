@@ -93,12 +93,7 @@ const AuthContext = () => {
   } else {
     return (
       <button onClick={signOut} className="text-[18px] md:text-2xl text-nowrap">
-        <img
-          src="/icons/Logout.svg"
-          className="w-[39px] h-[42px] block md:hidden"
-        ></img>
-
-        <span className="hidden md:block">
+        <span >
           {session?.user?.user_metadata?.avatar_url ? (
             <img
               src={session.user.user_metadata.avatar_url}

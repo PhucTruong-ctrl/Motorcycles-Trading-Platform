@@ -21,10 +21,10 @@ const HomePage = () => {
           <HomeBrandList />
         </div>
         <div className="mb-5">
-          <HomeProductList condition={"new"} />
+          <HomeProductList condition={"New"} />
         </div>
         <div className="mb-5">
-          <HomeProductList condition={"used"} />
+          <HomeProductList condition={"Used"} />
         </div>
         <div className="mb-5">
           <HomeSell />
