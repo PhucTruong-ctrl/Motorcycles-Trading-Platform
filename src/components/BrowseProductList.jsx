@@ -10,7 +10,12 @@ const BrowseProductList = () => {
       try {
         const { data, error } = await supabase
           .from("MOTORCYCLE")
-          .select("*")
+          .select(
+            `
+            *,
+            USER (*)
+          `
+          )
           .order("created_at", { ascending: false });
 
         if (error) {
@@ -29,7 +34,7 @@ const BrowseProductList = () => {
     <div className="w-full">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:flex flex-col gap-5 md:gap-3.5 items-stretch justify-between ">
         {moto.map((moto) => (
-          <BrowseProduct key={moto.id} moto={moto} />
+          <BrowseProduct key={moto.id} moto={moto} user={moto.USER} />
         ))}
       </div>
     </div>

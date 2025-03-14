@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router";
 
 const HomeProduct = ({ moto }) => {
+
   const formatNumber = (number) => {
     return new Intl.NumberFormat("en-US", {
       style: "decimal",
@@ -16,7 +17,7 @@ const HomeProduct = ({ moto }) => {
             className="rounded-t-md h-[145px] object-cover"
             src={
               Array.isArray(moto.image_url) && moto.image_url.length > 0
-                ? moto.image_url[moto.image_url.length - 1]
+                ? moto.image_url[0]
                 : "/img/R7_Sample.jpg"
             }
             alt={moto.type}

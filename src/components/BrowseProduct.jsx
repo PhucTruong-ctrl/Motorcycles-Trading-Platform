@@ -2,7 +2,7 @@ import React from "react";
 import { format } from "date-fns";
 import { Link } from "react-router";
 
-const BrowseProduct = ({ moto }) => {
+const BrowseProduct = ({ moto, user }) => {
   const formatDate = (dateString) => {
     return format(new Date(dateString), " HH:mm MM-dd-yyyy");
   };
@@ -23,7 +23,7 @@ const BrowseProduct = ({ moto }) => {
         <img
           src={
             Array.isArray(moto.image_url) && moto.image_url.length > 0
-              ? moto.image_url[moto.image_url.length - 1]
+              ? moto.image_url[0]
               : "/img/R7_Sample.jpg"
           }
           alt={moto.type}
@@ -43,7 +43,7 @@ const BrowseProduct = ({ moto }) => {
               className="text-nowrap text-[13px] font-light text-black flex flex-row gap-1"
             >
               <img src="/icons/Location.svg" alt="" />
-              {moto.location}
+              {user.address}
             </div>
           </div>
           <div id="Mid" className="flex flex-col justify-end items-start gap-1">
@@ -69,7 +69,7 @@ const BrowseProduct = ({ moto }) => {
 
         <div
           id="Desc"
-          className="hidden md:block text-black text-[13px] max-w-[900px] line-clamp-4 overflow-hidden"
+          className="hidden md:block text-black text-[13px] w-full line-clamp-4 overflow-hidden"
           style={{
             display: "-webkit-box",
             WebkitBoxOrient: "vertical",

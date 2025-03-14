@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-
-import { Auth } from "@supabase/auth-ui-react";
-
 import supabase from "../supabase-client";
 
 const AuthContext = () => {

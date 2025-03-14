@@ -1,17 +1,7 @@
 import React from "react";
-import Select from "react-dropdown-select";
 
 const FilterTextboxDropdown = ({ title }) => {
-  const options = [
-    {
-      id: 1,
-      name: "Leanne Graham",
-    },
-    {
-      id: 2,
-      name: "Ervin Howell",
-    },
-  ];
+
   return (
     <div className="flex flex-col justify-center items-start gap-1 self-stretch">
       <div className="font-bold text-[20px]">{title}</div>
@@ -19,13 +9,6 @@ const FilterTextboxDropdown = ({ title }) => {
         <div>Any</div>
         <img src="/icons/Dropdown.svg" alt="" />
       </div>
-      <Select
-        options={options}
-        labelField="name"
-        valueField="id"
-        onChange={(values) => this.setValues(values)}
-      />
-      ;
     </div>
   );
 };
