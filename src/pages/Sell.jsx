@@ -215,7 +215,9 @@ const Sell = () => {
       }
 
       // Tìm tên brand từ danh sách brands
-      const selectedBrand = brands.find((brand) => brand.name === NewMoto.brand);
+      const selectedBrand = brands.find(
+        (brand) => brand.name === NewMoto.brand
+      );
       console.log("Selected brand:", selectedBrand); // Kiểm tra giá trị selectedBrand
 
       if (!selectedBrand) {
@@ -273,175 +275,181 @@ const Sell = () => {
         <header className="mb-5">
           <Header />
         </header>
-        <form className="flex flex-col gap-5 items-start" onSubmit={addMoto}>
-          <Select
-            options={typeOptions}
-            onChange={handleTypeChange}
-            values={typeOptions.filter(
-              (option) => option.value === NewMoto.type
-            )}
-            placeholder="Select a type"
-            searchable
-            className="border-2"
-          />
 
-          <Select
-            options={filteredBrands.map((brand) => ({
-              label: brand,
-              value: brand,
-            }))}
-            onChange={handleBrandChange}
-            values={filteredBrands
-              .map((brand) => ({ label: brand, value: brand }))
-              .filter((option) => option.value === NewMoto.brand)}
-            placeholder="Select a brand"
-            searchable
-            className="border-2"
-            disabled={!NewMoto.type} // Vô hiệu hóa nếu chưa chọn type
-          />
-
-          <Select
-            options={filteredModels.map((model) => ({
-              label: model.model,
-              value: model.model,
-            }))}
-            onChange={handleModelChange}
-            values={filteredModels
-              .map((model) => ({ label: model.model, value: model.model }))
-              .filter((option) => option.value === NewMoto.model)}
-            placeholder="Select a model"
-            searchable
-            className="border-2"
-            disabled={!NewMoto.brand} // Vô hiệu hóa nếu chưa chọn brand
-          />
-
-          <Select
-            options={filteredTrims.map((trim) => ({
-              label: trim,
-              value: trim,
-            }))}
-            onChange={handleTrimChange}
-            values={filteredTrims
-              .map((trim) => ({ label: trim, value: trim }))
-              .filter((option) => option.value === NewMoto.trim)}
-            placeholder="Select a trim"
-            searchable
-            className="border-2"
-            disabled={!NewMoto.model} // Vô hiệu hóa nếu chưa chọn model
-          />
-          <input
-            type="text"
-            name="mile"
-            className="border-2"
-            placeholder="mile"
-            value={NewMoto.mile}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="year"
-            className="border-2"
-            placeholder="year"
-            value={NewMoto.year}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="engine_size"
-            className="border-2"
-            placeholder="engine size"
-            value={NewMoto.engine_size}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="engine_num"
-            className="border-2"
-            placeholder="engine num"
-            value={NewMoto.engine_num}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="chassis_num"
-            className="border-2"
-            placeholder="chassis num"
-            value={NewMoto.chassis_num}
-            onChange={handleInputChange}
-          />
-          <div>
-            registration
-            <input
-              type="checkbox"
-              name="registration"
+        <div className="border-4 flex justify-center items-center">
+          <form
+            className="flex flex-col gap-5 items-center justify-center border-2 border-red"
+            onSubmit={addMoto}
+          >
+            <Select
+              options={typeOptions}
+              onChange={handleTypeChange}
+              values={typeOptions.filter(
+                (option) => option.value === NewMoto.type
+              )}
+              placeholder="Select a type"
+              searchable
               className="border-2"
-              checked={NewMoto.registration}
-              onChange={handleInputChange}
             />
-          </div>
-          <div>
-            condition <br />
-            Used
-            <input
-              type="radio"
-              name="condition"
-              value="Used"
-              checked={NewMoto.condition === "Used"}
-              onChange={handleInputChange}
-            />
-            New
-            <input
-              type="radio"
-              name="condition"
-              value="New"
-              checked={NewMoto.condition === "New"}
-              onChange={handleInputChange}
-            />
-          </div>
-          <input
-            type="text"
-            name="desc"
-            className="border-2"
-            placeholder="desc"
-            value={NewMoto.desc}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="price"
-            className="border-2"
-            placeholder="price"
-            value={NewMoto.price}
-            onChange={handleInputChange}
-          />
-          {}
-          <div>
-            <label>Upload Images:</label>
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleFileSelect}
-            />
-            <div className="flex gap-2 mt-2">
-              {selectedFile &&
-                selectedFile
-                  .toReversed()
-                  .map((file, index) => (
-                    <img
-                      key={index}
-                      src={URL.createObjectURL(file)}
-                      alt="Selected"
-                      className="w-32 h-32 object-cover"
-                    />
-                  ))}
-            </div>
-          </div>
 
-          <button type="submit" className="bg-amber-800">
-            Add Motorcycle
-          </button>
-        </form>
+            <Select
+              options={filteredBrands.map((brand) => ({
+                label: brand,
+                value: brand,
+              }))}
+              onChange={handleBrandChange}
+              values={filteredBrands
+                .map((brand) => ({ label: brand, value: brand }))
+                .filter((option) => option.value === NewMoto.brand)}
+              placeholder="Select a brand"
+              searchable
+              className="border-2"
+              disabled={!NewMoto.type} // Vô hiệu hóa nếu chưa chọn type
+            />
+
+            <Select
+              options={filteredModels.map((model) => ({
+                label: model.model,
+                value: model.model,
+              }))}
+              onChange={handleModelChange}
+              values={filteredModels
+                .map((model) => ({ label: model.model, value: model.model }))
+                .filter((option) => option.value === NewMoto.model)}
+              placeholder="Select a model"
+              searchable
+              className="border-2"
+              disabled={!NewMoto.brand} // Vô hiệu hóa nếu chưa chọn brand
+            />
+
+            <Select
+              options={filteredTrims.map((trim) => ({
+                label: trim,
+                value: trim,
+              }))}
+              onChange={handleTrimChange}
+              values={filteredTrims
+                .map((trim) => ({ label: trim, value: trim }))
+                .filter((option) => option.value === NewMoto.trim)}
+              placeholder="Select a trim"
+              searchable
+              className="border-2"
+              disabled={!NewMoto.model} // Vô hiệu hóa nếu chưa chọn model
+            />
+            <input
+              type="text"
+              name="mile"
+              className="border-2"
+              placeholder="mile"
+              value={NewMoto.mile}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="year"
+              className="border-2"
+              placeholder="year"
+              value={NewMoto.year}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="engine_size"
+              className="border-2"
+              placeholder="engine size"
+              value={NewMoto.engine_size}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="engine_num"
+              className="border-2"
+              placeholder="engine num"
+              value={NewMoto.engine_num}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="chassis_num"
+              className="border-2"
+              placeholder="chassis num"
+              value={NewMoto.chassis_num}
+              onChange={handleInputChange}
+            />
+            <div>
+              registration
+              <input
+                type="checkbox"
+                name="registration"
+                className="border-2"
+                checked={NewMoto.registration}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              condition <br />
+              Used
+              <input
+                type="radio"
+                name="condition"
+                value="Used"
+                checked={NewMoto.condition === "Used"}
+                onChange={handleInputChange}
+              />
+              New
+              <input
+                type="radio"
+                name="condition"
+                value="New"
+                checked={NewMoto.condition === "New"}
+                onChange={handleInputChange}
+              />
+            </div>
+            <input
+              type="text"
+              name="desc"
+              className="border-2"
+              placeholder="desc"
+              value={NewMoto.desc}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="price"
+              className="border-2"
+              placeholder="price"
+              value={NewMoto.price}
+              onChange={handleInputChange}
+            />
+            {}
+            <div>
+              <label>Upload Images:</label>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileSelect}
+              />
+              <div className="flex gap-2 mt-2">
+                {selectedFile &&
+                  selectedFile
+                    .toReversed()
+                    .map((file, index) => (
+                      <img
+                        key={index}
+                        src={URL.createObjectURL(file)}
+                        alt="Selected"
+                        className="w-32 h-32 object-cover"
+                      />
+                    ))}
+              </div>
+            </div>
+
+            <button type="submit" className="bg-amber-800">
+              Add Motorcycle
+            </button>
+          </form>
+        </div>
         <div className="mb-5">
           <Footer />
         </div>

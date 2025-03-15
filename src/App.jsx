@@ -5,6 +5,11 @@ import Sell from "./pages/Sell";
 import About from "./pages/About";
 import Browse from "./pages/Browse";
 import ProductDetail from "./pages/ProductDetail";
+import Profile from "./pages/Profile";
+import EditInfo from "./pages/EditInfo";
+import Listing from "./pages/Listing";
+import PurchaseHistory from "./pages/PurchaseHistory";
+import WorkArea from "./pages/WorkArea";
 
 const App = () => {
   return (
@@ -16,6 +21,11 @@ const App = () => {
           <Route path="/about" element={<About />}></Route>
           <Route path="/sell" element={<Sell />}></Route>
           <Route path="/:uid/:id" element={<ProductDetail />} />
+          <Route path="/:uid/profile" element={<Profile />} />
+          <Route path="/:uid/edit-info" element={<EditInfo />} />
+          <Route path="/:uid/listing" element={<Listing />} />
+          <Route path="/:uid/purchase-history" element={<PurchaseHistory />} />
+          <Route path="/work" element={<WorkArea />} />
         </Routes>
       </div>
     </div>

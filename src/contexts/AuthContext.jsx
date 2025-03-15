@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import supabase from "../supabase-client";
+import UserMenu from "../components/UserMenu";
 
 const AuthContext = () => {
   const [session, setSession] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -25,6 +28,23 @@ const AuthContext = () => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Nếu menu đang mở và click xảy ra bên ngoài menu
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false); // Đóng menu
+      }
+    };
+
+    // Thêm sự kiện lắng nghe
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Dọn dẹp sự kiện khi component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen]); // Chỉ chạy lại khi isMenuOpen thay đổi
 
   const handleUserCreation = async (user) => {
     const { data: existingUser, error: selectError } = await supabase
@@ -66,10 +86,6 @@ const AuthContext = () => {
     }
   };
 
-  const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-  };
-
   const signUp = async () => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -89,18 +105,24 @@ const AuthContext = () => {
     );
   } else {
     return (
-      <button onClick={signOut} className="text-[18px] md:text-2xl text-nowrap">
-        <span >
-          {session?.user?.user_metadata?.avatar_url ? (
-            <img
-              src={session.user.user_metadata.avatar_url}
-              className="w-8 h-8 rounded-full"
-            />
-          ) : (
-            <span>{session?.user?.email}</span>
-          )}
-        </span>
-      </button>
+      <div className="relative" ref={menuRef}>
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="text-[18px] md:text-2xl text-nowrap"
+        >
+          <span>
+            {session?.user?.user_metadata?.avatar_url ? (
+              <img
+                src={session.user.user_metadata.avatar_url}
+                className="w-8 h-8 rounded-full"
+              />
+            ) : (
+              <span>{session?.user?.email}</span>
+            )}
+          </span>
+        </button>
+        {isMenuOpen && <UserMenu user={session.user} />}
+      </div>
     );
   }
 };

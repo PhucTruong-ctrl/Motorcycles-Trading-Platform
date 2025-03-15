@@ -9,7 +9,7 @@ import HomeProduct from "../components/HomeProduct";
 const MotoDetail = () => {
   const { uid, id } = useParams();
   const [moto, setMoto] = useState(null);
-  const [motoMore, setMotoMore] = useState([]); // State for additional motorcycles
+  const [motoMore, setMotoMore] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,6 +25,10 @@ const MotoDetail = () => {
       style: "decimal",
       minimumFractionDigits: 0,
     }).format(number);
+  };
+
+  const CapitalizeFirst = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
   const handleNext = () => {
@@ -115,8 +119,9 @@ const MotoDetail = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        setCurrentIndex(0);
+        setCurrentMainIndex(0);
 
-        // Fetch motorcycle details
         const { data: motoData, error: motoError } = await supabase
           .from("MOTORCYCLE")
           .select("*")
@@ -127,7 +132,6 @@ const MotoDetail = () => {
         if (motoError) throw motoError;
         setMoto(motoData);
 
-        // Fetch user details
         const { data: userData, error: userError } = await supabase
           .from("USER")
           .select("*")
@@ -137,16 +141,14 @@ const MotoDetail = () => {
         if (userError) throw userError;
         setUser(userData);
 
-        // Fetch additional motorcycles from the same dealer
         const { data: moreMotoData, error: moreMotoError } = await supabase
           .from("MOTORCYCLE")
           .select("*")
           .eq("uid", uid)
-          .neq("id", id); // Exclude the current motorcycle
+          .neq("id", id);
 
         if (moreMotoError) throw moreMotoError;
         setMotoMore(moreMotoData || []);
-
       } catch (error) {
         console.error("Error fetching data:", error);
         setError(error);
@@ -156,7 +158,7 @@ const MotoDetail = () => {
     };
 
     fetchData();
-  }, [uid, id]); // Chỉ chạy khi uid hoặc id thay đổi
+  }, [uid, id]);
 
   useEffect(() => {
     if (moto && !viewsIncreased) {
@@ -191,7 +193,7 @@ const MotoDetail = () => {
         </header>
 
         <div className="font-light mb-4 ">
-          {moto.type} / {moto.brand} / {moto.model} / {moto.trim} / {moto.year}
+          {CapitalizeFirst(moto.type)} / {moto.brand} / {moto.model} / {moto.trim} / {moto.year}
         </div>
 
         <div className="flex flex-col md:flex-row justify-center gap-15 items-center self-stretch rounded-[6px] mb-5">
@@ -259,7 +261,7 @@ const MotoDetail = () => {
               className="flex flex-col items-start gap-1 self-stretch border-b-1 border-grey pb-5"
             >
               <div className="text-black font-light flex flex-row gap-4">
-                {moto.condition} {moto.year} {moto.brand} {moto.type}{" "}
+                {moto.condition} {moto.year} {moto.brand} {CapitalizeFirst(moto.type)} {""}
                 {moto.model} {moto.trim}
               </div>
               <div className="font-bold text-4xl">
