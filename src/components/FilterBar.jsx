@@ -4,7 +4,7 @@ import FilterRangeSliderBar from "./FilterRangeSliderbar";
 
 const FilterBar = () => {
   return (
-    <div className="w-full md:w-fit flex flex-col justify-center items-center gap-3.5 p-6 bg-white rounded-[6px] shadow-md shadow-grey">
+    <div className="w-full md:w-fit h-fit flex flex-col justify-start items-center gap-3.5 p-6 bg-white rounded-[6px] shadow-md shadow-grey">
       <div className="self-center md:self-start text-2xl font-extrabold text-black">
         Filter
       </div>

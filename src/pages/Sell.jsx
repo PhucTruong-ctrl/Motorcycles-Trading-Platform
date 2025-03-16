@@ -24,7 +24,7 @@ const Sell = () => {
     price: "",
     image_url: [],
   });
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState([]);
   const [brands, setBrands] = useState([]); // State để lưu danh sách brand
 
   const typeOptions = [
@@ -34,7 +34,7 @@ const Sell = () => {
     { value: "sport", label: "Sport" },
     { value: "offroad", label: "Offroad" },
     { value: "adventure", label: "Adventure" },
-    { value: "sport touring", label: "Sport Touring" },
+    { value: "sportTouring", label: "Sport Touring" },
     { value: "scooters", label: "Scooters" },
     { value: "underbones", label: "Underbones" },
   ];
@@ -101,7 +101,7 @@ const Sell = () => {
     if (selectedOptions.length > 0) {
       const selectedBrand = selectedOptions[0].value;
 
-      console.log("Selected brand ID:", selectedBrand); // Kiểm tra giá trị brand được chọn
+      console.log("Selected brand:", selectedBrand); // Kiểm tra giá trị brand được chọn
 
       // Lọc danh sách model dựa trên type và brand đã chọn
       const modelsForBrandAndType =
@@ -122,30 +122,33 @@ const Sell = () => {
   const handleModelChange = (selectedOptions) => {
     if (selectedOptions.length > 0) {
       const selectedModel = selectedOptions[0].value;
-      console.log("Selected brand ID:", selectedModel);
-
-      // Lọc danh sách trim dựa trên type, brand, và model đã chọn
-      const trimsForModel =
-        motorcycleData[NewMoto.brand]?.[NewMoto.type]?.find(
-          (model) => model.model === selectedModel
-        )?.trims || [];
-
-      setFilteredTrims(trimsForModel); // Cập nhật danh sách trim
-
+      // Get trims for the selected model
+      const modelDetails = motorcycleData[NewMoto.brand]?.[NewMoto.type]?.find(
+        (model) => model.model === selectedModel
+      );
+      const trimsForModel = modelDetails?.trims || [];
+      setFilteredTrims(trimsForModel);
+      // Reset trim and engine_size when model changes
       setNewMoto((prevState) => ({
         ...prevState,
         model: selectedModel,
-        trim: "", // Reset trim khi model thay đổi
+        trim: "",
+        engine_size: "",
       }));
     }
   };
 
   const handleTrimChange = (selectedOptions) => {
     if (selectedOptions.length > 0) {
-      console.log("Selected brand ID:", selectedOptions[0].value);
+      const selectedTrimName = selectedOptions[0].value;
+      // Find the selected trim object to get engine_size
+      const selectedTrim = filteredTrims.find(
+        (trim) => trim.name === selectedTrimName
+      );
       setNewMoto((prevState) => ({
         ...prevState,
-        trim: selectedOptions[0].value,
+        trim: selectedTrimName,
+        engine_size: selectedTrim ? selectedTrim.engine_size : "",
       }));
     }
   };
@@ -160,31 +163,33 @@ const Sell = () => {
 
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
-    if (files) {
-      setSelectedFile(files);
-    }
+    setSelectedFile((prevFiles) => [...files.toReversed(), ...prevFiles]); // Thêm ảnh mới lên đầu
+  };
+
+  const removeFile = (index) => {
+    setSelectedFile((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
   const uploadFiles = async (files) => {
     if (!files || files.length === 0) return [];
 
     const urls = [];
-    const reversedFiles = files.toReversed();
 
-    for (const file of reversedFiles) {
+    for (const file of files) {
       const fileName = `${user.id}-${Date.now()}-${file.name}`;
+      const filePath = `${user.id}/${fileName}`;
       try {
         const { error } = await supabase.storage
           .from("motorcycle-media")
-          .upload(fileName, file);
+          .upload(filePath, file);
 
         if (error) throw error;
 
-        const { data: publicUrl } = supabase.storage
+        const { data } = supabase.storage
           .from("motorcycle-media")
-          .getPublicUrl(fileName);
+          .getPublicUrl(filePath);
 
-        urls.push(publicUrl.publicUrl);
+        urls.push(data.publicUrl);
       } catch (error) {
         console.error("Error uploading file:", error);
       }
@@ -196,12 +201,12 @@ const Sell = () => {
   const addMoto = async (e) => {
     e.preventDefault();
 
+    console.log("NewMoto before submission:", NewMoto); // In ra NewMoto để kiểm tra giá trị
+
     if (!NewMoto.uid) {
       alert("User not found. Please log in again.");
       return;
     }
-
-    console.log("NewMoto before submission:", NewMoto); // Kiểm tra giá trị NewMoto trước khi gửi
 
     try {
       let imageUrls = NewMoto.image_url;
@@ -278,86 +283,100 @@ const Sell = () => {
 
         <div className="border-4 flex justify-center items-center">
           <form
-            className="flex flex-col gap-5 items-center justify-center border-2 border-red"
+            className="flex flex-col gap-5 items-center justify-center w-200 border-2 border-red"
             onSubmit={addMoto}
           >
-            <Select
-              options={typeOptions}
-              onChange={handleTypeChange}
-              values={typeOptions.filter(
-                (option) => option.value === NewMoto.type
-              )}
-              placeholder="Select a type"
-              searchable
-              className="border-2"
-            />
+            <div className="grid grid-cols-2 gap-5 w-full">
+              <div className="flex flex-col border-2 w-full">
+                <div>Type</div>
+                <Select
+                  options={typeOptions}
+                  onChange={handleTypeChange}
+                  values={typeOptions.filter(
+                    (option) => option.value === NewMoto.type
+                  )}
+                  placeholder="Select a type"
+                  searchable
+                  className="border-2"
+                />
+              </div>
 
-            <Select
-              options={filteredBrands.map((brand) => ({
-                label: brand,
-                value: brand,
-              }))}
-              onChange={handleBrandChange}
-              values={filteredBrands
-                .map((brand) => ({ label: brand, value: brand }))
-                .filter((option) => option.value === NewMoto.brand)}
-              placeholder="Select a brand"
-              searchable
-              className="border-2"
-              disabled={!NewMoto.type} // Vô hiệu hóa nếu chưa chọn type
-            />
+              <div className="flex flex-col border-2 w-full">
+                <div>Brand</div>
+                <Select
+                  options={filteredBrands.map((brand) => ({
+                    label: brand,
+                    value: brand,
+                  }))}
+                  onChange={handleBrandChange}
+                  values={filteredBrands
+                    .map((brand) => ({ label: brand, value: brand }))
+                    .filter((option) => option.value === NewMoto.brand)}
+                  placeholder="Select a brand"
+                  searchable
+                  className="border-2"
+                  disabled={!NewMoto.type} // Vô hiệu hóa nếu chưa chọn type
+                />
+              </div>
+            </div>
 
-            <Select
-              options={filteredModels.map((model) => ({
-                label: model.model,
-                value: model.model,
-              }))}
-              onChange={handleModelChange}
-              values={filteredModels
-                .map((model) => ({ label: model.model, value: model.model }))
-                .filter((option) => option.value === NewMoto.model)}
-              placeholder="Select a model"
-              searchable
-              className="border-2"
-              disabled={!NewMoto.brand} // Vô hiệu hóa nếu chưa chọn brand
-            />
+            <div className="grid grid-cols-2 gap-5 w-full">
+              <div className="flex flex-col border-2 w-full">
+                <div>Model</div>
+                <Select
+                  options={filteredModels.map((model) => ({
+                    label: model.model,
+                    value: model.model,
+                  }))}
+                  onChange={handleModelChange}
+                  values={filteredModels
+                    .map((model) => ({
+                      label: model.model,
+                      value: model.model,
+                    }))
+                    .filter((option) => option.value === NewMoto.model)}
+                  placeholder="Select a model"
+                  searchable
+                  className="border-2"
+                  disabled={!NewMoto.brand} // Vô hiệu hóa nếu chưa chọn brand
+                />
+              </div>
 
-            <Select
-              options={filteredTrims.map((trim) => ({
-                label: trim,
-                value: trim,
-              }))}
-              onChange={handleTrimChange}
-              values={filteredTrims
-                .map((trim) => ({ label: trim, value: trim }))
-                .filter((option) => option.value === NewMoto.trim)}
-              placeholder="Select a trim"
-              searchable
-              className="border-2"
-              disabled={!NewMoto.model} // Vô hiệu hóa nếu chưa chọn model
-            />
-            <input
-              type="text"
-              name="mile"
-              className="border-2"
-              placeholder="mile"
-              value={NewMoto.mile}
-              onChange={handleInputChange}
-            />
+              <div className="flex flex-col border-2 w-full">
+                <div>Trims</div>
+                <Select
+                  options={filteredTrims.map((trim) => ({
+                    label: trim.name, // Use trim.name as label
+                    value: trim.name, // Use trim.name as value
+                  }))}
+                  onChange={handleTrimChange}
+                  values={filteredTrims
+                    .map((trim) => ({ label: trim.name, value: trim.name }))
+                    .filter((option) => option.value === NewMoto.trim)}
+                  placeholder="Select a trim"
+                  searchable
+                  className="border-2"
+                  disabled={!NewMoto.model}
+                />
+              </div>
+            </div>
+
+            {NewMoto.condition !== "New" && (
+              <input
+                type="text"
+                name="mile"
+                className="border-2"
+                placeholder="mile"
+                value={NewMoto.mile}
+                onChange={handleInputChange}
+              />
+            )}
             <input
               type="text"
               name="year"
               className="border-2"
               placeholder="year"
               value={NewMoto.year}
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="engine_size"
-              className="border-2"
-              placeholder="engine size"
-              value={NewMoto.engine_size}
               onChange={handleInputChange}
             />
             <input
@@ -431,17 +450,21 @@ const Sell = () => {
                 onChange={handleFileSelect}
               />
               <div className="flex gap-2 mt-2">
-                {selectedFile &&
-                  selectedFile
-                    .toReversed()
-                    .map((file, index) => (
-                      <img
-                        key={index}
-                        src={URL.createObjectURL(file)}
-                        alt="Selected"
-                        className="w-32 h-32 object-cover"
-                      />
-                    ))}
+                {selectedFile.map((file, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt="Selected"
+                      className="w-32 h-32 object-cover"
+                    />
+                    <button
+                      className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
+                      onClick={() => removeFile(index)}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
 

@@ -15,7 +15,9 @@ const BrowseProduct = ({ moto, user }) => {
   };
 
   return (
-    <Link to={`/${moto.uid}/${moto.id}`}>
+    <Link
+      to={`/${moto.type}/${moto.brand}/${moto.model}/${moto.trim}/${moto.year}/${moto.uid}/${moto.id}`}
+    >
       <div
         id="BrowseProduct"
         className="flex flex-col md:flex-row justify-start items-center content-center gap-3.5 bg-white rounded-[6px] p-4 sm:p-5 md:p-6 shadow-md shadow-grey"

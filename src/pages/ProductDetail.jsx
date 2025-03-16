@@ -4,10 +4,10 @@ import supabase from "../supabase-client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Button from "../components/Button";
-import HomeProduct from "../components/HomeProduct";
+import ProductCard from "../components/ProductCard";
 
 const MotoDetail = () => {
-  const { uid, id } = useParams();
+  const { type, brand, model, trim, year, uid, id } = useParams();
   const [moto, setMoto] = useState(null);
   const [motoMore, setMotoMore] = useState([]);
   const [user, setUser] = useState(null);
@@ -18,7 +18,7 @@ const MotoDetail = () => {
   const [currentMainIndex, setCurrentMainIndex] = useState(0);
   const [viewsIncreased, setViewsIncreased] = useState(false);
 
-  const imagesPerView = 5;
+  const imagesPerView = 7;
 
   const formatNumber = (number) => {
     return new Intl.NumberFormat("en-US", {
@@ -193,192 +193,201 @@ const MotoDetail = () => {
         </header>
 
         <div className="font-light mb-4 ">
-          {CapitalizeFirst(moto.type)} / {moto.brand} / {moto.model} / {moto.trim} / {moto.year}
-        </div>
-
-        <div className="flex flex-col md:flex-row justify-center gap-15 items-center self-stretch rounded-[6px] mb-5">
-          <div className="flex flex-col gap-3.5 md:max-w-[700px] md:max-h-fit rounded-[6px]">
-            <div className="relative flex flex-col justify-center items-center">
-              <img
-                id="mainImg"
-                src={mainImage || "/img/R7_Sample.jpg"}
-                className="w-full md:w-[800px] h-[500px] rounded-[6px] object-cover"
-                alt="Main motorcycle"
-              />
-              <div className="absolute flex flex-row justify-between w-full">
-                <button
-                  onClick={handlePrevMain}
-                  className={`${currentMainIndex > 0 ? "opacity-100" : "opacity-0"}`}
-                >
-                  <img src="/icons/ArrowBack.svg" alt="Previous" />
-                </button>
-                <button
-                  onClick={handleNextMain}
-                  className={`${currentMainIndex < moto.image_url.length - 1 ? "opacity-100" : "opacity-0"}`}
-                >
-                  <img src="/icons/ArrowForward.svg" alt="Next" />
-                </button>
-              </div>
-            </div>
-
-            <div className="flex flex-col justify-center items-center rounded-[6px] overflow-hidden">
-              {currentIndex > 0 && (
-                <button onClick={handlePrev} className="absolute self-start">
-                  <img src="/icons/ArrowBack.svg" alt="Previous" />
-                </button>
-              )}
-              <div className="flex flex-row gap-3.5 overflow-hidden p-1">
-                {moto.image_url
-                  .slice(currentIndex, currentIndex + imagesPerView)
-                  .map((img, index) => (
-                    <img
-                      key={index}
-                      src={img}
-                      alt={`Thumbnail ${index + 1}`}
-                      className={`w-[130px] h-[100px] rounded-[6px] object-contain cursor-pointer hover:border-2 ${
-                        img === mainImage ? "border-2 border-black" : "border-0"
-                      }`}
-                      onClick={() => {
-                        setCurrentMainIndex(currentIndex + index);
-                        setMainImage(img);
-                      }}
-                    />
-                  ))}
-              </div>
-              {currentIndex + imagesPerView < moto.image_url.length && (
-                <button onClick={handleNext} className="absolute self-end">
-                  <img src="/icons/ArrowForward.svg" alt="Next" />
-                </button>
-              )}
-            </div>
-          </div>
-          <div
-            id="RightSection"
-            className="flex flex-col justify-center items-center lg:justify-start lg:items-start self-stretch"
-          >
-            <div
-              id="BikeDetail"
-              className="flex flex-col items-start gap-1 self-stretch border-b-1 border-grey pb-5"
-            >
-              <div className="text-black font-light flex flex-row gap-4">
-                {moto.condition} {moto.year} {moto.brand} {CapitalizeFirst(moto.type)} {""}
-                {moto.model} {moto.trim}
-              </div>
-              <div className="font-bold text-4xl">
-                {moto.model} {moto.trim}
-              </div>
-
-              <div className="text-grey font-light">
-                {formatNumber(moto.mile)} Miles
-              </div>
-
-              <div className="text-4xl font-extrabold text-red">
-                ${formatNumber(moto.price)}
-              </div>
-            </div>
-
-            <div id="ContactSeller" className="">
-              <div
-                id="SellerDetail"
-                className="flex flex-col lg:flex-row justify-evenly items-center gap-3.5 self-stretch pt-5"
-              >
-                {user && (
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={user.avatar_url}
-                      alt={user.name}
-                      className="w-[60px] sm:w-[80px] md:w-[95px] h-auto rounded-full"
-                    />
-                    <div className="flex flex-col items-start gap-1">
-                      <div className="font-bold text-2xl">{user.name}</div>
-                      <div className="flex flex-row gap-1 font-light text-grey text-nowrap text-[15px]">
-                        <img src="/icons/Location.svg" alt="" /> {user.address}
-                      </div>
-                    </div>
-                  </div>
-                )}
-                <div className="flex flex-row gap-3.5">
-                  <div className="flex items-center gap-1">
-                    <Button
-                      textValue={`${user.phone_num}`}
-                      bg_color={"black"}
-                      text_color={"white"}
-                      icons={"/icons/Phone.svg"}
-                    />
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      textValue={"Chat"}
-                      bg_color={"blue"}
-                      text_color={"white"}
-                      icons={"/icons/Chat.svg"}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-5 pt-5 pb-5 border-b-1 border-grey">
-                <div className="flex flex-row gap-5 text-grey">
-                  <input
-                    type="text"
-                    placeholder="First Name"
-                    className="rounded-[6px] border-[1px] border-grey h-10 bg-white w-full px-5"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    className="rounded-[6px] border-[1px] border-grey h-10 bg-white w-full px-5"
-                  />
-                </div>
-                <div className="flex flex-row gap-5 text-grey">
-                  <input
-                    type="text"
-                    placeholder="Email Address"
-                    defaultValue={user.email}
-                    className="rounded-[6px] border-[1px] border-grey h-10 bg-white w-full px-5"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Phone Number"
-                    defaultValue={user.phone_num}
-                    className="rounded-[6px] border-[1px] border-grey h-10 bg-white w-full px-5"
-                  />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Message"
-                  className="rounded-[6px] border-[1px] border-grey h-10 bg-white w-full px-5"
-                  defaultValue={`Is this ${moto.brand} ${moto.model} ${moto.trim} still available? `}
-                />
-                <Button
-                  textValue={"Send Email"}
-                  bg_color={"black"}
-                  text_color={"white"}
-                  width={"full"}
-                  icons={"/icons/Chat.svg"}
-                />
-              </div>
-            </div>
-
-            <div className="pt-5">
-              <div className="font-semibold">Popularity Stats</div>
-              <div>Seen {moto.views} times</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-5 items-start justify-start mb-5">
-          <div className="font-semibold text-2xl">Description</div>
-          <div className="text-[16px]">{moto.desc}</div>
+          {CapitalizeFirst(moto.type)} / {moto.brand} / {moto.model} /{" "}
+          {moto.trim} / {moto.year}
         </div>
 
         <div>
-          <div className="font-light text-xl underline">
-            More From This Dealer
+          <div className="flex flex-col md:flex-row justify-center gap-15 items-center self-stretch rounded-[6px] mb-5">
+            <div className="flex flex-col gap-3.5 md:w-[1000px] md:h-fit rounded-[6px]">
+              <div className="relative flex flex-col justify-center items-center">
+                <img
+                  id="mainImg"
+                  src={mainImage || "/img/R7_Sample.jpg"}
+                  className="w-full md:w-full h-[700px] rounded-[6px] object-cover"
+                  alt="Main motorcycle"
+                />
+                <div className="absolute flex flex-row justify-between w-full">
+                  <button
+                    onClick={handlePrevMain}
+                    className={`${currentMainIndex > 0 ? "opacity-100" : "opacity-0"}`}
+                  >
+                    <img src="/icons/ArrowBack.svg" alt="Previous" />
+                  </button>
+                  <button
+                    onClick={handleNextMain}
+                    className={`${currentMainIndex < moto.image_url.length - 1 ? "opacity-100" : "opacity-0"}`}
+                  >
+                    <img src="/icons/ArrowForward.svg" alt="Next" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-center items-center rounded-[6px]">
+                {currentIndex > 0 && (
+                  <button onClick={handlePrev} className="absolute self-start">
+                    <img src="/icons/ArrowBack.svg" alt="Previous" />
+                  </button>
+                )}
+                <div className="flex flex-row gap-3.5 overflow-hidden p-1">
+                  {moto.image_url
+                    .slice(currentIndex, currentIndex + imagesPerView)
+                    .map((img, index) => (
+                      <img
+                        key={index}
+                        src={img}
+                        alt={`Thumbnail ${index + 1}`}
+                        className={`w-[130px] h-[100px] rounded-[6px] object-contain cursor-pointer hover:border-2 ${
+                          img === mainImage
+                            ? "border-2 border-black"
+                            : "border-0"
+                        }`}
+                        onClick={() => {
+                          setCurrentMainIndex(currentIndex + index);
+                          setMainImage(img);
+                        }}
+                      />
+                    ))}
+                </div>
+                {currentIndex + imagesPerView < moto.image_url.length && (
+                  <button onClick={handleNext} className="absolute self-end">
+                    <img src="/icons/ArrowForward.svg" alt="Next" />
+                  </button>
+                )}
+              </div>
+            </div>
+            <div
+              id="RightSection"
+              className="flex flex-col justify-center items-center lg:justify-start lg:items-start self-stretch"
+            >
+              <div
+                id="BikeDetail"
+                className="flex flex-col items-start gap-1 self-stretch border-b-1 border-grey pb-5"
+              >
+                <div className="text-black font-light flex flex-row gap-4">
+                  {moto.condition} {moto.year} {moto.brand}{" "}
+                  {CapitalizeFirst(moto.type)} {""}
+                  {moto.model} {moto.trim}
+                </div>
+                <div className="font-bold text-4xl">
+                  {moto.model} {moto.trim}
+                </div>
+
+                <div className="text-grey font-light">
+                  {formatNumber(moto.mile)} Miles
+                </div>
+
+                <div className="text-4xl font-extrabold text-red">
+                  ${formatNumber(moto.price)}
+                </div>
+              </div>
+
+              <div id="ContactSeller" className="">
+                <div
+                  id="SellerDetail"
+                  className="flex flex-col lg:flex-row justify-evenly items-center gap-3.5 self-stretch pt-5"
+                >
+                  {user && (
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={user.avatar_url}
+                        alt={user.name}
+                        className="w-[60px] sm:w-[80px] md:w-[95px] h-auto rounded-full"
+                      />
+                      <div className="flex flex-col items-start gap-1">
+                        <div className="font-bold text-2xl">{user.name}</div>
+                        <div className="flex flex-row gap-1 font-light text-grey text-nowrap text-[15px]">
+                          <img src="/icons/Location.svg" alt="" />{" "}
+                          {user.address}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex flex-row gap-3.5">
+                    <div className="flex items-center gap-1">
+                      <Button
+                        textValue={`${user.phone_num}`}
+                        bg_color={"black"}
+                        text_color={"white"}
+                        icons={"/icons/Phone.svg"}
+                      />
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        textValue={"Chat"}
+                        bg_color={"blue"}
+                        text_color={"white"}
+                        icons={"/icons/Chat.svg"}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-5 pt-5 pb-5 border-b-1 border-grey">
+                  <div className="flex flex-row gap-5 text-grey">
+                    <input
+                      type="text"
+                      placeholder="First Name"
+                      className="rounded-[6px] border-[1px] border-grey h-10 bg-white w-full px-5"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Last Name"
+                      className="rounded-[6px] border-[1px] border-grey h-10 bg-white w-full px-5"
+                    />
+                  </div>
+                  <div className="flex flex-row gap-5 text-grey">
+                    <input
+                      type="text"
+                      placeholder="Email Address"
+                      defaultValue={user.email}
+                      className="rounded-[6px] border-[1px] border-grey h-10 bg-white w-full px-5"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Phone Number"
+                      defaultValue={user.phone_num}
+                      className="rounded-[6px] border-[1px] border-grey h-10 bg-white w-full px-5"
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Message"
+                    className="rounded-[6px] border-[1px] border-grey h-10 bg-white w-full px-5"
+                    defaultValue={`Is this ${moto.brand} ${moto.model} ${moto.trim} still available? `}
+                  />
+                  <Button
+                    textValue={"Send Email"}
+                    bg_color={"black"}
+                    text_color={"white"}
+                    width={"full"}
+                    icons={"/icons/Chat.svg"}
+                  />
+                </div>
+              </div>
+
+              <div className="pt-5">
+                <div className="font-semibold">Popularity Stats</div>
+                <div>Seen {moto.views} times</div>
+              </div>
+            </div>
           </div>
-          <div className="w-full flex justify-start items-start gap-8 overflow-hidden p-4">
-            {motoMore.map((moto) => (
-              <HomeProduct key={moto.id} moto={moto} />
-            ))}
+
+          <div>
+            {" "}
+            <div className="flex flex-col gap-5 items-start justify-start mb-5">
+              <div className="font-semibold text-2xl">Description</div>
+              <div className="text-[16px]">{moto.desc}</div>
+            </div>
+            <div>
+              <div className="font-light text-xl underline">
+                More From This Dealer
+              </div>
+              <div className="w-full flex justify-start items-start gap-8 overflow-hidden p-4">
+                {motoMore.map((moto) => (
+                  <ProductCard key={moto.id} moto={moto} />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 

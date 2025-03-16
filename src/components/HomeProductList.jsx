@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import HomeProduct from "./HomeProduct";
+import ProductCard from "./ProductCard";
 import supabase from "../supabase-client";
 
 const HomeProductList = ({ condition }) => {
@@ -44,7 +44,7 @@ const HomeProductList = ({ condition }) => {
       </div>
       <div className="w-full flex justify-start items-start gap-8 overflow-hidden p-4">
         {motorcycles.map((moto) => (
-          <HomeProduct key={moto.id} moto={moto} />
+          <ProductCard key={moto.id} moto={moto} />
         ))}
       </div>
     </div>
