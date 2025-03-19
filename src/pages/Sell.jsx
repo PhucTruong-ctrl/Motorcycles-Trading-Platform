@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import supabase from "../supabase-client";
 import Select from "react-dropdown-select";
 import { motorcycleData } from "../data/motorcycleData";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import ProductCard from "../components/ProductCard";
+import Loading from "../components/Loading";
 
 const Sell = () => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [NewMoto, setNewMoto] = useState({
     uid: "",
     brand: "",
@@ -25,7 +28,7 @@ const Sell = () => {
     image_url: [],
   });
   const [selectedFile, setSelectedFile] = useState([]);
-  const [brands, setBrands] = useState([]); // State để lưu danh sách brand
+  const [brands, setBrands] = useState([]);
 
   const typeOptions = [
     { value: "naked", label: "Naked" },
@@ -39,9 +42,9 @@ const Sell = () => {
     { value: "underbones", label: "Underbones" },
   ];
 
-  const [filteredBrands, setFilteredBrands] = useState([]); // Lưu danh sách brand sau khi lọc
-  const [filteredModels, setFilteredModels] = useState([]); // Lưu danh sách model sau khi lọc
-  const [filteredTrims, setFilteredTrims] = useState([]); // Lưu danh sách trim sau khi lọc
+  const [filteredBrands, setFilteredBrands] = useState([]);
+  const [filteredModels, setFilteredModels] = useState([]);
+  const [filteredTrims, setFilteredTrims] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,14 +60,14 @@ const Sell = () => {
           }));
         }
 
-        const { data, error } = await supabase.from("BRAND").select("*"); // Lấy tất cả các brand
+        const { data, error } = await supabase.from("BRAND").select("*");
 
         if (error) {
           throw error;
         }
 
-        console.log("Fetched brands:", data); // Kiểm tra dữ liệu brand
-        setBrands(data || []); // Lưu danh sách brand vào state
+        console.log("Fetched brands:", data);
+        setBrands(data || []);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -77,22 +80,21 @@ const Sell = () => {
     if (selectedOptions.length > 0) {
       const selectedType = selectedOptions[0].value;
 
-      // Lọc danh sách brand dựa trên type đã chọn
       const brandsForType = Object.keys(motorcycleData).filter((brand) =>
         Object.keys(motorcycleData[brand]).includes(selectedType)
       );
 
-      console.log("Filtered brands for type:", brandsForType); // Kiểm tra danh sách brand sau khi lọc
-      setFilteredBrands(brandsForType); // Cập nhật danh sách brand
-      setFilteredModels([]); // Reset danh sách model
-      setFilteredTrims([]); // Reset danh sách trim
+      console.log("Filtered brands for type:", brandsForType);
+      setFilteredBrands(brandsForType);
+      setFilteredModels([]);
+      setFilteredTrims([]);
 
       setNewMoto((prevState) => ({
         ...prevState,
         type: selectedType,
-        brand: "", // Reset brand khi type thay đổi
-        model: "", // Reset model khi type thay đổi
-        trim: "", // Reset trim khi type thay đổi
+        brand: "",
+        model: "",
+        trim: "",
       }));
     }
   };
@@ -101,20 +103,19 @@ const Sell = () => {
     if (selectedOptions.length > 0) {
       const selectedBrand = selectedOptions[0].value;
 
-      console.log("Selected brand:", selectedBrand); // Kiểm tra giá trị brand được chọn
+      console.log("Selected brand:", selectedBrand);
 
-      // Lọc danh sách model dựa trên type và brand đã chọn
       const modelsForBrandAndType =
         motorcycleData[selectedBrand]?.[NewMoto.type] || [];
 
-      setFilteredModels(modelsForBrandAndType); // Cập nhật danh sách model
-      setFilteredTrims([]); // Reset danh sách trim
+      setFilteredModels(modelsForBrandAndType);
+      setFilteredTrims([]);
 
       setNewMoto((prevState) => ({
         ...prevState,
-        brand: selectedBrand, // Lưu id của brand
-        model: "", // Reset model khi brand thay đổi
-        trim: "", // Reset trim khi brand thay đổi
+        brand: selectedBrand,
+        model: "",
+        trim: "",
       }));
     }
   };
@@ -122,13 +123,13 @@ const Sell = () => {
   const handleModelChange = (selectedOptions) => {
     if (selectedOptions.length > 0) {
       const selectedModel = selectedOptions[0].value;
-      // Get trims for the selected model
+
       const modelDetails = motorcycleData[NewMoto.brand]?.[NewMoto.type]?.find(
         (model) => model.model === selectedModel
       );
       const trimsForModel = modelDetails?.trims || [];
       setFilteredTrims(trimsForModel);
-      // Reset trim and engine_size when model changes
+
       setNewMoto((prevState) => ({
         ...prevState,
         model: selectedModel,
@@ -141,7 +142,7 @@ const Sell = () => {
   const handleTrimChange = (selectedOptions) => {
     if (selectedOptions.length > 0) {
       const selectedTrimName = selectedOptions[0].value;
-      // Find the selected trim object to get engine_size
+
       const selectedTrim = filteredTrims.find(
         (trim) => trim.name === selectedTrimName
       );
@@ -163,7 +164,7 @@ const Sell = () => {
 
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
-    setSelectedFile((prevFiles) => [...files.toReversed(), ...prevFiles]); // Thêm ảnh mới lên đầu
+    setSelectedFile((prevFiles) => [...files.toReversed(), ...prevFiles]);
   };
 
   const removeFile = (index) => {
@@ -198,10 +199,14 @@ const Sell = () => {
     return urls;
   };
 
+  const addButton = () => {
+    setLoading(true);
+  };
+
   const addMoto = async (e) => {
     e.preventDefault();
 
-    console.log("NewMoto before submission:", NewMoto); // In ra NewMoto để kiểm tra giá trị
+    console.log("NewMoto before submission:", NewMoto);
 
     if (!NewMoto.uid) {
       alert("User not found. Please log in again.");
@@ -219,11 +224,10 @@ const Sell = () => {
         }
       }
 
-      // Tìm tên brand từ danh sách brands
       const selectedBrand = brands.find(
         (brand) => brand.name === NewMoto.brand
       );
-      console.log("Selected brand:", selectedBrand); // Kiểm tra giá trị selectedBrand
+      console.log("Selected brand:", selectedBrand);
 
       if (!selectedBrand) {
         alert("Invalid brand selected. Please try again.");
@@ -235,7 +239,7 @@ const Sell = () => {
       const { data, error } = await supabase.from("MOTORCYCLE").insert([
         {
           ...NewMoto,
-          brand: brandName, // Chèn tên brand vào cột brand
+          brand: brandName,
           model: NewMoto.model,
           trim: NewMoto.trim,
           image_url: imageUrls,
@@ -249,7 +253,6 @@ const Sell = () => {
       console.log("Motorcycle added successfully:", data);
       alert("Motorcycle added successfully!");
 
-      // Reset form after success
       setNewMoto({
         uid: user.id,
         brand: "",
@@ -268,8 +271,10 @@ const Sell = () => {
         image_url: [],
       });
       setSelectedFile([]);
+      setLoading(false);
     } catch (error) {
       console.error("Error adding motorcycle:", error);
+      setLoading(false);
       alert("Error adding motorcycle. Please try again.");
     }
   };
@@ -281,28 +286,37 @@ const Sell = () => {
           <Header />
         </header>
 
-        <div className="border-4 flex justify-center items-center">
+        <div className="flex flex-row justify-evenly items-center">
           <form
-            className="flex flex-col gap-5 items-center justify-center w-200 border-2 border-red"
+            className="flex flex-col gap-3 items-center justify-center w-200 bg-white shadow-md shadow-grey p-10 rounded-[6px]"
             onSubmit={addMoto}
           >
-            <div className="grid grid-cols-2 gap-5 w-full">
-              <div className="flex flex-col border-2 w-full">
-                <div>Type</div>
+            <div className="self-start flex flex-col gap-1 pb-5 border-b-1 border-grey">
+              <div className="font-bold text-4xl">Sell Your Motorcycle</div>
+              <div className="">
+                List with confidence. With fraud protection and first class
+                customer service, you'll be protected every step of the way.
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-5">
+              <div className="flex flex-col w-full">
+                <div className="font-bold text-xl p-2 text-center">Type</div>
                 <Select
                   options={typeOptions}
                   onChange={handleTypeChange}
                   values={typeOptions.filter(
                     (option) => option.value === NewMoto.type
                   )}
-                  placeholder="Select a type"
+                  placeholder="Select type"
                   searchable
-                  className="border-2"
+                  className="text-[18px]"
+                  required
                 />
               </div>
 
-              <div className="flex flex-col border-2 w-full">
-                <div>Brand</div>
+              <div className="flex flex-col w-full">
+                <div className="font-bold text-xl p-2 text-center">Brand</div>
                 <Select
                   options={filteredBrands.map((brand) => ({
                     label: brand,
@@ -312,17 +326,16 @@ const Sell = () => {
                   values={filteredBrands
                     .map((brand) => ({ label: brand, value: brand }))
                     .filter((option) => option.value === NewMoto.brand)}
-                  placeholder="Select a brand"
+                  placeholder="Select brand"
                   searchable
-                  className="border-2"
-                  disabled={!NewMoto.type} // Vô hiệu hóa nếu chưa chọn type
+                  className="text-[18px]"
+                  disabled={!NewMoto.type}
+                  required
                 />
               </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-5 w-full">
-              <div className="flex flex-col border-2 w-full">
-                <div>Model</div>
+              <div className="flex flex-col w-full">
+                <div className="font-bold text-xl p-2 text-center">Model</div>
                 <Select
                   options={filteredModels.map((model) => ({
                     label: model.model,
@@ -335,130 +348,212 @@ const Sell = () => {
                       value: model.model,
                     }))
                     .filter((option) => option.value === NewMoto.model)}
-                  placeholder="Select a model"
+                  placeholder="Select model"
                   searchable
-                  className="border-2"
-                  disabled={!NewMoto.brand} // Vô hiệu hóa nếu chưa chọn brand
+                  className="text-[18px]"
+                  disabled={!NewMoto.brand}
+                  required
                 />
               </div>
 
-              <div className="flex flex-col border-2 w-full">
-                <div>Trims</div>
+              <div className="flex flex-col w-full">
+                <div className="font-bold text-xl p-2 text-center">Trims</div>
                 <Select
                   options={filteredTrims.map((trim) => ({
-                    label: trim.name, // Use trim.name as label
-                    value: trim.name, // Use trim.name as value
+                    label: trim.name,
+                    value: trim.name,
                   }))}
                   onChange={handleTrimChange}
                   values={filteredTrims
                     .map((trim) => ({ label: trim.name, value: trim.name }))
                     .filter((option) => option.value === NewMoto.trim)}
-                  placeholder="Select a trim"
+                  placeholder="Select trim"
                   searchable
-                  className="border-2"
+                  className="text-[18px]"
                   disabled={!NewMoto.model}
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col gap-3 justify-center items-center w-full">
+                <div className="font-bold text-xl p-2 text-center">Year</div>
+                <input
+                  type="number"
+                  name="year"
+                  className="border-2 border-grey rounded-[4px] p-2 w-full"
+                  placeholder="Enter Manufacture Year"
+                  value={NewMoto.year}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              {NewMoto.condition !== "New" && (
+                <div className="flex flex-col gap-3 justify-center items-center w-full">
+                  <div className="font-bold text-xl p-2 text-center">
+                    Mileage
+                  </div>
+                  <input
+                    type="number"
+                    name="mile"
+                    className="border-2 border-grey rounded-[4px] p-2 w-full"
+                    placeholder="Enter Current Mileage"
+                    value={NewMoto.mile}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              )}
+              <div className="flex flex-col gap-3 justify-center items-center w-full">
+                <div className="font-bold text-xl p-2 text-center">
+                  Engine Number
+                </div>
+                <input
+                  type="text"
+                  name="engine_num"
+                  className="border-2 border-grey rounded-[4px] p-2 w-full"
+                  placeholder="Enter Engine Number"
+                  value={NewMoto.engine_num}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-3 justify-center items-center w-full">
+                <div className="font-bold text-xl p-2 text-center">
+                  Chassis Number
+                </div>
+                <input
+                  type="text"
+                  name="chassis_num"
+                  className="border-2 border-grey rounded-[4px] p-2 w-full"
+                  placeholder="Enter Chassis Number"
+                  value={NewMoto.chassis_num}
+                  onChange={handleInputChange}
+                  required
                 />
               </div>
             </div>
 
-            {NewMoto.condition !== "New" && (
+            <div className="w-full flex flex-col gap-3 justify-center items-center">
+              <div className="font-bold text-xl">Condition</div>
+              <ul className="grid w-full gap-6 grid-cols-2">
+                <li className="">
+                  <input
+                    type="radio"
+                    id="used"
+                    name="condition"
+                    className="hidden peer"
+                    value="Used"
+                    checked={NewMoto.condition === "Used"}
+                    onChange={handleInputChange}
+                    required
+                  />
+                  <label
+                    htmlFor="used"
+                    className="inline-flex items-center justify-between w-full h-40 p-5 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition  "
+                  >
+                    <div className="block">
+                      <div className="w-full text-xl font-semibold">Used</div>
+                      <div className="w-full">
+                        Preloved motorcycle with stories to tell
+                      </div>
+                    </div>
+                  </label>
+                </li>
+                <li>
+                  <input
+                    type="radio"
+                    id="new"
+                    name="condition"
+                    className="hidden peer"
+                    value="New"
+                    checked={NewMoto.condition === "New"}
+                    onChange={handleInputChange}
+                    required
+                  />
+                  <label
+                    htmlFor="new"
+                    className="inline-flex items-center justify-between w-full h-40 p-5 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition  "
+                  >
+                    <div className="relative block overflow-hidden">
+                      <div className="w-full text-xl font-semibold">New</div>
+                      <div className="w-full">
+                        Brand new motorcycle without any thought!
+                      </div>
+                    </div>
+                  </label>
+                </li>
+              </ul>
+            </div>
+
+            <div className="flex flex-col gap-3 justify-center items-center w-full">
+              <div className="font-bold text-xl p-2 text-center">
+                Description
+              </div>
               <input
                 type="text"
-                name="mile"
-                className="border-2"
-                placeholder="mile"
-                value={NewMoto.mile}
+                name="desc"
+                className="border-2 border-grey rounded-[4px] p-2 w-full min-h-50"
+                placeholder="Enter Description"
+                value={NewMoto.desc}
                 onChange={handleInputChange}
-              />
-            )}
-            <input
-              type="text"
-              name="year"
-              className="border-2"
-              placeholder="year"
-              value={NewMoto.year}
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="engine_num"
-              className="border-2"
-              placeholder="engine num"
-              value={NewMoto.engine_num}
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="chassis_num"
-              className="border-2"
-              placeholder="chassis num"
-              value={NewMoto.chassis_num}
-              onChange={handleInputChange}
-            />
-            <div>
-              registration
-              <input
-                type="checkbox"
-                name="registration"
-                className="border-2"
-                checked={NewMoto.registration}
-                onChange={handleInputChange}
+                required
               />
             </div>
-            <div>
-              condition <br />
-              Used
-              <input
-                type="radio"
-                name="condition"
-                value="Used"
-                checked={NewMoto.condition === "Used"}
-                onChange={handleInputChange}
-              />
-              New
-              <input
-                type="radio"
-                name="condition"
-                value="New"
-                checked={NewMoto.condition === "New"}
-                onChange={handleInputChange}
-              />
+
+            <div className="flex flex-row gap-3 justify-center items-center w-full">
+              <div className="flex flex-col gap-3 justify-center items-center w-full">
+                <div className="font-bold text-xl p-2 text-center">Price</div>
+                <input
+                  type="number"
+                  name="price"
+                  className="border-2 border-grey rounded-[4px] p-2 w-full"
+                  placeholder="Enter Price"
+                  value={NewMoto.price}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-3 justify-center items-center w-full">
+                <div className="font-bold text-xl p-2 text-center">
+                  Registration
+                </div>
+                <input
+                  type="checkbox"
+                  name="registration"
+                  className="border-2 w-5 h-5"
+                  checked={NewMoto.registration}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
             </div>
-            <input
-              type="text"
-              name="desc"
-              className="border-2"
-              placeholder="desc"
-              value={NewMoto.desc}
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="price"
-              className="border-2"
-              placeholder="price"
-              value={NewMoto.price}
-              onChange={handleInputChange}
-            />
-            {}
-            <div>
-              <label>Upload Images:</label>
+
+            <div className="flex flex-col">
+              <label
+                htmlFor="img_input"
+                className="block mb-2 font-bold text-xl p-2 text-center"
+              >
+                Upload Images:
+              </label>
               <input
+                id="img_input"
                 type="file"
                 accept="image/*"
                 multiple
+                placeholder=""
                 onChange={handleFileSelect}
+                className="p-5 text-sm text-gray-900 border-2 border-gray rounded-[6px] cursor-pointer bg-gray-50 hover:scale-105 transition"
+                required
               />
-              <div className="flex gap-2 mt-2">
+              <div className="grid grid-cols-2 md:grid-cols-4 w-full gap-2 mt-5 rounded-[6px] max-h-100 overflow-y-scroll">
                 {selectedFile.map((file, index) => (
                   <div key={index} className="relative">
                     <img
                       src={URL.createObjectURL(file)}
                       alt="Selected"
-                      className="w-32 h-32 object-cover"
+                      className="w-30 h-30 object-cover rounded-[6px]"
                     />
                     <button
-                      className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
+                      className="absolute top-0 right-0 bg-black text-white rounded-[6px] p-1"
                       onClick={() => removeFile(index)}
                     >
                       ✕
@@ -468,12 +563,19 @@ const Sell = () => {
               </div>
             </div>
 
-            <button type="submit" className="bg-amber-800">
-              Add Motorcycle
+            <button
+              type="submit"
+              className="w-full rounded-[6px] bg-black text-white text-2xl font-bold p-3 hover:scale-105 transition"
+              onClick={addButton}
+            >
+              {loading === false && <div>Sell My Motorcycle</div>}
+              {loading === true && <Loading />}
             </button>
           </form>
+
+          {/* <div><ProductCard/></div> */}
         </div>
-        <div className="mb-5">
+        <div className="mt-5">
           <Footer />
         </div>
       </main>

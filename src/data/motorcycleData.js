@@ -794,13 +794,26 @@ export const motorcycleData = {
         ],
       },
       {
+        model: "YZF-R7",
+        trims: [
+          { name: "Standard", engine_size: "699" },
+          { name: "ABS", engine_size: "699" },
+        ],
+      },
+      {
+        model: "YZF-R9",
+        trims: [
+          { name: "Standard", engine_size: "899" },
+          { name: "ABS", engine_size: "899" },
+        ],
+      },
+      {
         model: "YZF-R1",
         trims: [
           { name: "Standard", engine_size: "998" },
           { name: "M", engine_size: "998" },
         ],
       },
-      { model: "YZF-R1M", trims: [{ name: "Standard", engine_size: "998" }] },
     ],
     offroad: [
       { model: "WR250F", trims: [{ name: "Standard", engine_size: "249" }] },

@@ -5,7 +5,7 @@ import supabase from "../supabase-client";
 const EditDeleteButton = ({ motoUID, motoID, currentUserId }) => {
   const navigate = useNavigate();
   if (currentUserId !== motoUID) {
-    alert("Bạn không có quyền thực hiện thao tác này!");
+    alert("You dont have permission to do this!");
     return;
   }
 
@@ -14,7 +14,7 @@ const EditDeleteButton = ({ motoUID, motoID, currentUserId }) => {
   };
 
   const handleDelete = async () => {
-    if (window.confirm("Bạn chắc chắn muốn xóa sản phẩm này?")) {
+    if (window.confirm("Are you sure you want delete this?")) {
       try {
         // 1. Lấy dữ liệu sản phẩm để có danh sách hình ảnh
         const { data: motoData, error: fetchError } = await supabase
@@ -48,11 +48,11 @@ const EditDeleteButton = ({ motoUID, motoID, currentUserId }) => {
           .eq("uid", motoUID);
         if (error) throw error;
 
-        alert("Xóa thành công!");
+        alert("Delete complete!");
         window.location.reload();
       } catch (error) {
-        console.error("Lỗi xóa sản phẩm:", error);
-        alert("Xóa thất bại!");
+        console.error("Delete error:", error);
+        alert("Delete failed");
       }
     }
   };
@@ -63,13 +63,13 @@ const EditDeleteButton = ({ motoUID, motoID, currentUserId }) => {
         onClick={handleEdit}
         className="w-full text-[16px] text-left rounded-[6px] flex flex-row gap-1 p-2 hover:bg-[#efeeee] hover:shadow-md transition"
       >
-        <img src="icons/Edit.svg" alt="" /> Sửa
+        <img src="icons/Edit.svg" alt="" /> Edit
       </button>
       <button
         onClick={handleDelete}
         className="w-full text-[16px] text-left rounded-[6px] flex flex-row gap-1 p-2 hover:bg-[#efeeee] hover:shadow-md transition"
       >
-        <img src="icons/Delete.svg" alt="" /> Xóa
+        <img src="icons/Delete.svg" alt="" /> Delete
       </button>
     </div>
   );

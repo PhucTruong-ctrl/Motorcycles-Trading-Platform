@@ -33,7 +33,7 @@ const HomePageBanner = () => {
             make it yours.
           </p>
         </div>
-        <Button textValue={"Browse"} bg_color={"blue"} text_color={"white"} icons={"icons/Search.svg"}/>
+        <Button textValue={"Browse"} bg_color={"blue"} text_color={"white"} icons={"icons/Search.svg"} link={"browse"}/>
       </div>
 
       {/* Right Section */}

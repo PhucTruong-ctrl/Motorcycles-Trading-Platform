@@ -144,8 +144,8 @@ const EditProduct = () => {
 
       setDeletedImages((prev) => [...prev, imageUrl]);
     } catch (error) {
-      console.error("Lỗi xóa ảnh:", error);
-      alert("Xóa ảnh thất bại!");
+      console.error("Image delete error:", error);
+      alert("Image delete failed!");
     }
   };
 
@@ -154,7 +154,7 @@ const EditProduct = () => {
     const reverseFiles = selectedFiles.toReversed();
     const newUrls = [];
     for (const file of reverseFiles) {
-      // Tạo path theo định dạng: motorcycle-media/{user_id}/filename
+
       const filePath = `${moto.uid}/${Date.now()}-${file.name}`;
 
       const { error } = await supabase.storage
@@ -190,7 +190,7 @@ const EditProduct = () => {
         .from("MOTORCYCLE")
         .update(payload)
         .eq("id", id)
-        .eq("uid", moto.uid); // Thêm điều kiện uid
+        .eq("uid", moto.uid); 
 
       if (error) throw error;
 
@@ -204,17 +204,17 @@ const EditProduct = () => {
       }
 
       if (!moto.type || !moto.brand || !moto.model) {
-        alert("Vui lòng điền đầy đủ thông tin bắt buộc");
+        alert("Please fill all the information");
         return;
       }
 
-      alert("Cập nhật thành công!");
+      alert("Update complete!");
       navigate(
         `/${moto.type}/${moto.brand}/${moto.model}/${moto.trim}/${moto.year}/${moto.uid}/${moto.id}`
       );
     } catch (error) {
-      console.error("Lỗi cập nhật:", error);
-      alert("Cập nhật thất bại!");
+      console.error("Update error:", error);
+      alert("Update failed!");
     }
   };
 
@@ -269,29 +269,90 @@ const EditProduct = () => {
             />
           </div>
 
-          {}
-          <input
-            name="mile"
-            value={moto.mile}
-            onChange={(e) =>
-              setMoto((prev) => ({
-                ...prev,
-                mile: e.target.value,
-              }))
-            }
-            className="border-2"
-          />
-          <input
-            name="mile"
-            value={moto.year}
-            onChange={(e) =>
-              setMoto((prev) => ({
-                ...prev,
-                year: e.target.value,
-              }))
-            }
-            className="border-2"
-          />
+          <div>
+            <div>Mileage</div>
+            <input
+              name="mile"
+              value={moto.mile}
+              onChange={(e) =>
+                setMoto((prev) => ({
+                  ...prev,
+                  mile: e.target.value,
+                }))
+              }
+              className="border-2"
+            />
+          </div>
+          <div>
+            <div>Year</div>
+            <input
+              name="year"
+              value={moto.year}
+              onChange={(e) =>
+                setMoto((prev) => ({
+                  ...prev,
+                  year: e.target.value,
+                }))
+              }
+              className="border-2"
+            />
+          </div>
+          <div>
+            <div>Description</div>
+            <input
+              name="desc"
+              value={moto.desc}
+              onChange={(e) =>
+                setMoto((prev) => ({
+                  ...prev,
+                  desc: e.target.value,
+                }))
+              }
+              className="border-2"
+            />
+          </div>
+          <div>
+            <div>Engine Number</div>
+            <input
+              name="engine_num"
+              value={moto.engine_num}
+              onChange={(e) =>
+                setMoto((prev) => ({
+                  ...prev,
+                  engine_num: e.target.value,
+                }))
+              }
+              className="border-2"
+            />
+          </div>
+          <div>
+            <div>Chasiss Number</div>
+            <input
+              name="chassis_num"
+              value={moto.chassis_num}
+              onChange={(e) =>
+                setMoto((prev) => ({
+                  ...prev,
+                  chassis_num: e.target.value,
+                }))
+              }
+              className="border-2"
+            />
+          </div>
+          <div>
+            <div>Price</div>
+            <input
+              name="price"
+              value={moto.price}
+              onChange={(e) =>
+                setMoto((prev) => ({
+                  ...prev,
+                  price: e.target.value,
+                }))
+              }
+              className="border-2"
+            />
+          </div>
 
           {}
           <div className="image-section">

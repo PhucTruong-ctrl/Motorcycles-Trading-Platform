@@ -1,11 +1,20 @@
-import React from 'react'
+import React from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const Profile = () => {
   return (
     <div>
-      
+      <main className="my-[15px] mx-[25px]">
+        <header className="mb-5">
+          <Header />
+        </header>
+        <div className="mt-5">
+          <Footer />
+        </div>
+      </main>
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

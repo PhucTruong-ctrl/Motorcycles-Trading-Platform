@@ -37,7 +37,7 @@ const Header = () => {
               src="/icons/About.svg"
               className="w-[39px] h-[42px] block md:hidden"
             ></img>
-            <span className="hidden md:block">About Us</span>
+            <span className="hidden md:block">About Me</span>
           </button>
         </Link>
 
