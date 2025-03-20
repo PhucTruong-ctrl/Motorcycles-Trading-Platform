@@ -31,9 +31,8 @@ const AuthContext = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false); 
+        setIsMenuOpen(false);
       }
     };
 
@@ -42,77 +41,75 @@ const AuthContext = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isMenuOpen]); 
+  }, [isMenuOpen]);
 
   const uploadAvatarToSupabase = async (imageUrl, userId) => {
     try {
-      // Fetch ảnh từ Google
       const response = await fetch(imageUrl);
-      if (!response.ok) throw new Error('Failed to fetch image');
-  
-      // Lấy loại file từ header
-      const contentType = response.headers.get('Content-Type');
-      const fileExt = contentType?.split('/')[1] || 'jpg';
+      if (!response.ok) throw new Error("Failed to fetch image");
+
+      const contentType = response.headers.get("Content-Type");
+      const fileExt = contentType?.split("/")[1] || "jpg";
       const fileName = `${userId}-${Date.now()}.${fileExt}`;
       const blob = await response.blob();
-  
-      // Upload vào folder có tên là userId
-      const folderPath = `${userId}/${fileName}`; // Đường dẫn folder
+
+      const folderPath = `${userId}/${fileName}`;
       const { data, error } = await supabase.storage
-        .from('user-media')
+        .from("user-media")
         .upload(folderPath, blob, {
-          cacheControl: '3600', // Cache 1 giờ
-          upsert: false, // Không ghi đè file nếu tồn tại
+          cacheControl: "3600",
+          upsert: false,
         });
-  
+
       if (error) throw error;
-  
-      // Lấy public URL của file đã upload
-      const { data: { publicUrl } } = supabase.storage
-        .from('user-media')
-        .getPublicUrl(data.path);
-  
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("user-media").getPublicUrl(data.path);
+
       return publicUrl;
     } catch (error) {
-      console.error('Error uploading avatar:', error);
+      console.error("Error uploading avatar:", error);
       return null;
     }
   };
 
   const handleUserCreation = async (user) => {
-    const { data: existingUser, error: selectError } = await supabase
-      .from("USER")
-      .select("*")
-      .eq("email", user.email)
-      .single();
-  
-    if (selectError) {
-      console.error("Error fetching user:", selectError); // Sử dụng selectError để log lỗi
-      return;
-    }
-  
-    if (!existingUser) {
-      let avatarUrl = user.user_metadata.avatar_url;
-  
-      if (avatarUrl) {
-        const newAvatarUrl = await uploadAvatarToSupabase(avatarUrl, user.id);
-        if (newAvatarUrl) avatarUrl = newAvatarUrl;
-      }
-  
-      const { error: insertError } = await supabase
+    try {
+      const { data: existingUser, error: selectError } = await supabase
         .from("USER")
-        .insert([{
-          uid: user.id,
-          email: user.email,
-          name: user.user_metadata.full_name,
-          avatar_url: avatarUrl,
-        }])
-        .single();
-  
-      if (insertError) console.error("Error inserting user:", insertError);
+        .select("*")
+        .eq("email", user.email)
+        .maybeSingle();
+
+      if (selectError) throw selectError;
+
+      if (!existingUser) {
+        let avatarUrl = user.user_metadata.avatar_url;
+
+        if (avatarUrl) {
+          const newAvatarUrl = await uploadAvatarToSupabase(avatarUrl, user.id);
+          if (newAvatarUrl) avatarUrl = newAvatarUrl;
+        }
+
+        const { error: insertError } = await supabase
+          .from("USER")
+          .insert([
+            {
+              uid: user.id,
+              email: user.email,
+              name: user.user_metadata.full_name,
+              avatar_url: avatarUrl,
+            },
+          ])
+          .single();
+
+        if (insertError) throw insertError;
+      }
+    } catch (error) {
+      console.error("Error in handleUserCreation:", error);
     }
   };
-
   const signUp = async () => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
