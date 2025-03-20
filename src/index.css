@@ -12,6 +12,10 @@
   --color-blue: #07246d;
   --color-bright-blue: #0e3599;
 
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-l: 20px;
+
   --font-roboto: Roboto, sans-serif;
 }
 
