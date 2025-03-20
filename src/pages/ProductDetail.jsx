@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import supabase from "../supabase-client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -289,13 +289,17 @@ const MotoDetail = () => {
                 >
                   {user && (
                     <div className="flex items-center gap-2">
-                      <img
-                        src={user.avatar_url}
-                        alt={user.name}
-                        className="w-[60px] sm:w-[80px] md:w-[95px] h-auto rounded-full"
-                      />
+                      <Link to={`/${user?.uid}/profile`}>
+                        <img
+                          src={user.avatar_url}
+                          alt={user.name}
+                          className="w-[60px] sm:w-[80px] md:w-[95px] h-auto rounded-full"
+                        />
+                      </Link>
                       <div className="flex flex-col items-start gap-1">
-                        <div className="font-bold text-2xl">{user.name}</div>
+                        <Link to={`/${user?.uid}/profile`}>
+                          <div className="font-bold text-2xl">{user.name}</div>
+                        </Link>
                         <div className="flex flex-row gap-1 font-light text-grey text-nowrap text-[15px]">
                           <img src="/icons/Location.svg" alt="" />{" "}
                           {user.address}
