@@ -31,58 +31,85 @@ const AuthContext = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Nếu menu đang mở và click xảy ra bên ngoài menu
+
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false); // Đóng menu
+        setIsMenuOpen(false); 
       }
     };
 
-    // Thêm sự kiện lắng nghe
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Dọn dẹp sự kiện khi component unmount
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isMenuOpen]); // Chỉ chạy lại khi isMenuOpen thay đổi
+  }, [isMenuOpen]); 
+
+  const uploadAvatarToSupabase = async (imageUrl, userId) => {
+    try {
+      // Fetch ảnh từ Google
+      const response = await fetch(imageUrl);
+      if (!response.ok) throw new Error('Failed to fetch image');
+  
+      // Lấy loại file từ header
+      const contentType = response.headers.get('Content-Type');
+      const fileExt = contentType?.split('/')[1] || 'jpg';
+      const fileName = `${userId}-${Date.now()}.${fileExt}`;
+      const blob = await response.blob();
+  
+      // Upload vào folder có tên là userId
+      const folderPath = `${userId}/${fileName}`; // Đường dẫn folder
+      const { data, error } = await supabase.storage
+        .from('user-media')
+        .upload(folderPath, blob, {
+          cacheControl: '3600', // Cache 1 giờ
+          upsert: false, // Không ghi đè file nếu tồn tại
+        });
+  
+      if (error) throw error;
+  
+      // Lấy public URL của file đã upload
+      const { data: { publicUrl } } = supabase.storage
+        .from('user-media')
+        .getPublicUrl(data.path);
+  
+      return publicUrl;
+    } catch (error) {
+      console.error('Error uploading avatar:', error);
+      return null;
+    }
+  };
 
   const handleUserCreation = async (user) => {
     const { data: existingUser, error: selectError } = await supabase
-
       .from("USER")
-
       .select("*")
-
       .eq("email", user.email)
-
       .single();
-
+  
+    if (selectError) {
+      console.error("Error fetching user:", selectError); // Sử dụng selectError để log lỗi
+      return;
+    }
+  
     if (!existingUser) {
-      const { data: newUser, error: insertError } = await supabase
-
-        .from("USER")
-
-        .insert([
-          {
-            uid: user.id,
-
-            email: user.email,
-
-            name: user.user_metadata.full_name,
-
-            avatar_url: user.user_metadata.avatar_url,
-          },
-        ])
-
-        .single();
-
-      if (insertError) {
-        console.error("Error inserting user:", insertError);
-      } else {
-        console.log("User created:", newUser);
+      let avatarUrl = user.user_metadata.avatar_url;
+  
+      if (avatarUrl) {
+        const newAvatarUrl = await uploadAvatarToSupabase(avatarUrl, user.id);
+        if (newAvatarUrl) avatarUrl = newAvatarUrl;
       }
-    } else {
-      console.log("User already exists:", existingUser);
+  
+      const { error: insertError } = await supabase
+        .from("USER")
+        .insert([{
+          uid: user.id,
+          email: user.email,
+          name: user.user_metadata.full_name,
+          avatar_url: avatarUrl,
+        }])
+        .single();
+  
+      if (insertError) console.error("Error inserting user:", insertError);
     }
   };
 
