@@ -6,7 +6,6 @@ import HomeBrandList from "../components/HomeBrandList";
 import HomeProductList from "../components/HomeProductList";
 import HomeSell from "../components/HomeSell";
 
-
 const HomePage = () => {
   return (
     <div>
