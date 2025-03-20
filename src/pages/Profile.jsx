@@ -8,11 +8,14 @@ import ProductCard from "../components/ProductCard";
 const Profile = () => {
   const { uid } = useParams();
   const [user, setUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const [moto, setMoto] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!uid) return;
+
     const fetchData = async () => {
       try {
         const { data: userData, error: userError } = await supabase
@@ -23,6 +26,7 @@ const Profile = () => {
 
         if (userError) throw userError;
 
+        console.log("User Data:", userData);
         setUser(userData);
 
         const { data: motoData, error: motoError } = await supabase
@@ -32,8 +36,10 @@ const Profile = () => {
 
         if (motoError) throw motoError;
 
+        console.log("Motorcycle Data:", motoData);
         setMoto(motoData);
       } catch (error) {
+        console.error("Error fetching data:", error);
         setError(error);
       } finally {
         setLoading(false);
@@ -41,7 +47,20 @@ const Profile = () => {
     };
 
     fetchData();
-  }, [uid, user]);
+  }, [uid]);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session?.user) {
+        setCurrentUser(session.user);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -49,10 +68,6 @@ const Profile = () => {
 
   if (error) {
     return <div>Error: {error.message}</div>;
-  }
-
-  if (!moto) {
-    return <div>Moto not found.</div>;
   }
 
   return (
@@ -66,18 +81,16 @@ const Profile = () => {
             <img
               src="/img/bannerDefault.png"
               alt=""
-              className="object-contain w-full"
+              className="object-cover w-full"
             />
           </div>
 
-          <div className="flex flex-row gap-6 w-full bg-white rounded-xl shadow-md relative">
-            <div className="min-w-[100px] min-h-[100px] md:min-w-[150px] md:min-h-[150px]">
-              <img
-                src={user?.avatar_url}
-                alt=""
-                className="w-full h-full rounded-xl"
-              />
-            </div>
+          <div className="flex flex-col md:flex-row gap-6 w-full bg-white rounded-xl shadow-md relative p-5">
+            <img
+              src={user?.avatar_url}
+              alt=""
+              className="w-[150px] h-[150px] rounded-xl border-2 border-grey"
+            />
             <div className="flex flex-row gap-6 justify-center items-center">
               <div className="flex flex-col gap-2.5">
                 <h2>{user?.name}</h2>
@@ -95,14 +108,11 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-            <Link
-              to={`/${user?.uid}/profile/edit`}
-              className="absolute right-5 top-5"
-            >
-              <button className="font-bold text-[24px] text-black">
+            {currentUser?.id === uid && (
+              <button className="font-bold text-[24px] text-black absolute right-5 top-5">
                 Edit Profile
               </button>
-            </Link>
+            )}
           </div>
 
           <div className="bg-white w-full h-20 rounded-xl shadow-md flex flex-row gap-12 justify-start items-center p-5">
