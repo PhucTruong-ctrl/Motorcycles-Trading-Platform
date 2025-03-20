@@ -27,7 +27,10 @@
   }
 
   h1 {
-    @apply text-[#1c1c1c] font-bold italic text-6xl inline-block tracking-[-1.28px];
+    @apply text-[#1c1c1c] font-bold text-6xl tracking-[-1.28px];
+  }
+  h2 {
+    @apply text-[#1c1c1c] font-bold text-4xl;
   }
   p {
     @apply text-[#1c1c1c] text-2xl;
