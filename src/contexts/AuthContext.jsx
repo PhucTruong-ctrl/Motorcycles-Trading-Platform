@@ -50,7 +50,7 @@ const AuthContext = () => {
 
       const { data: userData, error } = await supabase
         .from("USER")
-        .select("avatar_url, name, email")
+        .select("avatar_url")
         .eq("uid", session.user.id)
         .single();
 
@@ -120,7 +120,7 @@ const AuthContext = () => {
               uid: user.id,
               email: user.email,
               name: user.user_metadata.full_name,
-              avatar_url: avatarUrl,
+              avatar_url: avatarUrl, 
             },
           ])
           .single();
@@ -160,11 +160,11 @@ const AuthContext = () => {
             {user?.avatar_url ? (
               <img src={user.avatar_url} className="w-8 h-8 rounded-full" />
             ) : (
-              <span>{user?.email}</span>
+              <span>{session.user?.email}</span>
             )}
           </span>
         </button>
-        {isMenuOpen && <UserMenu user={user} />}
+        {isMenuOpen && <UserMenu user={session.user} />}
       </div>
     );
   }
