@@ -16,20 +16,18 @@ const ProductCard = ({ moto, currentUserId, isOwnerPage }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Nếu menu đang mở và click xảy ra bên ngoài menu
+
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false); // Đóng menu
+        setIsMenuOpen(false); 
       }
     };
 
-    // Thêm sự kiện lắng nghe
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Dọn dẹp sự kiện khi component unmount
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isMenuOpen]); // Chỉ chạy lại khi isMenuOpen thay đổi
+  }, [isMenuOpen]); 
 
   return (
     <div className="relative home-card" ref={menuRef}>

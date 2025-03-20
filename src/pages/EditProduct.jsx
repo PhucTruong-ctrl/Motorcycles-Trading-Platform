@@ -154,7 +154,6 @@ const EditProduct = () => {
     const reverseFiles = selectedFiles.toReversed();
     const newUrls = [];
     for (const file of reverseFiles) {
-
       const filePath = `${moto.uid}/${Date.now()}-${file.name}`;
 
       const { error } = await supabase.storage
@@ -186,11 +185,11 @@ const EditProduct = () => {
         image_url: [...moto.image_url, ...newImageUrls],
       };
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("MOTORCYCLE")
         .update(payload)
         .eq("id", id)
-        .eq("uid", moto.uid); 
+        .eq("uid", moto.uid);
 
       if (error) throw error;
 
