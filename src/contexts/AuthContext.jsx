@@ -3,6 +3,7 @@ import supabase from "../supabase-client";
 import UserMenu from "../components/UserMenu";
 
 const AuthContext = () => {
+  const [user, setUser] = useState(null);
   const [session, setSession] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -42,6 +43,26 @@ const AuthContext = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isMenuOpen]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!session?.user) return;
+
+      const { data: userData, error } = await supabase
+        .from("USER")
+        .select("avatar_url, name, email")
+        .eq("uid", session.user.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching user data:", error);
+      } else {
+        setUser(userData);
+      }
+    };
+
+    fetchUserData();
+  }, [session]);
 
   const uploadAvatarToSupabase = async (imageUrl, userId) => {
     try {
@@ -110,6 +131,7 @@ const AuthContext = () => {
       console.error("Error in handleUserCreation:", error);
     }
   };
+
   const signUp = async () => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -135,17 +157,14 @@ const AuthContext = () => {
           className="text-[18px] md:text-2xl text-nowrap"
         >
           <span>
-            {session?.user?.user_metadata?.avatar_url ? (
-              <img
-                src={session.user.user_metadata.avatar_url}
-                className="w-8 h-8 rounded-full"
-              />
+            {user?.avatar_url ? (
+              <img src={user.avatar_url} className="w-8 h-8 rounded-full" />
             ) : (
-              <span>{session?.user?.email}</span>
+              <span>{user?.email}</span>
             )}
           </span>
         </button>
-        {isMenuOpen && <UserMenu user={session.user} />}
+        {isMenuOpen && <UserMenu user={user} />}
       </div>
     );
   }
