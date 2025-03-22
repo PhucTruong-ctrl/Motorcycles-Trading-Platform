@@ -120,7 +120,7 @@ const AuthContext = () => {
               uid: user.id,
               email: user.email,
               name: user.user_metadata.full_name,
-              avatar_url: avatarUrl, 
+              avatar_url: avatarUrl,
             },
           ])
           .single();
@@ -158,7 +158,7 @@ const AuthContext = () => {
         >
           <span>
             {user?.avatar_url ? (
-              <img src={user.avatar_url} className="w-8 h-8 rounded-full" />
+              <img src={user.avatar_url} className="w-10 h-10 rounded-full" />
             ) : (
               <span>{session.user?.email}</span>
             )}

@@ -4,9 +4,8 @@ import Logo from "./Logo";
 import AuthContext from "../contexts/AuthContext";
 
 const Header = () => {
-
   return (
-    <div className="flex justify-between items-center border-b-1 border-grey pb-4">
+    <div className="flex justify-between items-center border-b-1 border-grey pb-5">
       <Logo></Logo>
 
       {/* Right Section */}
@@ -41,7 +40,7 @@ const Header = () => {
           </button>
         </Link>
 
-        <AuthContext/>
+        <AuthContext />
       </div>
     </div>
   );

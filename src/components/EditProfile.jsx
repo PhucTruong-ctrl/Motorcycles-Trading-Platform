@@ -104,10 +104,12 @@ const EditProfile = ({ user, onClose }) => {
         .eq("uid", user.uid)
         .select();
 
+      console.log("Data: ", data);
       if (error) throw error;
 
       onClose();
       alert("Profile updated successfully!");
+      window.location.reload();
     } catch (error) {
       console.error("Update error:", error);
       alert("Update failed!");
