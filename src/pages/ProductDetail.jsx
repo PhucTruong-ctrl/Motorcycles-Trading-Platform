@@ -301,8 +301,8 @@ const MotoDetail = () => {
                           <div className="font-bold text-2xl">{user.name}</div>
                         </Link>
                         <div className="flex flex-row gap-1 font-light text-grey text-nowrap text-[15px]">
-                          <img src="/icons/Location.svg" alt="" />{" "}
-                          {user.address}
+                          <img src="/icons/Location.svg" alt="" /> {user?.state}
+                          , {user?.city}
                         </div>
                       </div>
                     </div>

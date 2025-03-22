@@ -45,7 +45,7 @@ const BrowseProduct = ({ moto, user }) => {
               className="text-nowrap text-[13px] font-light text-black flex flex-row gap-1"
             >
               <img src="/icons/Location.svg" alt="" />
-              {user.address}
+              {user?.state}, {user?.city}
             </div>
           </div>
           <div id="Mid" className="flex flex-col justify-end items-start gap-1">
