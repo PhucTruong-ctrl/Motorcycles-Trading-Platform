@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link, useParams } from "react-router";
 import supabase from "../supabase-client";
 import Header from "../components/Header";
@@ -19,6 +19,8 @@ const MotoDetail = () => {
   const [viewsIncreased, setViewsIncreased] = useState(false);
 
   const imagesPerView = 7;
+
+  console.log(type, brand, model, trim, year);
 
   const formatNumber = (number) => {
     return new Intl.NumberFormat("en-US", {
@@ -80,7 +82,7 @@ const MotoDetail = () => {
     }
   };
 
-  const increaseViews = async () => {
+  const increaseViews = useCallback(async () => {
     if (!moto) {
       console.log("Moto is null, cannot increase views.");
       return;
@@ -95,7 +97,8 @@ const MotoDetail = () => {
         .from("MOTORCYCLE")
         .update({ views: moto.views + 1 })
         .eq("id", id)
-        .select();
+        .select("*")
+        .single();
 
       if (error) {
         console.error("Error updating views:", error);
@@ -108,12 +111,14 @@ const MotoDetail = () => {
         );
         setMoto((prevMoto) => ({ ...prevMoto, views: data[0].views }));
       } else {
-        console.error("No data returned after update.");
+        console.error(
+          "No data returned after update. Check if the ID is valid."
+        );
       }
     } catch (error) {
       console.error("Error increasing views:", error);
     }
-  };
+  }, [moto, id]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -165,7 +170,7 @@ const MotoDetail = () => {
       increaseViews();
       setViewsIncreased(true);
     }
-  }, [moto, viewsIncreased]);
+  }, [moto, viewsIncreased, increaseViews]);
 
   useEffect(() => {
     if (moto?.image_url?.length > 0) {
@@ -198,13 +203,13 @@ const MotoDetail = () => {
         </div>
 
         <div>
-          <div className="flex flex-col md:flex-row justify-center gap-15 items-center self-stretch rounded-[6px] mb-5">
-            <div className="flex flex-col gap-3.5 md:w-[1000px] md:h-fit rounded-[6px]">
+          <div className="flex flex-col md:flex-row justify-center gap-15 items-center self-stretch mb-5">
+            <div className="flex flex-col gap-3.5 md:w-[1000px] md:h-fit rounded-xl">
               <div className="relative flex flex-col justify-center items-center">
                 <img
                   id="mainImg"
                   src={mainImage || "/img/R7_Sample.jpg"}
-                  className="w-full md:w-full h-[700px] rounded-[6px] object-cover"
+                  className="w-full md:w-full h-[700px] rouned-sm object-cover"
                   alt="Main motorcycle"
                 />
                 <div className="absolute flex flex-row justify-between w-full">
@@ -223,13 +228,13 @@ const MotoDetail = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col justify-center items-center rounded-[6px]">
+              <div className="flex flex-col justify-center items-center">
                 {currentIndex > 0 && (
                   <button onClick={handlePrev} className="absolute self-start">
                     <img src="/icons/ArrowBack.svg" alt="Previous" />
                   </button>
                 )}
-                <div className="flex flex-row gap-3.5 overflow-hidden p-1">
+                <div className="flex flex-row justify-center items-center gap-3.5 overflow-hidden">
                   {moto.image_url
                     .slice(currentIndex, currentIndex + imagesPerView)
                     .map((img, index) => (
@@ -237,7 +242,7 @@ const MotoDetail = () => {
                         key={index}
                         src={img}
                         alt={`Thumbnail ${index + 1}`}
-                        className={`w-[130px] h-[100px] rounded-[6px] object-contain cursor-pointer hover:border-2 ${
+                        className={`w-[130px] h-[100px] rouned-sm object-contain cursor-pointer hover:border-2 ${
                           img === mainImage
                             ? "border-2 border-black"
                             : "border-0"
@@ -285,7 +290,7 @@ const MotoDetail = () => {
               <div id="ContactSeller" className="">
                 <div
                   id="SellerDetail"
-                  className="flex flex-col lg:flex-row justify-evenly items-center gap-3.5 self-stretch pt-5"
+                  className="flex flex-col md:flex-row justify-between items-center gap-5 md:gap-15 pt-5"
                 >
                   {user && (
                     <div className="flex items-center gap-2">
@@ -293,11 +298,14 @@ const MotoDetail = () => {
                         <img
                           src={user.avatar_url}
                           alt={user.name}
-                          className="w-[60px] sm:w-[80px] md:w-[95px] h-auto rounded-full"
+                          className="w-[60px] h-[60px] sm:min-w-[80px] sm:min-h-[80px] md:min-w-[95px] md:min-h-[95px] rounded-full shrink-0"
                         />
                       </Link>
                       <div className="flex flex-col items-start gap-1">
                         <Link to={`/${user?.uid}/profile`}>
+                          <div className="font-light text-grey text-[15px]">
+                            {user.badge}
+                          </div>
                           <div className="font-bold text-2xl">{user.name}</div>
                         </Link>
                         <div className="flex flex-row gap-1 font-light text-grey text-nowrap text-[15px]">
@@ -331,12 +339,12 @@ const MotoDetail = () => {
                     <input
                       type="text"
                       placeholder="First Name"
-                      className="rounded-[6px] border-[1px] border-grey h-10 bg-white w-full px-5"
+                      className="rouned-sm border-[1px] border-grey h-10 bg-white w-full px-5"
                     />
                     <input
                       type="text"
                       placeholder="Last Name"
-                      className="rounded-[6px] border-[1px] border-grey h-10 bg-white w-full px-5"
+                      className="rouned-sm border-[1px] border-grey h-10 bg-white w-full px-5"
                     />
                   </div>
                   <div className="flex flex-row gap-5 text-grey">
@@ -344,19 +352,19 @@ const MotoDetail = () => {
                       type="text"
                       placeholder="Email Address"
                       defaultValue={user.email}
-                      className="rounded-[6px] border-[1px] border-grey h-10 bg-white w-full px-5"
+                      className="rouned-sm border-[1px] border-grey h-10 bg-white w-full px-5"
                     />
                     <input
                       type="text"
                       placeholder="Phone Number"
                       defaultValue={user.phone_num}
-                      className="rounded-[6px] border-[1px] border-grey h-10 bg-white w-full px-5"
+                      className="rouned-sm border-[1px] border-grey h-10 bg-white w-full px-5"
                     />
                   </div>
                   <input
                     type="text"
                     placeholder="Message"
-                    className="rounded-[6px] border-[1px] border-grey h-10 bg-white w-full px-5"
+                    className="rouned-sm border-[1px] border-grey h-10 bg-white w-full px-5"
                     defaultValue={`Is this ${moto.brand} ${moto.model} ${moto.trim} still available? `}
                   />
                   <Button
