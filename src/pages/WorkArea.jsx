@@ -1,8 +1,9 @@
 import React from "react";
+import EditProfile from "../components/EditProfile";
 
 const WorkArea = () => {
   return (
-    <div></div>
+    <div><EditProfile/></div>
   );
 };
 

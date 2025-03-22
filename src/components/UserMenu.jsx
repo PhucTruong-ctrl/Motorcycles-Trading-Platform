@@ -54,13 +54,6 @@ const UserMenu = ({ user }) => {
           <img className="w-6 h-6" src="icons/User.svg" alt="" /> My Profile
         </Link>
         <Link
-          to={`/${currentUser.uid}/edit-info`}
-          className="w-full text-[16px] text-nowrap text-left rounded-[6px] flex flex-row gap-1 p-2 hover:bg-[#efeeee] hover:shadow-md transition"
-        >
-          <img className="w-6 h-6" src="icons/Edit.svg" alt="" /> Edit
-          information
-        </Link>
-        <Link
           to={`/${currentUser.uid}/listing`}
           className="w-full text-[16px] text-nowrap text-left rounded-[6px] flex flex-row gap-1 p-2 hover:bg-[#efeeee] hover:shadow-md transition"
         >
