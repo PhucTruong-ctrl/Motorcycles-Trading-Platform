@@ -37,8 +37,8 @@ const BrowseProduct = ({ moto, user }) => {
         >
           <div id="Top" className="flex flex-col justify-end items-start gap-1">
             <div id="Name" className="font-extrabold text-2xl text-black">
-              {moto.brand.toUpperCase()} {moto.model.toUpperCase()}{" "}
-              {moto.trim.toUpperCase()}
+              {moto.condition.toUpperCase()} {moto.brand.toUpperCase()}{" "}
+              {moto.model.toUpperCase()} {moto.trim.toUpperCase()}
             </div>
             <div
               id="Location"

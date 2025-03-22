@@ -51,27 +51,27 @@ const UserMenu = ({ user }) => {
           to={`/${currentUser.uid}/profile`}
           className="w-full text-[16px] text-nowrap text-left rounded-[6px] flex flex-row gap-1 p-2 hover:bg-[#efeeee] hover:shadow-md transition"
         >
-          <img className="w-6 h-6" src="icons/User.svg" alt="" /> My Profile
+          <img className="w-6 h-6" src="/icons/User.svg" alt="" /> My Profile
         </Link>
         <Link
           to={`/${currentUser.uid}/listing`}
           className="w-full text-[16px] text-nowrap text-left rounded-[6px] flex flex-row gap-1 p-2 hover:bg-[#efeeee] hover:shadow-md transition"
         >
-          <img className="w-6 h-6" src="icons/List.svg" alt="" /> View My
+          <img className="w-6 h-6" src="/icons/List.svg" alt="" /> View My
           Listing
         </Link>
-        <Link
+        {/* <Link
           to={`/${currentUser.uid}/purchases-history`}
           className="w-full text-[16px] text-nowrap text-left rounded-[6px] flex flex-row gap-1 p-2 hover:bg-[#efeeee] hover:shadow-md transition"
         >
           <img className="w-6 h-6" src="icons/HistoryBlack.svg" alt="" />{" "}
           Purchases History
-        </Link>
+        </Link> */}
         <button
           onClick={signOut}
           className="w-full text-[16px] text-nowrap text-left rounded-[6px] flex flex-row gap-1 p-2 hover:bg-[#efeeee] hover:shadow-md transition"
         >
-          <img className="w-6 h-6" src="icons/Logout.svg" alt="" /> Sign Out
+          <img className="w-6 h-6" src="/icons/Logout.svg" alt="" /> Sign Out
         </button>
       </div>
     </div>

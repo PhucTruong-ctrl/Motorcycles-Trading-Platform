@@ -169,6 +169,8 @@ const Profile = () => {
         .from("user-media")
         .upload(`${currentUser.id}/${fileName}`, file);
 
+      console.log(uploadData);
+
       if (uploadError) throw uploadError;
 
       const { data: publicUrlData } = supabase.storage
@@ -191,7 +193,7 @@ const Profile = () => {
         .update({ avatar_url: newAvatarUrl })
         .eq("uid", uid)
         .select();
-
+      console.log(userData);
       if (userError) throw userError;
 
       setUser({ ...user, avatar_url: newAvatarUrl });
@@ -214,6 +216,7 @@ const Profile = () => {
         .from("user-media")
         .upload(`${currentUser.id}/${fileName}`, file);
 
+      console.log(uploadData);
       if (uploadError) throw uploadError;
 
       const { data: publicUrlData } = supabase.storage
@@ -236,7 +239,7 @@ const Profile = () => {
         .update({ banner_url: newBannerUrl })
         .eq("uid", uid)
         .select();
-
+      console.log(userData);
       if (userError) throw userError;
 
       setUser({ ...user, banner_url: newBannerUrl });
