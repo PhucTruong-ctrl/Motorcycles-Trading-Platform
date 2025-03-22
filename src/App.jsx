@@ -6,7 +6,6 @@ import About from "./pages/About";
 import Browse from "./pages/Browse";
 import ProductDetail from "./pages/ProductDetail";
 import Profile from "./pages/Profile";
-import EditInfo from "./pages/EditInfo";
 import EditProduct from "./pages/EditProduct";
 import Listing from "./pages/Listing";
 import PurchaseHistory from "./pages/PurchaseHistory";
@@ -27,7 +26,6 @@ const App = () => {
           />
           <Route path="/:uid/edit/:id" element={<EditProduct />} />
           <Route path="/:uid/profile" element={<Profile />} />
-          <Route path="/:uid/edit-info" element={<EditInfo />} />
           <Route path="/:uid/listing" element={<Listing />} />
           <Route path="/:uid/purchase-history" element={<PurchaseHistory />} />
           <Route path="/work" element={<WorkArea />} />
