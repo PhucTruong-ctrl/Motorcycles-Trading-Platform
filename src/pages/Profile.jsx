@@ -216,7 +216,7 @@ const Profile = () => {
             className="fixed inset-0 flex items-center justify-center"
             overlayClassName=""
           >
-            <EditProfile onClose={() => setModalIsOpen(false)} />
+            <EditProfile user={user} onClose={() => setModalIsOpen(false)} />
           </Modal>
 
           <div className="bg-white w-full h-20 rounded-xl shadow-md flex flex-row gap-12 justify-start items-center p-5">
@@ -244,29 +244,31 @@ const Profile = () => {
             </div>
           ) : (
             <div className="w-full">
-              <form
-                onSubmit={sendRep}
-                className="flex flex-col gap-3 items-center justify-center bg-white shadow-md p-10 rounded-[6px]"
-              >
-                <Select
-                  options={[
-                    { value: true, label: "+1 Positive" },
-                    { value: false, label: "Report" },
-                  ]}
-                  placeholder="Send a reputation"
-                  onChange={(selected) => setRepType(selected[0]?.value)}
-                />
-                <input
-                  type="text"
-                  className="border-2"
-                  value={repMessage || ""}
-                  onChange={(e) => setRepMessage(e.target.value)}
-                  placeholder="Enter your reputation message"
-                />
-                <button type="submit" className="border-2">
-                  Submit
-                </button>
-              </form>
+              {currentUser.id !== uid && (
+                <form
+                  onSubmit={sendRep}
+                  className="flex flex-col gap-3 items-center justify-center bg-white shadow-md p-10 rounded-[6px]"
+                >
+                  <Select
+                    options={[
+                      { value: true, label: "+1 Positive" },
+                      { value: false, label: "Report" },
+                    ]}
+                    placeholder="Send a reputation"
+                    onChange={(selected) => setRepType(selected[0]?.value)}
+                  />
+                  <input
+                    type="text"
+                    className="border-2"
+                    value={repMessage || ""}
+                    onChange={(e) => setRepMessage(e.target.value)}
+                    placeholder="Enter your reputation message"
+                  />
+                  <button type="submit" className="border-2">
+                    Submit
+                  </button>
+                </form>
+              )}
               <div className="flex flex-col gap-5 w-full mt-2">
                 {rep && rep.length > 0 ? (
                   rep.map((repItem) => (
