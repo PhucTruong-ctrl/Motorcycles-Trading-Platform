@@ -209,7 +209,7 @@ const MotoDetail = () => {
                 <img
                   id="mainImg"
                   src={mainImage || "/img/R7_Sample.jpg"}
-                  className="w-full md:w-full h-[700px] rouned-sm object-cover"
+                  className="w-full md:w-full h-[700px] rounded-sm object-cover"
                   alt="Main motorcycle"
                 />
                 <div className="absolute flex flex-row justify-between w-full">
@@ -234,7 +234,7 @@ const MotoDetail = () => {
                     <img src="/icons/ArrowBack.svg" alt="Previous" />
                   </button>
                 )}
-                <div className="flex flex-row justify-center items-center gap-3.5 overflow-hidden">
+                <div className="flex flex-row justify-center items-center gap-3.5 ">
                   {moto.image_url
                     .slice(currentIndex, currentIndex + imagesPerView)
                     .map((img, index) => (
@@ -242,7 +242,7 @@ const MotoDetail = () => {
                         key={index}
                         src={img}
                         alt={`Thumbnail ${index + 1}`}
-                        className={`w-[130px] h-[100px] rouned-sm object-contain cursor-pointer hover:border-2 ${
+                        className={`w-[130px] h-[100px] rounded-sm object-contain cursor-pointer hover:border-2 ${
                           img === mainImage
                             ? "border-2 border-black"
                             : "border-0"
@@ -339,12 +339,12 @@ const MotoDetail = () => {
                     <input
                       type="text"
                       placeholder="First Name"
-                      className="rouned-sm border-[1px] border-grey h-10 bg-white w-full px-5"
+                      className="rounded-sm border-[1px] border-grey h-10 bg-white w-full px-5"
                     />
                     <input
                       type="text"
                       placeholder="Last Name"
-                      className="rouned-sm border-[1px] border-grey h-10 bg-white w-full px-5"
+                      className="rounded-sm border-[1px] border-grey h-10 bg-white w-full px-5"
                     />
                   </div>
                   <div className="flex flex-row gap-5 text-grey">
@@ -352,19 +352,19 @@ const MotoDetail = () => {
                       type="text"
                       placeholder="Email Address"
                       defaultValue={user.email}
-                      className="rouned-sm border-[1px] border-grey h-10 bg-white w-full px-5"
+                      className="rounded-sm border-[1px] border-grey h-10 bg-white w-full px-5"
                     />
                     <input
                       type="text"
                       placeholder="Phone Number"
                       defaultValue={user.phone_num}
-                      className="rouned-sm border-[1px] border-grey h-10 bg-white w-full px-5"
+                      className="rounded-sm border-[1px] border-grey h-10 bg-white w-full px-5"
                     />
                   </div>
                   <input
                     type="text"
                     placeholder="Message"
-                    className="rouned-sm border-[1px] border-grey h-10 bg-white w-full px-5"
+                    className="rounded-sm border-[1px] border-grey h-10 bg-white w-full px-5"
                     defaultValue={`Is this ${moto.brand} ${moto.model} ${moto.trim} still available? `}
                   />
                   <Button
