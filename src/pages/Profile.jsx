@@ -226,7 +226,7 @@ const Profile = () => {
       const newBannerUrl = publicUrlData.publicUrl;
 
       if (user?.banner_url) {
-        const oldFileName = user.avatar_url.split("/").pop();
+        const oldFileName = user.banner_url.split("/").pop();
         const { error: deleteError } = await supabase.storage
           .from("user-media")
           .remove([`${currentUser.id}/${oldFileName}`]);
