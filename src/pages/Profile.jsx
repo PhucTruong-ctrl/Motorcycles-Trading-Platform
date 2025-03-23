@@ -270,11 +270,11 @@ const Profile = () => {
             <img
               src={user?.banner_url}
               alt=""
-              className="object-cover w-full h-full"
+              className="object-cover w-full"
             />
             {currentUser?.id === uid && (
               <div className="absolute">
-                <label htmlFor="avt-upload">
+                <label htmlFor="banner-upload">
                   <img
                     src="/icons/Upload.svg"
                     alt=""
@@ -282,7 +282,7 @@ const Profile = () => {
                   />
                 </label>
                 <input
-                  id="avt-upload"
+                  id="banner-upload"
                   type="file"
                   accept="image/*"
                   className="hidden"

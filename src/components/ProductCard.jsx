@@ -34,7 +34,7 @@ const ProductCard = ({ moto, currentUserId, isOwnerPage }) => {
       {showActions && (
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="absolute right-0 bottom-0 bg-black rounded-[6px] w-10 shadow-md active:scale-140 transition"
+          className="absolute right-0 bottom-0 bg-black rounded-md w-10 shadow-md active:scale-140 transition"
         >
           <img src="/icons/More.svg" alt="" className="w-full" />
         </button>

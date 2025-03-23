@@ -20,7 +20,7 @@ const BrowseProduct = ({ moto, user }) => {
     >
       <div
         id="BrowseProduct"
-        className="flex flex-col md:flex-row justify-start items-center content-center gap-3.5 bg-white rounded-[6px] p-4 sm:p-5 md:p-6 shadow-md shadow-grey"
+        className="flex flex-col md:flex-row justify-start items-center content-center gap-3.5 bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-md shadow-grey"
       >
         <img
           src={
