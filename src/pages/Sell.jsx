@@ -453,7 +453,7 @@ const Sell = () => {
                     <div className="block">
                       <div className="w-full text-xl font-semibold">Used</div>
                       <div className="w-full">
-                        Preloved motorcycle with stories to tell
+                        Pre-loved motorcycle with stories to tell
                       </div>
                     </div>
                   </label>

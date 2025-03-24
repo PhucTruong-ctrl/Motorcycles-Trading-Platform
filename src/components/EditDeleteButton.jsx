@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router"; // Sửa import
+import { useNavigate } from "react-router";
 import supabase from "../supabase-client";
 
 const EditDeleteButton = ({ motoUID, motoID, currentUserId }) => {
@@ -10,13 +10,12 @@ const EditDeleteButton = ({ motoUID, motoID, currentUserId }) => {
   }
 
   const handleEdit = () => {
-    navigate(`/${motoUID}/edit/${motoID}`); // Điều hướng đến trang edit
+    navigate(`/${motoUID}/edit/${motoID}`);
   };
 
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want delete this?")) {
       try {
-        // 1. Lấy dữ liệu sản phẩm để có danh sách hình ảnh
         const { data: motoData, error: fetchError } = await supabase
           .from("MOTORCYCLE")
           .select("image_url, uid")
@@ -25,13 +24,12 @@ const EditDeleteButton = ({ motoUID, motoID, currentUserId }) => {
 
         if (fetchError) throw fetchError;
 
-        // 2. Xóa các file hình ảnh khỏi Supabase Storage
         const imageUrls = motoData.image_url;
         if (imageUrls && imageUrls.length > 0) {
           const pathsToDelete = imageUrls.map((url) => {
             const parts = url.split("/");
             const fileName = parts[parts.length - 1];
-            // Giả sử file được lưu trong folder có tên là uid
+
             return `${motoData.uid}/${fileName}`;
           });
           const { error: storageError } = await supabase.storage
@@ -40,7 +38,6 @@ const EditDeleteButton = ({ motoUID, motoID, currentUserId }) => {
           if (storageError) throw storageError;
         }
 
-        // 3. Xóa dữ liệu sản phẩm khỏi bảng MOTORCYCLE
         const { error } = await supabase
           .from("MOTORCYCLE")
           .delete()

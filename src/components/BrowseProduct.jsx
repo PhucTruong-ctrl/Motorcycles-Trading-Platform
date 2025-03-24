@@ -75,7 +75,7 @@ const BrowseProduct = ({ moto, user }) => {
           style={{
             display: "-webkit-box",
             WebkitBoxOrient: "vertical",
-            WebkitLineClamp: 4, // Giới hạn số dòng
+            WebkitLineClamp: 4,
           }}
         >
           {moto.desc}
