@@ -45,6 +45,7 @@ const FilterBar = () => {
 
   useEffect(() => {
     updateURL();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedType, selectedBrand, selectedModel, selectedTrim]);
 
   const updateURL = () => {
@@ -207,15 +208,24 @@ const FilterBar = () => {
       <div className="flex flex-col items-start gap-1 self-stretch">
         <div className="font-bold text-[20px]">Condition</div>
         <div className="flex flex-row justify-start md:justify-between items-center gap-2.5 self-stretch">
-          <div className="flex justify-center items-center px-6 py-2 max-w-[70px] rounded-sm font-light italic text-[18px] text-white bg-blue shadow-md shadow-grey">
+          <button
+            value={"All"}
+            className="flex justify-center items-center px-6 py-2 max-w-[70px] rounded-sm font-light italic text-[18px] text-white bg-blue shadow-md shadow-grey"
+          >
             All
-          </div>
-          <div className="flex justify-center items-center px-6 py-2 max-w-[70px] rounded-sm font-light italic text-[18px] text-white bg-black shadow-md shadow-grey">
+          </button>
+          <button
+            value={"New"}
+            className="flex justify-center items-center px-6 py-2 max-w-[70px] rounded-sm font-light italic text-[18px] text-white bg-black shadow-md shadow-grey"
+          >
             New
-          </div>
-          <div className="flex justify-center items-center px-6 py-2 max-w-[70px] rounded-sm font-light italic text-[18px] text-white bg-black shadow-md shadow-grey">
+          </button>
+          <button
+            value={"Used"}
+            className="flex justify-center items-center px-6 py-2 max-w-[70px] rounded-sm font-light italic text-[18px] text-white bg-black shadow-md shadow-grey"
+          >
             Used
-          </div>
+          </button>
         </div>
       </div>
 
