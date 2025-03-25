@@ -11,6 +11,7 @@ const FilterBar = () => {
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
   const [selectedTrim, setSelectedTrim] = useState("");
+  const [condition, setCondition] = useState("");
 
   const [filteredBrands, setFilteredBrands] = useState([]);
   const [filteredModels, setFilteredModels] = useState([]);
@@ -46,7 +47,7 @@ const FilterBar = () => {
   useEffect(() => {
     updateURL();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedType, selectedBrand, selectedModel, selectedTrim]);
+  }, [selectedType, selectedBrand, selectedModel, selectedTrim, condition]);
 
   const updateURL = () => {
     const queryParams = {
@@ -54,6 +55,7 @@ const FilterBar = () => {
       brand: selectedBrand !== "" ? selectedBrand : undefined,
       model: selectedModel !== "" ? selectedModel : undefined,
       trim: selectedTrim !== "" ? selectedTrim : undefined,
+      condition: condition !== "" ? condition : undefined,
     };
 
     const query = queryString.stringify(queryParams, { skipNull: true });
@@ -99,6 +101,12 @@ const FilterBar = () => {
       setSelectedTrim(selectedTrim);
       updateURL();
     }
+  };
+
+  const handleConditionChange = (e) => {
+    const selectedCondition = e.target.value;
+    setCondition(selectedCondition);
+    updateURL();
   };
 
   return (
@@ -205,28 +213,44 @@ const FilterBar = () => {
         </div>
       </div>
 
-      <div className="flex flex-col items-start gap-1 self-stretch">
-        <div className="font-bold text-[20px]">Condition</div>
-        <div className="flex flex-row justify-start md:justify-between items-center gap-2.5 self-stretch">
-          <button
-            value={"All"}
-            className="flex justify-center items-center px-6 py-2 max-w-[70px] rounded-sm font-light italic text-[18px] text-white bg-blue shadow-md shadow-grey"
-          >
-            All
-          </button>
-          <button
-            value={"New"}
-            className="flex justify-center items-center px-6 py-2 max-w-[70px] rounded-sm font-light italic text-[18px] text-white bg-black shadow-md shadow-grey"
-          >
-            New
-          </button>
-          <button
-            value={"Used"}
-            className="flex justify-center items-center px-6 py-2 max-w-[70px] rounded-sm font-light italic text-[18px] text-white bg-black shadow-md shadow-grey"
-          >
-            Used
-          </button>
-        </div>
+      <div className="w-full flex flex-col gap-3 justify-center items-center">
+        <div className="font-bold text-xl">Condition</div>
+        <ul className="grid w-full gap-6 grid-cols-2">
+          <li className="">
+            <input
+              type="radio"
+              id="used-condition"
+              name="condition"
+              className="hidden peer"
+              value="Used"
+              checked={condition === "Used"}
+              onChange={handleConditionChange}
+            />
+            <label
+              htmlFor="used-condition"
+              className="inline-flex items-center justify-between text-center w-full p-3 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition"
+            >
+              <div className="w-full text-[16px] font-semibold">Used</div>
+            </label>
+          </li>
+          <li>
+            <input
+              type="radio"
+              id="new-condition"
+              name="condition"
+              className="hidden peer"
+              value="New"
+              checked={condition === "New"}
+              onChange={handleConditionChange}
+            />
+            <label
+              htmlFor="new-condition"
+              className="inline-flex items-center justify-between text-center w-full p-3 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition"
+            >
+              <div className="w-full text-[16px] font-semibold">New</div>
+            </label>
+          </li>
+        </ul>
       </div>
 
       <FilterRangeSliderBar
