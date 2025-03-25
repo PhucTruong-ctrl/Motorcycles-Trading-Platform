@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import FilterRangeSliderBar from "./FilterRangeSliderbar";
 import { motorcycleData } from "../data/motorcycleData";
 import Select from "react-dropdown-select";
 import queryString from "query-string";
+import RangeSlider from "react-range-slider-input";
+import "react-range-slider-input/dist/style.css";
 
 const FilterBar = () => {
   const navigate = useNavigate();
@@ -12,6 +13,16 @@ const FilterBar = () => {
   const [selectedModel, setSelectedModel] = useState("");
   const [selectedTrim, setSelectedTrim] = useState("");
   const [condition, setCondition] = useState("");
+
+  const [price, setPrice] = useState([0, 100000]);
+  const [mileage, setMileage] = useState([0, 999999]);
+  const [year, setYear] = useState([1895, new Date().getFullYear()]);
+  const [engineSize, setEngineSize] = useState([0, 3000]);
+
+  const [debouncedPrice, setDebouncedPrice] = useState(price);
+  const [debouncedMileage, setDebouncedMileage] = useState(mileage);
+  const [debouncedYear, setDebouncedYear] = useState(year);
+  const [debouncedEngineSize, setDebouncedEngineSize] = useState(engineSize);
 
   const [filteredBrands, setFilteredBrands] = useState([]);
   const [filteredModels, setFilteredModels] = useState([]);
@@ -44,10 +55,55 @@ const FilterBar = () => {
     setFilteredTrims(trimsForModel);
   }, [selectedType, selectedBrand, selectedModel]);
 
+  const formatNumber = (number) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "decimal",
+      minimumFractionDigits: 0,
+    }).format(number);
+  };
+
   useEffect(() => {
     updateURL();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedType, selectedBrand, selectedModel, selectedTrim, condition]);
+  }, [
+    selectedType,
+    selectedBrand,
+    selectedModel,
+    selectedTrim,
+    condition,
+    debouncedPrice,
+    debouncedMileage,
+    debouncedYear,
+    debouncedEngineSize,
+  ]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedPrice(price);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [price]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedMileage(mileage);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [mileage]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedYear(year);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [year]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedEngineSize(engineSize);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [engineSize]);
 
   const updateURL = () => {
     const queryParams = {
@@ -56,6 +112,14 @@ const FilterBar = () => {
       model: selectedModel !== "" ? selectedModel : undefined,
       trim: selectedTrim !== "" ? selectedTrim : undefined,
       condition: condition !== "" ? condition : undefined,
+      price_min: price[0] > 0 ? price[0] : undefined,
+      price_max: price[1] < 100000 ? price[1] : undefined,
+      mileage_min: mileage[0] > 0 ? mileage[0] : undefined,
+      mileage_max: mileage[1] < 999999 ? mileage[1] : undefined,
+      year_min: year[0] > 1895 ? year[0] : undefined,
+      year_max: year[1] < new Date().getFullYear() ? year[1] : undefined,
+      engine_size_min: engineSize[0] > 50 ? engineSize[0] : undefined,
+      engine_size_max: engineSize[1] < 3000 ? engineSize[1] : undefined,
     };
 
     const query = queryString.stringify(queryParams, { skipNull: true });
@@ -72,6 +136,16 @@ const FilterBar = () => {
       setFilteredModels([]);
       setFilteredTrims([]);
       updateURL();
+    } else if (selectedOptions.length === 0) {
+      setSelectedType("");
+      setSelectedBrand("");
+      setSelectedModel("");
+      setSelectedTrim("");
+      setFilteredBrands([]);
+      setFilteredModels([]);
+      setFilteredTrims([]);
+      updateURL();
+      return;
     }
   };
 
@@ -83,6 +157,14 @@ const FilterBar = () => {
       setSelectedTrim("");
       setFilteredTrims([]);
       updateURL();
+    } else if (selectedOptions.length === 0) {
+      setSelectedBrand("");
+      setSelectedModel("");
+      setSelectedTrim("");
+      setFilteredModels([]);
+      setFilteredTrims([]);
+      updateURL();
+      return;
     }
   };
 
@@ -92,6 +174,12 @@ const FilterBar = () => {
       setSelectedModel(selectedModel);
       setSelectedTrim("");
       updateURL();
+    } else if (selectedOptions.length === 0) {
+      setSelectedModel("");
+      setSelectedTrim("");
+      setFilteredTrims([]);
+      updateURL();
+      return;
     }
   };
 
@@ -100,6 +188,10 @@ const FilterBar = () => {
       const selectedTrim = selectedOptions[0].value;
       setSelectedTrim(selectedTrim);
       updateURL();
+    } else if (selectedOptions.length === 0) {
+      setSelectedTrim("");
+      updateURL();
+      return;
     }
   };
 
@@ -127,7 +219,7 @@ const FilterBar = () => {
         </div>
       </div>
 
-      <div className="flex flex-col items-start gap-1 self-stretch w-full">
+      <div className="flex flex-col items-start gap-1 w-full">
         <div className="font-bold text-xl">Type</div>
         <div className="w-full">
           <Select
@@ -141,6 +233,7 @@ const FilterBar = () => {
             }
             placeholder="Select type"
             searchable
+            clearable
             className="text-[18px]"
           />
         </div>
@@ -163,6 +256,7 @@ const FilterBar = () => {
             }
             placeholder="Select brand"
             searchable
+            clearable
             className="text-[18px]"
             disabled={!selectedType}
           />
@@ -186,6 +280,7 @@ const FilterBar = () => {
             }
             placeholder="Select model"
             searchable
+            clearable
             className="text-[18px]"
             disabled={!selectedBrand}
           />
@@ -207,6 +302,7 @@ const FilterBar = () => {
             }
             placeholder="Select trim"
             searchable
+            clearable
             className="text-[18px]"
             disabled={!selectedModel}
           />
@@ -215,7 +311,24 @@ const FilterBar = () => {
 
       <div className="w-full flex flex-col gap-3 justify-center items-center">
         <div className="font-bold text-xl">Condition</div>
-        <ul className="grid w-full gap-6 grid-cols-2">
+        <ul className="grid w-full gap-6 grid-cols-3">
+          <li>
+            <input
+              type="radio"
+              id="all-condition"
+              name="condition"
+              className="hidden peer"
+              value=""
+              checked={condition === ""}
+              onChange={handleConditionChange}
+            />
+            <label
+              htmlFor="all-condition"
+              className="inline-flex items-center justify-between text-center w-full p-3 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition"
+            >
+              <div className="w-full text-[16px] font-semibold">All</div>
+            </label>
+          </li>
           <li className="">
             <input
               type="radio"
@@ -253,15 +366,65 @@ const FilterBar = () => {
         </ul>
       </div>
 
-      <FilterRangeSliderBar
-        title={"Price"}
-        decimalFront={"$"}
-        minVal={0}
-        maxVal={100000}
-      />
-      <FilterRangeSliderBar title={"Year"} minVal={1895} maxVal={2025} />
-      <FilterRangeSliderBar title={"Mileage"} minVal={0} maxVal={100000} />
-      <FilterRangeSliderBar title={"Engine Size"} minVal={0} maxVal={100000} />
+      <div className="flex flex-col justify-center items-start self-stretch gap-2">
+        <div className="font-bold text-[20px]">Price</div>
+        <div className="flex justify-between self-stretch font-[400] text-[18px] text-black">
+          <span>${formatNumber(price[0])}</span>
+          <span>${formatNumber(price[1])}</span>
+        </div>
+        <RangeSlider
+          id="range-slider"
+          min={0}
+          max={100000}
+          value={price}
+          onInput={(value) => setPrice(value)}
+        />
+      </div>
+
+      <div className="flex flex-col justify-center items-start self-stretch gap-2">
+        <div className="font-bold text-[20px]">Mileage</div>
+        <div className="flex justify-between self-stretch font-[400] text-[18px] text-black">
+          <span>{formatNumber(mileage[0])}</span>
+          <span>{formatNumber(mileage[1])}</span>
+        </div>
+        <RangeSlider
+          id="range-slider"
+          min={0}
+          max={999999}
+          value={mileage}
+          onInput={(value) => setMileage(value)}
+        />
+      </div>
+
+      <div className="flex flex-col justify-center items-start self-stretch gap-2">
+        <div className="font-bold text-[20px]">Year</div>
+        <div className="flex justify-between self-stretch font-[400] text-[18px] text-black">
+          <span>{formatNumber(year[0])}</span>
+          <span>{formatNumber(year[1])}</span>
+        </div>
+        <RangeSlider
+          id="range-slider"
+          min={1895}
+          max={new Date().getFullYear()}
+          value={year}
+          onInput={(value) => setYear(value)}
+        />
+      </div>
+
+      <div className="flex flex-col justify-center items-start self-stretch gap-2">
+        <div className="font-bold text-[20px]">Engine Size</div>
+        <div className="flex justify-between self-stretch font-[400] text-[18px] text-black">
+          <span>{formatNumber(engineSize[0])}</span>
+          <span>{formatNumber(engineSize[1])}</span>
+        </div>
+        <RangeSlider
+          id="range-slider"
+          min={50}
+          max={3000}
+          value={engineSize}
+          onInput={(value) => setEngineSize(value)}
+        />
+      </div>
     </div>
   );
 };
