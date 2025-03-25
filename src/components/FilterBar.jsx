@@ -32,12 +32,14 @@ const FilterBar = () => {
 
   const typeOptions = [
     { value: "naked", label: "Naked" },
+    { value: "classic", label: "Classic" },
+    { value: "scrambler", label: "Scrambler" },
     { value: "cruiser", label: "Cruiser" },
     { value: "touring", label: "Touring" },
     { value: "sport", label: "Sport" },
     { value: "offroad", label: "Offroad" },
     { value: "adventure", label: "Adventure" },
-    { value: "sportTouring", label: "Sport Touring" },
+    { value: "sport_touring", label: "Sport Touring" },
     { value: "scooters", label: "Scooters" },
     { value: "underbones", label: "Underbones" },
   ];
@@ -357,7 +359,6 @@ const FilterBar = () => {
         max={3000}
         formatValue={(val) => `${formatNumber(val)}`}
       />
-
     </div>
   );
 };

@@ -4,9 +4,9 @@ export const motorcycleData = {
       {
         model: "R1250R",
         trims: [
-          { name: "Standard", engine_size: "1250" },
-          { name: "Exclusive", engine_size: "1250" },
-          { name: "HP", engine_size: "1250" },
+          { name: "Base", engine_size: "1250" },
+          { name: "Sport", engine_size: "1250" },
+          { name: "Triple Black", engine_size: "1250" },
         ],
       },
       {
@@ -24,7 +24,7 @@ export const motorcycleData = {
         trims: [
           { name: "Standard", engine_size: "999" },
           { name: "Sport", engine_size: "999" },
-          { name: "M Package", engine_size: "999" },
+          { name: "Pro Package", engine_size: "999" },
         ],
       },
       {
@@ -40,46 +40,19 @@ export const motorcycleData = {
         model: "R18",
         trims: [
           { name: "Standard", engine_size: "1802" },
-          { name: "First Edition", engine_size: "1802" },
           { name: "Classic", engine_size: "1802" },
           { name: "B", engine_size: "1802" },
           { name: "Transcontinental", engine_size: "1802" },
+          { name: "Roctane", engine_size: "1802" },
         ],
       },
       {
-        model: "K1600B",
+        model: "R12",
         trims: [
-          { name: "Standard", engine_size: "1649" },
-          { name: "Grand America", engine_size: "1649" },
+          { name: "Standard", engine_size: "1199" },
+          { name: "nineT", engine_size: "1199" },
+          { name: "S", engine_size: "1199" },
         ],
-      },
-    ],
-    touring: [
-      {
-        model: "R1250RT",
-        trims: [
-          { name: "Standard", engine_size: "1250" },
-          { name: "Exclusive", engine_size: "1250" },
-          { name: "HP", engine_size: "1250" },
-        ],
-      },
-      {
-        model: "K1600GT",
-        trims: [
-          { name: "Standard", engine_size: "1649" },
-          { name: "Grand America", engine_size: "1649" },
-        ],
-      },
-      {
-        model: "K1600GTL",
-        trims: [
-          { name: "Standard", engine_size: "1649" },
-          { name: "Exclusive", engine_size: "1649" },
-        ],
-      },
-      {
-        model: "K1600 Grand America",
-        trims: [{ name: "Standard", engine_size: "1649" }],
       },
     ],
     sport: [
@@ -87,7 +60,8 @@ export const motorcycleData = {
         model: "S1000RR",
         trims: [
           { name: "Standard", engine_size: "999" },
-          { name: "Pro", engine_size: "999" },
+          { name: "Dynamic Package", engine_size: "999" },
+          { name: "Race Package", engine_size: "999" },
           { name: "M Package", engine_size: "999" },
         ],
       },
@@ -95,18 +69,11 @@ export const motorcycleData = {
         model: "M1000RR",
         trims: [
           { name: "Standard", engine_size: "999" },
-          { name: "Carbon Package", engine_size: "999" },
+          { name: "M Competition Package", engine_size: "999" },
         ],
       },
     ],
     offroad: [
-      {
-        model: "F850GS",
-        trims: [
-          { name: "Standard", engine_size: "853" },
-          { name: "Adventure", engine_size: "853" },
-        ],
-      },
       { model: "F750GS", trims: [{ name: "Standard", engine_size: "853" }] },
       { model: "G310GS", trims: [{ name: "Standard", engine_size: "313" }] },
     ],
@@ -114,56 +81,49 @@ export const motorcycleData = {
       {
         model: "R1250GS",
         trims: [
-          { name: "Standard", engine_size: "1250" },
-          { name: "Adventure", engine_size: "1250" },
-          { name: "HP", engine_size: "1250" },
+          { name: "Standard", engine_size: "1249" },
+          { name: "Adventure", engine_size: "1249" },
         ],
       },
       {
-        model: "R1250GS Adventure",
+        model: "R1300GS",
         trims: [
-          { name: "Standard", engine_size: "1250" },
-          { name: "Adventure", engine_size: "1250" },
-          { name: "HP", engine_size: "1250" },
+          { name: "Standard", engine_size: "1299" },
+          { name: "Adventure", engine_size: "1299" },
         ],
       },
       {
-        model: "F850GS Adventure",
+        model: "F850GS",
         trims: [
           { name: "Standard", engine_size: "853" },
           { name: "Adventure", engine_size: "853" },
         ],
       },
       {
-        model: "F900GS Adventure",
+        model: "F900GS",
         trims: [
           { name: "Base", engine_size: "895" },
-          { name: "Sport", engine_size: "895" },
+          { name: "Adventure", engine_size: "895" },
         ],
+      },
+      {
+        model: "F310GS",
+        trims: [{ name: "Base", engine_size: "309" }],
       },
     ],
-    sportTouring: [
+    sport_touring: [
       {
-        model: "R1250RS",
+        model: "K1600",
         trims: [
-          { name: "Standard", engine_size: "1250" },
-          { name: "Exclusive", engine_size: "1250" },
-          { name: "HP", engine_size: "1250" },
-        ],
-      },
-      {
-        model: "K1600GT",
-        trims: [
-          { name: "Standard", engine_size: "1649" },
+          { name: "B", engine_size: "1649" },
+          { name: "GT", engine_size: "1649" },
           { name: "Grand America", engine_size: "1649" },
+          { name: "GTL", engine_size: "1649" },
         ],
       },
       {
-        model: "K1600GTL",
-        trims: [
-          { name: "Standard", engine_size: "1649" },
-          { name: "Exclusive", engine_size: "1649" },
-        ],
+        model: "R1250",
+        trims: [{ name: "RT", engine_size: "1649" }],
       },
     ],
     scooters: [
@@ -182,86 +142,96 @@ export const motorcycleData = {
       {
         model: "Monster",
         trims: [
-          { name: "Standard", engine_size: "821" },
-          { name: "Monster+", engine_size: "821" },
-          { name: "Monster 821", engine_size: "821" },
-          { name: "Monster 821 Stealth", engine_size: "821" },
-          { name: "Monster 1200", engine_size: "1198" },
-          { name: "Monster 1200 S", engine_size: "1198" },
+          { name: "Standard", engine_size: "937" },
+          { name: "+", engine_size: "937" },
+          { name: "SP", engine_size: "937" },
+          { name: "30° Anniversario", engine_size: "937" },
+          { name: "Senna", engine_size: "937" },
         ],
       },
-    ],
-    sport: [
       {
-        model: "Panigale V2",
-        trims: [{ name: "Standard", engine_size: "955" }],
-      },
-      {
-        model: "Panigale V4",
+        model: "Streetfighter",
         trims: [
-          { name: "Standard", engine_size: "1103" },
+          { name: "V2", engine_size: "890" },
+          { name: "V2 S", engine_size: "890" },
+          { name: "V4", engine_size: "1103" },
           { name: "V4 S", engine_size: "1103" },
-          { name: "V4 SP", engine_size: "1103" },
-          { name: "V4 R", engine_size: "998" },
-          { name: "Superleggera V4", engine_size: "998" },
+          { name: "V4 SP2", engine_size: "1103" },
+          { name: "V4 Lamborghini", engine_size: "1103" },
+          { name: "V4 Supreme", engine_size: "1103" },
         ],
       },
     ],
     cruiser: [
       {
-        model: "Diavel 1260",
+        model: "Diavel",
         trims: [
-          { name: "Standard", engine_size: "1262" },
-          { name: "S", engine_size: "1262" },
-          { name: "Lamborghini", engine_size: "1262" },
+          { name: "V4", engine_size: "1158" },
+          { name: "for Bentley", engine_size: "1158" },
         ],
       },
       {
         model: "XDiavel",
+        trims: [{ name: "V4", engine_size: "1158" }],
+      },
+    ],
+    scrambler: [
+      {
+        model: "Scrambler",
         trims: [
-          { name: "Standard", engine_size: "1262" },
-          { name: "S", engine_size: "1262" },
-          { name: "Black Star", engine_size: "1262" },
+          { name: "10th Anniversary Rizoma Edition", engine_size: "803" },
+          { name: "Icon Dark", engine_size: "803" },
+          { name: "Icon", engine_size: "803" },
+          { name: "Full Throttle", engine_size: "803" },
+          { name: "Nightshift", engine_size: "803" },
+        ],
+      },
+    ],
+    sport: [
+      {
+        model: "Panigale",
+        trims: [
+          { name: "V2", engine_size: "890" },
+          { name: "V2 S", engine_size: "890" },
+          { name: "V2 Superquadro Final Edition", engine_size: "955" },
+          { name: "V4", engine_size: "1103" },
+          { name: "V4 S", engine_size: "1103" },
+          { name: "V4 Tricolore", engine_size: "1103" },
+          { name: "V4 Tricolore Italia", engine_size: "1103" },
         ],
       },
     ],
     touring: [
       {
-        model: "Multistrada 950",
+        model: "Multistrada",
         trims: [
-          { name: "Standard", engine_size: "937" },
-          { name: "S", engine_size: "937" },
+          { name: "V2", engine_size: "890" },
+          { name: "V2 S", engine_size: "890" },
+          { name: "V4", engine_size: "1158" },
+          { name: "V4 S", engine_size: "1158" },
+          { name: "V4 Rally", engine_size: "1158" },
+          { name: "V4 Pikes Peak", engine_size: "1158" },
+          { name: "V4 RS", engine_size: "1158" },
         ],
       },
       {
-        model: "Multistrada V4",
+        model: "DesertX",
         trims: [
-          { name: "Standard", engine_size: "1158" },
-          { name: "S", engine_size: "1158" },
-          { name: "S Sport", engine_size: "1158" },
-        ],
-      },
-      {
-        model: "Multistrada 1260 Enduro",
-        trims: [{ name: "Standard", engine_size: "1262" }],
-      },
-    ],
-    adventure: [
-      {
-        model: "Hypermotard 950",
-        trims: [
-          { name: "Standard", engine_size: "937" },
-          { name: "SP", engine_size: "937" },
-          { name: "RVE", engine_size: "937" },
+          { name: "Base", engine_size: "937" },
+          { name: "Discovery", engine_size: "937" },
+          { name: "Rally", engine_size: "937" },
         ],
       },
     ],
-    sportTouring: [
+    offroad: [
       {
-        model: "SuperSport",
+        model: "Hypermotard",
         trims: [
-          { name: "Standard", engine_size: "937" },
-          { name: "S", engine_size: "937" },
+          { name: "698 Mono", engine_size: "659" },
+          { name: "698 Mono RVE", engine_size: "659" },
+          { name: "950 RVE", engine_size: "937" },
+          { name: "950 SP", engine_size: "937" },
+          { name: "950", engine_size: "937" },
         ],
       },
     ],
@@ -269,465 +239,355 @@ export const motorcycleData = {
   Kawasaki: {
     naked: [
       {
-        model: "Z1000",
+        model: "Z",
         trims: [
-          { name: "Standard", engine_size: "1043" },
-          { name: "Special Edition", engine_size: "1043" },
+          { name: "125", engine_size: "124" },
+          { name: "125 Pro", engine_size: "124" },
+          { name: "1000", engine_size: "1043" },
+          { name: "800", engine_size: "806" },
+          { name: "900", engine_size: "948" },
+          { name: "650", engine_size: "649" },
+          { name: "900RS", engine_size: "948" },
+          { name: "650RS", engine_size: "649" },
+          { name: "H2", engine_size: "998" },
         ],
       },
+    ],
+    classic: [
       {
-        model: "Z900",
+        model: "W",
         trims: [
-          { name: "Standard", engine_size: "948" },
-          { name: "Performance", engine_size: "948" },
+          { name: "1", engine_size: "624" },
+          { name: "2", engine_size: "624" },
+          { name: "3", engine_size: "624" },
+          { name: "650", engine_size: "676" },
+          { name: "800", engine_size: "800" },
         ],
       },
-      {
-        model: "Z650",
-        trims: [
-          { name: "Standard", engine_size: "649" },
-          { name: "Performance", engine_size: "649" },
-        ],
-      },
-      { model: "Z400", trims: [{ name: "Standard", engine_size: "399" }] },
     ],
     cruiser: [
       {
-        model: "Vulcan S",
+        model: "Vulcan",
         trims: [
-          { name: "Standard", engine_size: "649" },
-          { name: "Cafe", engine_size: "649" },
-          { name: "Custom", engine_size: "649" },
+          { name: "S", engine_size: "649" },
+          { name: "900 Classic", engine_size: "903" },
+          { name: "900 Classic LT", engine_size: "903" },
+          { name: "1700 Voyager", engine_size: "1700" },
+          { name: "1700 Vaquero", engine_size: "1700" },
         ],
       },
       {
-        model: "Vulcan 900 Classic",
+        model: "ZL",
         trims: [
-          { name: "Standard", engine_size: "903" },
-          { name: "LT", engine_size: "903" },
+          { name: "600", engine_size: "600" },
+          { name: "750", engine_size: "750" },
+          { name: "900", engine_size: "908" },
+          { name: "1000", engine_size: "1000" },
         ],
       },
       {
-        model: "Vulcan 1700 Voyager",
+        model: "Eliminator",
         trims: [
-          { name: "Standard", engine_size: "1700" },
-          { name: "ABS", engine_size: "1700" },
-        ],
-      },
-    ],
-    touring: [
-      {
-        model: "Concourse 14",
-        trims: [
-          { name: "Standard", engine_size: "1400" },
-          { name: "ABS", engine_size: "1400" },
+          { name: "400", engine_size: "396" },
+          { name: "500", engine_size: "451" },
         ],
       },
     ],
     sport: [
       {
-        model: "Ninja ZX-10R",
+        model: "Ninja",
         trims: [
-          { name: "Standard", engine_size: "998" },
-          { name: "SE", engine_size: "998" },
-          { name: "KRT Edition", engine_size: "998" },
-        ],
-      },
-      {
-        model: "Ninja ZX-6R",
-        trims: [
-          { name: "Standard", engine_size: "636" },
-          { name: "636", engine_size: "636" },
-        ],
-      },
-      {
-        model: "Ninja 400",
-        trims: [
-          { name: "Standard", engine_size: "399" },
-          { name: "KRT Edition", engine_size: "399" },
+          { name: "125", engine_size: "125" },
+          { name: "300", engine_size: "296" },
+          { name: "500", engine_size: "296" },
+          { name: "650", engine_size: "296" },
+          { name: "ZX-25R", engine_size: "249" },
+          { name: "ZX-4R", engine_size: "399" },
+          { name: "ZX-4RR", engine_size: "399" },
+          { name: "ZX-6R", engine_size: "636" },
+          { name: "ZX-10R", engine_size: "998" },
+          { name: "H2", engine_size: "998" },
+          { name: "H2R", engine_size: "998" },
         ],
       },
     ],
     offroad: [
       {
-        model: "KLX250",
+        model: "KLX",
         trims: [
-          { name: "Standard", engine_size: "249" },
-          { name: "Camo", engine_size: "249" },
-        ],
-      },
-      {
-        model: "KLX140",
-        trims: [
-          { name: "Standard", engine_size: "144" },
-          { name: "L", engine_size: "144" },
-          { name: "G", engine_size: "144" },
+          { name: "110R", engine_size: "112" },
+          { name: "140R", engine_size: "144" },
+          { name: "230", engine_size: "233" },
+          { name: "230SM", engine_size: "233" },
+          { name: "230R", engine_size: "233" },
+          { name: "300", engine_size: "292" },
+          { name: "300R", engine_size: "292" },
+          { name: "300SM", engine_size: "292" },
         ],
       },
     ],
     adventure: [
       {
-        model: "Versys 1000",
+        model: "Versys",
         trims: [
-          { name: "Standard", engine_size: "1043" },
-          { name: "LT", engine_size: "1043" },
+          { name: "650", engine_size: "649" },
+          { name: "650 LT", engine_size: "649" },
+          { name: "1000", engine_size: "1043" },
+          { name: "1000 SE LT", engine_size: "1043" },
+          { name: "1100", engine_size: "1099" },
+          { name: "1100 SE LT", engine_size: "1099" },
+          { name: "X 300", engine_size: "296" },
+          { name: "X 300 ABS", engine_size: "296" },
         ],
       },
       {
-        model: "Versys 650",
-        trims: [
-          { name: "Standard", engine_size: "649" },
-          { name: "LT", engine_size: "649" },
-        ],
+        model: "KLR",
+        trims: [{ name: "650", engine_size: "649" }],
       },
     ],
     sport_touring: [
       {
-        model: "Ninja H2 SX",
+        model: "Ninja",
         trims: [
-          { name: "Standard", engine_size: "998" },
-          { name: "SE", engine_size: "998" },
+          { name: "1000SX", engine_size: "1043" },
+          { name: "1100SX", engine_size: "1099" },
+          { name: "H2 SX", engine_size: "998" },
         ],
       },
-    ],
-    scooters: [
-      { model: "J300", trims: [{ name: "Standard", engine_size: "299" }] },
-      { model: "Z125 Pro", trims: [{ name: "Standard", engine_size: "125" }] },
-    ],
-    underbones: [
-      { model: "KSR Pro", trims: [{ name: "Standard", engine_size: "111" }] },
     ],
   },
   Honda: {
     naked: [
       {
-        model: "CB500F",
+        model: "CB",
         trims: [
-          { name: "Standard", engine_size: "471" },
-          { name: "ABS", engine_size: "471" },
-        ],
-      },
-      {
-        model: "CB650R",
-        trims: [
-          { name: "Standard", engine_size: "648" },
-          { name: "ABS", engine_size: "648" },
-        ],
-      },
-      {
-        model: "CB1000R",
-        trims: [
-          { name: "Standard", engine_size: "998" },
-          { name: "ABS", engine_size: "998" },
-        ],
-      },
-      {
-        model: "CBR500R",
-        trims: [
-          { name: "Standard", engine_size: "471" },
-          { name: "ABS", engine_size: "471" },
-        ],
-      },
-      {
-        model: "CBR650R",
-        trims: [
-          { name: "Standard", engine_size: "648" },
-          { name: "ABS", engine_size: "648" },
-        ],
-      },
-      {
-        model: "CBR1000RR",
-        trims: [
-          { name: "Standard", engine_size: "999" },
-          { name: "SP", engine_size: "999" },
-          { name: "SP2", engine_size: "999" },
-        ],
-      },
-      {
-        model: "CBR1000RR-R",
-        trims: [
-          { name: "Standard", engine_size: "999" },
-          { name: "SP", engine_size: "999" },
+          { name: "300R", engine_size: "286" },
+          { name: "500F", engine_size: "471" },
+          { name: "SCL500", engine_size: "471" },
+          { name: "650R", engine_size: "649" },
+          { name: "650R E-Clutch", engine_size: "649" },
+          { name: "1000R", engine_size: "998" },
+          { name: "1000R Black Edition", engine_size: "998" },
+          { name: "750 Hornet", engine_size: "755" },
+          { name: "1000 Hornet SP", engine_size: "998" },
         ],
       },
     ],
     cruiser: [
       {
-        model: "Rebel 500",
+        model: "Rebel",
         trims: [
-          { name: "Standard", engine_size: "471" },
-          { name: "ABS", engine_size: "471" },
+          { name: "250", engine_size: "234" },
+          { name: "300", engine_size: "298" },
+          { name: "500", engine_size: "500" },
+          { name: "500 ABS", engine_size: "500" },
+          { name: "500 ABS SE", engine_size: "500" },
+          { name: "1100", engine_size: "1083" },
+          { name: "1100 DCT", engine_size: "1083" },
+          { name: "1100 DCT SE", engine_size: "1083" },
+          { name: "1100T", engine_size: "1083" },
+          { name: "1100T DCT", engine_size: "1083" },
         ],
       },
       {
-        model: "Rebel 1100",
+        model: "Shadow",
         trims: [
-          { name: "Standard", engine_size: "1084" },
-          { name: "DCT", engine_size: "1084" },
-          { name: "ABS", engine_size: "1084" },
-          { name: "DCT+ABS", engine_size: "1084" },
+          { name: "Aero", engine_size: "745" },
+          { name: "Phantom", engine_size: "745" },
         ],
       },
       {
-        model: "Shadow Phantom",
-        trims: [{ name: "Standard", engine_size: "745" }],
-      },
-      {
-        model: "Gold Wing",
-        trims: [
-          { name: "Standard", engine_size: "1833" },
-          { name: "Tour", engine_size: "1833" },
-          { name: "Tour DCT", engine_size: "1833" },
-          { name: "Tour ABS", engine_size: "1833" },
-          { name: "Tour DCT+ABS", engine_size: "1833" },
-        ],
+        model: "Fury",
+        trims: [{ name: "Base", engine_size: "1312" }],
       },
     ],
     touring: [
       {
         model: "Gold Wing",
         trims: [
-          { name: "Standard", engine_size: "1833" },
-          { name: "Tour", engine_size: "1833" },
-          { name: "Tour DCT", engine_size: "1833" },
-          { name: "Tour ABS", engine_size: "1833" },
-          { name: "Tour DCT+ABS", engine_size: "1833" },
+          { name: "1000", engine_size: "999" },
+          { name: "1100", engine_size: "1085" },
+          { name: "1200", engine_size: "1182" },
+          { name: "1500", engine_size: "1520" },
+          { name: "1800", engine_size: "1832" },
+          { name: "1800 DCT", engine_size: "1832" },
+          { name: "1800 Tour", engine_size: "1832" },
+          { name: "1800 Tour DCT", engine_size: "1832" },
+          { name: "1800 Tour Airbag DCT", engine_size: "1832" },
+          { name: "1800 Tour 50th Anniversary ", engine_size: "1832" },
         ],
       },
       {
-        model: "CTX700",
+        model: "NT",
         trims: [
-          { name: "Standard", engine_size: "670" },
-          { name: "DCT", engine_size: "670" },
-          { name: "ABS", engine_size: "670" },
-          { name: "DCT+ABS", engine_size: "670" },
+          { name: "650", engine_size: "647" },
+          { name: "650V Deauville", engine_size: "647" },
+          { name: "700V Deauville", engine_size: "680" },
+          { name: "1100", engine_size: "1084" },
+          { name: "1100 DCT", engine_size: "1084" },
+          { name: "1100 E", engine_size: "1084" },
         ],
-      },
-      {
-        model: "CTX1300",
-        trims: [
-          { name: "Standard", engine_size: "1261" },
-          { name: "ABS", engine_size: "1261" },
-        ],
-      },
-      {
-        model: "NM4 Vultus",
-        trims: [{ name: "Standard", engine_size: "745" }],
       },
     ],
     sport: [
       {
-        model: "CBR500R",
+        model: "CBR",
         trims: [
-          { name: "Standard", engine_size: "471" },
-          { name: "ABS", engine_size: "471" },
-        ],
-      },
-      {
-        model: "CBR650R",
-        trims: [
-          { name: "Standard", engine_size: "648" },
-          { name: "ABS", engine_size: "648" },
-        ],
-      },
-      {
-        model: "CBR1000RR",
-        trims: [
-          { name: "Standard", engine_size: "999" },
-          { name: "SP", engine_size: "999" },
-          { name: "SP2", engine_size: "999" },
-        ],
-      },
-      {
-        model: "CBR1000RR-R",
-        trims: [
-          { name: "Standard", engine_size: "999" },
-          { name: "SP", engine_size: "999" },
+          { name: "125R", engine_size: "124" },
+          { name: "150R", engine_size: "149" },
+          { name: "250R", engine_size: "249" },
+          { name: "300R", engine_size: "299" },
+          { name: "500R", engine_size: "499" },
+          { name: "600RR", engine_size: "599" },
+          { name: "650R", engine_size: "649" },
+          { name: "900RR", engine_size: "899" },
+          { name: "929RR", engine_size: "929" },
+          { name: "954RR", engine_size: "954" },
+          { name: "1000RR Fireblade", engine_size: "998" },
         ],
       },
     ],
     offroad: [
-      { model: "CRF250F", trims: [{ name: "Standard", engine_size: "249" }] },
-      { model: "CRF450F", trims: [{ name: "Standard", engine_size: "449" }] },
       {
-        model: "CRF250L",
+        model: "CRF",
         trims: [
-          { name: "Standard", engine_size: "249" },
-          { name: "Rally", engine_size: "249" },
+          { name: "50", engine_size: "50" },
+          { name: "110F", engine_size: "110" },
+          { name: "125F", engine_size: "125" },
+          { name: "150L", engine_size: "150" },
+          { name: "150R", engine_size: "150" },
+          { name: "250F", engine_size: "250" },
+          { name: "250R", engine_size: "250" },
+          { name: "250RX", engine_size: "250" },
+          { name: "250L", engine_size: "250" },
+          { name: "300L", engine_size: "299" },
+          { name: "300 Rally", engine_size: "299" },
+          { name: "450X", engine_size: "449" },
+          { name: "450R", engine_size: "449" },
+          { name: "450R-S", engine_size: "449" },
+          { name: "450RX", engine_size: "449" },
+          { name: "450RL", engine_size: "449" },
         ],
       },
-      { model: "CRF450L", trims: [{ name: "Standard", engine_size: "449" }] },
-      {
-        model: "CRF300L",
-        trims: [
-          { name: "Standard", engine_size: "286" },
-          { name: "Rally", engine_size: "286" },
-        ],
-      },
-      { model: "CRF450RX", trims: [{ name: "Standard", engine_size: "449" }] },
-      { model: "CRF450X", trims: [{ name: "Standard", engine_size: "449" }] },
     ],
     adventure: [
       {
         model: "Africa Twin",
         trims: [
-          { name: "Standard", engine_size: "1084" },
-          { name: "DCT", engine_size: "1084" },
-          { name: "Adventure Sports", engine_size: "1084" },
-          { name: "Adventure Sports DCT", engine_size: "1084" },
+          { name: "XRV650", engine_size: "647" },
+          { name: "XRV750", engine_size: "742" },
+          { name: "CRF1000L", engine_size: "998" },
+          { name: "CRF1100L", engine_size: "1084" },
+          { name: "Adventure Sports ES", engine_size: "1084" },
         ],
       },
       {
-        model: "Africa Twin 1100",
+        model: "CRF",
         trims: [
-          { name: "Standard", engine_size: "1084" },
-          { name: "DCT", engine_size: "1084" },
-          { name: "Adventure Sports", engine_size: "1084" },
-          { name: "Adventure Sports DCT", engine_size: "1084" },
+          { name: "300L", engine_size: "299" },
+          { name: "300LS", engine_size: "299" },
+          { name: "300 Rally", engine_size: "299" },
+          { name: "450RL", engine_size: "449" },
         ],
       },
       {
-        model: "NC750X",
-        trims: [
-          { name: "Standard", engine_size: "745" },
-          { name: "DCT", engine_size: "745" },
-        ],
-      },
-      { model: "X-ADV", trims: [{ name: "Standard", engine_size: "745" }] },
-    ],
-    sportTouring: [
-      {
-        model: "VFR800F",
-        trims: [
-          { name: "Standard", engine_size: "782" },
-          { name: "ABS", engine_size: "782" },
-        ],
+        model: "Transalp",
+        trims: [{ name: "Base", engine_size: "755" }],
       },
       {
-        model: "VFR1200F",
-        trims: [
-          { name: "Standard", engine_size: "1237" },
-          { name: "DCT", engine_size: "1237" },
-          { name: "ABS", engine_size: "1237" },
-        ],
+        model: "NC750X DCT",
+        trims: [{ name: "Base", engine_size: "745" }],
       },
       {
-        model: "ST1300",
-        trims: [
-          { name: "Standard", engine_size: "1261" },
-          { name: "ABS", engine_size: "1261" },
-        ],
-      },
-      {
-        model: "NT1100",
-        trims: [
-          { name: "Standard", engine_size: "1084" },
-          { name: "DCT", engine_size: "1084" },
-        ],
+        model: "NX500",
+        trims: [{ name: "Base", engine_size: "499" }],
       },
     ],
     scooters: [
-      { model: "PCX160", trims: [{ name: "Standard", engine_size: "156" }] },
-      { model: "Forza 300", trims: [{ name: "Standard", engine_size: "279" }] },
-      { model: "SH125i", trims: [{ name: "Standard", engine_size: "124" }] },
-      { model: "SH150i", trims: [{ name: "Standard", engine_size: "153" }] },
-      { model: "Dio", trims: [{ name: "Standard", engine_size: "109" }] },
-      { model: "Lead 125", trims: [{ name: "Standard", engine_size: "124" }] },
       {
-        model: "Vision 110",
-        trims: [{ name: "Standard", engine_size: "109" }],
+        model: "SH",
+        trims: [
+          { name: "125", engine_size: "125" },
+          { name: "125i", engine_size: "125" },
+          { name: "160i", engine_size: "159" },
+          { name: "350i", engine_size: "3549" },
+        ],
+      },
+      {
+        model: "Vario",
+        trims: [
+          { name: "125", engine_size: "125" },
+          { name: "160", engine_size: "159" },
+        ],
+      },
+      {
+        model: "Air Blade",
+        trims: [
+          { name: "125", engine_size: "125" },
+          { name: "160", engine_size: "159" },
+        ],
+      },
+      {
+        model: "Lead",
+        trims: [
+          { name: "Base", engine_size: "110" },
+          { name: "ABS", engine_size: "110" },
+        ],
+      },
+      {
+        model: "Vision",
+        trims: [{ name: "Base", engine_size: "110" }],
       },
     ],
     underbones: [
-      { model: "Wave 110i", trims: [{ name: "Standard", engine_size: "109" }] },
       {
-        model: "Future 125",
-        trims: [{ name: "Standard", engine_size: "124" }],
+        model: "Wave",
+        trims: [
+          { name: "Alpha", engine_size: "109" },
+          { name: "RSX", engine_size: "109" },
+          { name: "Blade", engine_size: "109" },
+        ],
       },
-      { model: "Blade 110", trims: [{ name: "Standard", engine_size: "109" }] },
       {
-        model: "C125 Super Cub",
-        trims: [{ name: "Standard", engine_size: "124" }],
+        model: "Future",
+        trims: [{ name: "125 Fi", engine_size: "125" }],
+      },
+      {
+        model: "Cub",
+        trims: [{ name: "Super C125 Fi", engine_size: "125" }],
       },
     ],
   },
   Yamaha: {
     naked: [
       {
-        model: "MT-125",
+        model: "MT",
         trims: [
-          { name: "Standard", engine_size: "124" },
-          { name: "ABS", engine_size: "124" },
+          { name: "125", engine_size: "125" },
+          { name: "15", engine_size: "155" },
+          { name: "03", engine_size: "320" },
+          { name: "07", engine_size: "689" },
+          { name: "09", engine_size: "890" },
+          { name: "10", engine_size: "998" },
         ],
       },
       {
-        model: "MT-15",
+        model: "XSR",
         trims: [
-          { name: "Standard", engine_size: "155" },
-          { name: "ABS", engine_size: "155" },
-        ],
-      },
-      {
-        model: "MT-25",
-        trims: [
-          { name: "Standard", engine_size: "249" },
-          { name: "ABS", engine_size: "249" },
-        ],
-      },
-      {
-        model: "MT-03",
-        trims: [
-          { name: "Standard", engine_size: "321" },
-          { name: "ABS", engine_size: "321" },
-        ],
-      },
-      {
-        model: "MT-07",
-        trims: [
-          { name: "Standard", engine_size: "689" },
-          { name: "ABS", engine_size: "689" },
-        ],
-      },
-      {
-        model: "MT-09",
-        trims: [
-          { name: "Standard", engine_size: "847" },
-          { name: "ABS", engine_size: "847" },
-        ],
-      },
-      {
-        model: "MT-10",
-        trims: [
-          { name: "Standard", engine_size: "998" },
-          { name: "ABS", engine_size: "998" },
+          { name: "155", engine_size: "155" },
+          { name: "700", engine_size: "689" },
+          { name: "900", engine_size: "898" },
         ],
       },
     ],
     cruiser: [
       {
-        model: "V-Star 250",
-        trims: [{ name: "Standard", engine_size: "249" }],
-      },
-      {
-        model: "V-Star 650",
+        model: "V-Star",
         trims: [
-          { name: "Classic", engine_size: "649" },
-          { name: "Custom", engine_size: "649" },
-          { name: "Silverado", engine_size: "649" },
-        ],
-      },
-      {
-        model: "V-Star 950",
-        trims: [
-          { name: "Tourer", engine_size: "942" },
-          { name: "Custom", engine_size: "942" },
-        ],
-      },
-      {
-        model: "V-Star 1300",
-        trims: [
-          { name: "Tourer", engine_size: "1304" },
-          { name: "Deluxe", engine_size: "1304" },
+          { name: "250", engine_size: "249" },
+          { name: "650", engine_size: "649" },
+          { name: "1100", engine_size: "1063" },
+          { name: "1300", engine_size: "1304" },
         ],
       },
       {
@@ -735,14 +595,6 @@ export const motorcycleData = {
         trims: [
           { name: "R-Spec", engine_size: "942" },
           { name: "C-Spec", engine_size: "942" },
-        ],
-      },
-      { model: "Raider", trims: [{ name: "Standard", engine_size: "1900" }] },
-      {
-        model: "Warrior",
-        trims: [
-          { name: "Midnight", engine_size: "1670" },
-          { name: "Standard", engine_size: "1670" },
         ],
       },
       { model: "V-Max", trims: [{ name: "Standard", engine_size: "1679" }] },
@@ -757,401 +609,390 @@ export const motorcycleData = {
         ],
       },
       {
-        model: "Tracer 900",
+        model: "Tracer",
         trims: [
-          { name: "Standard", engine_size: "847" },
-          { name: "GT", engine_size: "847" },
+          { name: "7", engine_size: "689" },
+          { name: "7 GT", engine_size: "689" },
+          { name: "9", engine_size: "890" },
+          { name: "9 GT", engine_size: "890" },
+          { name: "9 GT+", engine_size: "890" },
         ],
       },
       {
-        model: "Tracer 700",
-        trims: [
-          { name: "Standard", engine_size: "689" },
-          { name: "GT", engine_size: "689" },
-        ],
+        model: "Tenere 700",
+        trims: [{ name: "Base", engine_size: "689" }],
       },
     ],
     sport: [
       {
-        model: "YZF-R15",
+        model: "YZF",
         trims: [
-          { name: "Standard", engine_size: "155" },
-          { name: "ABS", engine_size: "155" },
-        ],
-      },
-      {
-        model: "YZF-R3",
-        trims: [
-          { name: "Standard", engine_size: "321" },
-          { name: "ABS", engine_size: "321" },
-        ],
-      },
-      {
-        model: "YZF-R6",
-        trims: [
-          { name: "Standard", engine_size: "599" },
-          { name: "ABS", engine_size: "599" },
-        ],
-      },
-      {
-        model: "YZF-R7",
-        trims: [
-          { name: "Standard", engine_size: "699" },
-          { name: "ABS", engine_size: "699" },
-        ],
-      },
-      {
-        model: "YZF-R9",
-        trims: [
-          { name: "Standard", engine_size: "899" },
-          { name: "ABS", engine_size: "899" },
-        ],
-      },
-      {
-        model: "YZF-R1",
-        trims: [
-          { name: "Standard", engine_size: "998" },
-          { name: "M", engine_size: "998" },
+          { name: "R125", engine_size: "125" },
+          { name: "R15", engine_size: "155" },
+          { name: "R3", engine_size: "321" },
+          { name: "R6", engine_size: "599" },
+          { name: "R7", engine_size: "689" },
+          { name: "R7", engine_size: "689" },
+          { name: "R9", engine_size: "890" },
+          { name: "R1", engine_size: "998" },
+          { name: "R1M", engine_size: "998" },
         ],
       },
     ],
     offroad: [
-      { model: "WR250F", trims: [{ name: "Standard", engine_size: "249" }] },
-      { model: "WR450F", trims: [{ name: "Standard", engine_size: "449" }] },
-      { model: "YZ250F", trims: [{ name: "Standard", engine_size: "249" }] },
-      { model: "YZ450F", trims: [{ name: "Standard", engine_size: "449" }] },
-      { model: "XT250", trims: [{ name: "Standard", engine_size: "249" }] },
-      { model: "XT600", trims: [{ name: "Standard", engine_size: "595" }] },
       {
-        model: "XT1200Z Super Ténéré",
-        trims: [{ name: "Standard", engine_size: "1199" }],
+        model: "YZ",
+        trims: [
+          { name: "65", engine_size: "65" },
+          { name: "85", engine_size: "85" },
+          { name: "85LW", engine_size: "85" },
+          { name: "125", engine_size: "125" },
+          { name: "250", engine_size: "250" },
+          { name: "250F", engine_size: "250" },
+          { name: "250FX", engine_size: "250" },
+          { name: "450F", engine_size: "450" },
+          { name: "450FX", engine_size: "450" },
+        ],
+      },
+      {
+        model: "TT",
+        trims: [
+          { name: "R110E", engine_size: "110" },
+          { name: "R125LE", engine_size: "125" },
+          { name: "R230E", engine_size: "230" },
+        ],
+      },
+      {
+        model: "WR",
+        trims: [
+          { name: "250F", engine_size: "250" },
+          { name: "450F", engine_size: "450" },
+        ],
       },
     ],
     adventure: [
       {
-        model: "XT660Z Ténéré",
-        trims: [{ name: "Standard", engine_size: "660" }],
+        model: "XT250",
+        trims: [{ name: "Standard", engine_size: "2549" }],
       },
       {
-        model: "XT1200Z Super Ténéré",
-        trims: [{ name: "Standard", engine_size: "1199" }],
+        model: "TW200",
+        trims: [{ name: "Standard", engine_size: "199" }],
+      },
+      {
+        model: "Tenere 700",
+        trims: [{ name: "Base", engine_size: "689" }],
       },
     ],
-    sportTouring: [
+    sport_touring: [
       {
         model: "FJR1300",
         trims: [
-          { name: "Standard", engine_size: "1298" },
+          { name: "A", engine_size: "1298" },
           { name: "AE", engine_size: "1298" },
-          { name: "ES", engine_size: "1298" },
+          { name: "AS", engine_size: "1298" },
         ],
       },
       {
-        model: "Tracer 900",
+        model: "Tracer",
         trims: [
-          { name: "Standard", engine_size: "847" },
-          { name: "GT", engine_size: "847" },
-        ],
-      },
-      {
-        model: "Tracer 700",
-        trims: [
-          { name: "Standard", engine_size: "689" },
-          { name: "GT", engine_size: "689" },
+          { name: "700 Standard", engine_size: "689" },
+          { name: "700 GT", engine_size: "689" },
+          { name: "900 Standard", engine_size: "847" },
+          { name: "900 GT", engine_size: "847" },
+          { name: "900 +", engine_size: "847" },
         ],
       },
     ],
     scooters: [
       { model: "NMAX 155", trims: [{ name: "Standard", engine_size: "155" }] },
-      {
-        model: "YZF-R125",
-        trims: [
-          { name: "Standard", engine_size: "124" },
-          { name: "ABS", engine_size: "124" },
-        ],
-      },
       { model: "XMAX 300", trims: [{ name: "Standard", engine_size: "292" }] },
       { model: "TMAX", trims: [{ name: "Standard", engine_size: "530" }] },
+      { model: "Janus", trims: [{ name: "Standard", engine_size: "125" }] },
+      { model: "Lexi", trims: [{ name: "Standard", engine_size: "155" }] },
+      { model: "NVX", trims: [{ name: "Standard", engine_size: "155" }] },
+      { model: "Grande", trims: [{ name: "Standard", engine_size: "125" }] },
+      { model: "Freego", trims: [{ name: "Standard", engine_size: "125" }] },
+      { model: "Latte", trims: [{ name: "Standard", engine_size: "125" }] },
     ],
     underbones: [
-      { model: "YBR125", trims: [{ name: "Standard", engine_size: "124" }] },
+      { model: "PG-1", trims: [{ name: "Standard", engine_size: "109" }] },
+      { model: "Exciter", trims: [{ name: "Standard", engine_size: "155" }] },
+      { model: "Sniper", trims: [{ name: "Standard", engine_size: "155" }] },
       {
-        model: "YBR125 Cruiser",
-        trims: [{ name: "Standard", engine_size: "124" }],
+        model: "Jupiter",
+        trims: [
+          { name: "Fi", engine_size: "125" },
+          { name: "Finn", engine_size: "125" },
+        ],
       },
       {
-        model: "YBR125 Custom",
-        trims: [{ name: "Standard", engine_size: "124" }],
+        model: "Sirius",
+        trims: [
+          { name: "Base", engine_size: "110" },
+          { name: "Fi", engine_size: "110" },
+        ],
       },
-      {
-        model: "YBR125 Diversion",
-        trims: [{ name: "Standard", engine_size: "124" }],
-      },
-      { model: "YBR150", trims: [{ name: "Standard", engine_size: "149" }] },
-      { model: "YBR250", trims: [{ name: "Standard", engine_size: "249" }] },
-      { model: "YS125", trims: [{ name: "Standard", engine_size: "124" }] },
-      { model: "YS150", trims: [{ name: "Standard", engine_size: "149" }] },
-      { model: "YS250", trims: [{ name: "Standard", engine_size: "249" }] },
-      {
-        model: "YS250 Fazer",
-        trims: [{ name: "Standard", engine_size: "249" }],
-      },
-      { model: "YS300", trims: [{ name: "Standard", engine_size: "292" }] },
-      {
-        model: "YS300 Fazer",
-        trims: [{ name: "Standard", engine_size: "292" }],
-      },
-      { model: "YSZ125", trims: [{ name: "Standard", engine_size: "124" }] },
     ],
   },
   CFMOTO: {
     naked: [
       {
-        model: "700CL-X",
+        model: "NK",
         trims: [
-          { name: "Heritage", engine_size: "693" },
-          { name: "Sport", engine_size: "693" },
+          { name: "450", engine_size: "449" },
+          { name: "800", engine_size: "799" },
+          { name: "675", engine_size: "674" },
+          { name: "125", engine_size: "125" },
         ],
       },
-      { model: "800NK", trims: [{ name: "Standard", engine_size: "799" }] },
     ],
-    sport: [
+    classic: [
       {
-        model: "675SR",
+        model: "CL-X",
         trims: [
-          { name: "Standard", engine_size: "675" },
-          { name: "R", engine_size: "675" },
+          { name: "250", engine_size: "250" },
+          { name: "300", engine_size: "300" },
+          { name: "700 Hertiage", engine_size: "699" },
+          { name: "700 Sport", engine_size: "699" },
+          { name: "700 Adventure", engine_size: "699" },
         ],
-      },
-      { model: "675NK", trims: [{ name: "Standard", engine_size: "675" }] },
-      { model: "500SR", trims: [{ name: "Standard", engine_size: "471" }] },
-    ],
-    adventure: [
-      { model: "450MT", trims: [{ name: "Standard", engine_size: "449" }] },
-      {
-        model: "800MT",
-        trims: [
-          { name: "Standard", engine_size: "799" },
-          { name: "Touring", engine_size: "799" },
-        ],
-      },
-      { model: "1250TR-G", trims: [{ name: "Standard", engine_size: "1250" }] },
-    ],
-    touring: [
-      {
-        model: "700CL-X Touring",
-        trims: [{ name: "Standard", engine_size: "693" }],
-      },
-      {
-        model: "800MT Touring",
-        trims: [{ name: "Standard", engine_size: "799" }],
       },
     ],
     cruiser: [
       {
-        model: "CFMOTO Papio 125 XO2",
-        trims: [{ name: "Standard", engine_size: "125" }],
+        model: "CL-C",
+        trims: [
+          { name: "250", engine_size: "250" },
+          { name: "450", engine_size: "450" },
+          { name: "450 Bobber", engine_size: "450" },
+        ],
+      },
+    ],
+    sport: [
+      {
+        model: "SR",
+        trims: [
+          { name: "250", engine_size: "250" },
+          { name: "300", engine_size: "300" },
+          { name: "450", engine_size: "450" },
+          { name: "450 S", engine_size: "450" },
+          { name: "500 VOOM", engine_size: "500" },
+          { name: "675-R", engine_size: "675" },
+        ],
+      },
+    ],
+    adventure: [
+      {
+        model: "MT",
+        trims: [
+          { name: "450", engine_size: "449" },
+          { name: "700", engine_size: "699" },
+          { name: "800 Sport", engine_size: "799" },
+          { name: "800 Explore", engine_size: "799" },
+          { name: "800 X", engine_size: "799" },
+        ],
+      },
+    ],
+    touring: [
+      {
+        model: "MT",
+        trims: [
+          { name: "450", engine_size: "449" },
+          { name: "700", engine_size: "699" },
+          { name: "800 Sport", engine_size: "799" },
+          { name: "800 Explore", engine_size: "799" },
+          { name: "800 X", engine_size: "799" },
+        ],
+      },
+    ],
+    underbones: [
+      {
+        model: "XO Papio",
+        trims: [
+          { name: "Racer", engine_size: "125" },
+          { name: "Trail", engine_size: "125" },
+        ],
+      },
+    ],
+    scooters: [
+      {
+        model: "SC",
+        trims: [{ name: "150", engine_size: "150" }],
       },
     ],
   },
   Aprilia: {
     naked: [
-      { model: "Tuono 660", trims: [{ name: "Standard", engine_size: "660" }] },
       {
-        model: "Tuono V4 1100",
-        trims: [{ name: "Standard", engine_size: "1077" }],
+        model: "Tuono",
+        trims: [
+          { name: "125", engine_size: "125" },
+          { name: "457", engine_size: "457" },
+          { name: "1000", engine_size: "998" },
+          { name: "1000 R", engine_size: "998" },
+          { name: "1000 R Factory", engine_size: "998" },
+          { name: "V4", engine_size: "1099" },
+        ],
       },
     ],
     sport: [
-      { model: "RS 660", trims: [{ name: "Standard", engine_size: "659" }] },
       {
-        model: "RSV4 1100",
-        trims: [{ name: "Standard", engine_size: "1077" }],
+        model: "RS",
+        trims: [
+          { name: "V4", engine_size: "1077" },
+          { name: "660", engine_size: "659" },
+          { name: "457", engine_size: "457" },
+          { name: "125", engine_size: "125" },
+          { name: "50", engine_size: "50" },
+        ],
+      },
+      {
+        model: "Tuono",
+        trims: [
+          { name: "660", engine_size: "660" },
+          { name: "660 Factory", engine_size: "660" },
+        ],
       },
     ],
     adventure: [
       {
-        model: "Tuareg 660",
-        trims: [{ name: "Standard", engine_size: "660" }],
+        model: "Tuareg",
+        trims: [
+          { name: "457", engine_size: "457" },
+          { name: "660", engine_size: "660" },
+        ],
       },
     ],
-    touring: [
-      { model: "SR GT 200", trims: [{ name: "Standard", engine_size: "174" }] },
-      {
-        model: "SR GT 200 Sport",
-        trims: [{ name: "Sport", engine_size: "174" }],
-      },
+    offroad: [
+      { model: "SX 125", trims: [{ name: "Base", engine_size: "125" }] },
+      { model: "SX 125", trims: [{ name: "Base", engine_size: "125" }] },
     ],
     scooters: [
-      { model: "SRV 850", trims: [{ name: "Standard", engine_size: "839" }] },
-    ],
-    underbones: [
-      { model: "RX 125", trims: [{ name: "Standard", engine_size: "124" }] },
-      { model: "SX 125", trims: [{ name: "Standard", engine_size: "124" }] },
+      {
+        model: "SR",
+        trims: [
+          { name: "Base", engine_size: "125" },
+          { name: "GT 125", engine_size: "125" },
+          { name: "GT Sport 125", engine_size: "125" },
+          { name: "GT Replica 125", engine_size: "125" },
+          { name: "GT 200", engine_size: "199" },
+          { name: "GT Sport 200", engine_size: "199" },
+          { name: "GT Replica 200", engine_size: "199" },
+        ],
+      },
     ],
   },
   Suzuki: {
     naked: [
       {
-        model: "GSX-S1000",
+        model: "GSX-S",
         trims: [
-          { name: "Standard", engine_size: "999" },
-          { name: "ABS", engine_size: "999" },
-          { name: "Z", engine_size: "999" },
+          { name: "125", engine_size: "125" },
+          { name: "150", engine_size: "147" },
+          { name: "8S", engine_size: "776" },
+          { name: "750", engine_size: "750" },
+          { name: "750Z", engine_size: "750" },
+          { name: "750Z ABS", engine_size: "750" },
+          { name: "1000", engine_size: "999" },
         ],
       },
       {
-        model: "GSX-S750",
+        model: "SV",
         trims: [
-          { name: "Standard", engine_size: "749" },
-          { name: "ABS", engine_size: "749" },
+          { name: "650", engine_size: "649" },
+          { name: "650 ABS", engine_size: "649" },
         ],
-      },
-      {
-        model: "SV650",
-        trims: [
-          { name: "Standard", engine_size: "645" },
-          { name: "ABS", engine_size: "645" },
-        ],
-      },
-      {
-        model: "V-Strom 650",
-        trims: [
-          { name: "Standard", engine_size: "645" },
-          { name: "XT", engine_size: "645" },
-        ],
-      },
-      {
-        model: "V-Strom 1000",
-        trims: [
-          { name: "Standard", engine_size: "1037" },
-          { name: "XT", engine_size: "1037" },
-        ],
-      },
-      {
-        model: "GSX150 Bandit",
-        trims: [{ name: "Standard", engine_size: "147" }],
       },
     ],
     cruiser: [
       {
-        model: "Boulevard M109R",
+        model: "Boulevard",
         trims: [
-          { name: "Standard", engine_size: "1783" },
-          { name: "C90T", engine_size: "1783" },
-        ],
-      },
-      {
-        model: "Boulevard C50",
-        trims: [
-          { name: "Standard", engine_size: "805" },
+          { name: "S40", engine_size: "652" },
+          { name: "M50", engine_size: "805" },
+          { name: "C50", engine_size: "805" },
           { name: "C50T", engine_size: "805" },
+          { name: "S83", engine_size: "1360" },
+          { name: "C90", engine_size: "1460" },
+          { name: "M109R", engine_size: "1783" },
+          { name: "M109R B.O.S.S", engine_size: "1783" },
         ],
-      },
-      {
-        model: "Boulevard S40",
-        trims: [{ name: "Standard", engine_size: "652" }],
-      },
-      {
-        model: "Intruder M1800R",
-        trims: [{ name: "Standard", engine_size: "1783" }],
       },
     ],
     touring: [
       {
-        model: "V-Strom 1000",
-        trims: [
-          { name: "Standard", engine_size: "1037" },
-          { name: "XT", engine_size: "1037" },
-        ],
-      },
-      {
-        model: "V-Strom 650",
-        trims: [
-          { name: "Standard", engine_size: "645" },
-          { name: "XT", engine_size: "645" },
-        ],
+        model: "Boulevard",
+        trims: [{ name: "C50T", engine_size: "805" }],
       },
     ],
     sport: [
       {
-        model: "GSX-R1000",
+        model: "GSX",
         trims: [
-          { name: "Standard", engine_size: "999" },
-          { name: "R", engine_size: "999" },
-          { name: "MotoGP Edition", engine_size: "999" },
+          { name: "R150", engine_size: "150" },
+          { name: "250R ABS", engine_size: "250" },
+          { name: "R600", engine_size: "599" },
+          { name: "R600Z", engine_size: "599" },
+          { name: "R750", engine_size: "749" },
+          { name: "R750Z", engine_size: "749" },
+          { name: "8R", engine_size: "799" },
+          { name: "R1000", engine_size: "999" },
+          { name: "R1000R", engine_size: "999" },
+          { name: "R1000RZ", engine_size: "999" },
         ],
       },
       {
-        model: "GSX-R750",
-        trims: [
-          { name: "Standard", engine_size: "749" },
-          { name: "MotoGP Edition", engine_size: "749" },
-        ],
-      },
-      {
-        model: "GSX-R600",
-        trims: [
-          { name: "Standard", engine_size: "599" },
-          { name: "MotoGP Edition", engine_size: "599" },
-        ],
-      },
-      { model: "GSX-R125", trims: [{ name: "Standard", engine_size: "124" }] },
-      { model: "GSX-R150", trims: [{ name: "Standard", engine_size: "147" }] },
-      {
-        model: "GSX-S1000F",
-        trims: [
-          { name: "Standard", engine_size: "999" },
-          { name: "ABS", engine_size: "999" },
-        ],
+        model: "Hayabusa",
+        trims: [{ name: "Base", engine_size: "1340" }],
       },
     ],
     offroad: [
-      { model: "RM-Z450", trims: [{ name: "Standard", engine_size: "449" }] },
-      { model: "RM-Z250", trims: [{ name: "Standard", engine_size: "249" }] },
-      { model: "RM85", trims: [{ name: "Standard", engine_size: "84" }] },
+      {
+        model: "DR",
+        trims: [
+          { name: "Z125L", engine_size: "125" },
+          { name: "Z50", engine_size: "50" },
+        ],
+      },
     ],
     adventure: [
       {
-        model: "V-Strom 1000",
+        model: "V-Strom",
         trims: [
-          { name: "Standard", engine_size: "1037" },
-          { name: "XT", engine_size: "1037" },
-        ],
-      },
-      {
-        model: "V-Strom 650",
-        trims: [
-          { name: "Standard", engine_size: "645" },
-          { name: "XT", engine_size: "645" },
+          { name: "650", engine_size: "649" },
+          { name: "650XT", engine_size: "649" },
+          { name: "650XT Adventure", engine_size: "649" },
+          { name: "800", engine_size: "799" },
+          { name: "800DE", engine_size: "799" },
+          { name: "800DE Adventure", engine_size: "799" },
+          { name: "800 Touring", engine_size: "799" },
+          { name: "800RE", engine_size: "799" },
+          { name: "1000", engine_size: "999" },
+          { name: "1050", engine_size: "1049" },
+          { name: "1050DE", engine_size: "1049" },
+          { name: "1050DE Adventure", engine_size: "1049" },
         ],
       },
     ],
     sport_touring: [
       {
-        model: "GSX1250FA",
-        trims: [{ name: "Standard", engine_size: "1255" }],
+        model: "GSX",
+        trims: [
+          { name: "S1000GT+", engine_size: "999" },
+          { name: "S1000GX+", engine_size: "999" },
+        ],
       },
-      { model: "GSX1250F", trims: [{ name: "Standard", engine_size: "1255" }] },
     ],
     scooters: [
       {
-        model: "Burgman 650",
-        trims: [{ name: "Standard", engine_size: "638" }],
+        model: "Burgman",
+        trims: [
+          { name: "400", engine_size: "399" },
+          { name: "600", engine_size: "599" },
+          { name: "200", engine_size: "199" },
+        ],
       },
-      {
-        model: "Burgman 400",
-        trims: [{ name: "Standard", engine_size: "399" }],
-      },
-      {
-        model: "Burgman 200",
-        trims: [{ name: "Standard", engine_size: "200" }],
-      },
-      {
-        model: "Address 110",
-        trims: [{ name: "Standard", engine_size: "113" }],
-      },
-      { model: "Let's", trims: [{ name: "Standard", engine_size: "112" }] },
     ],
     underbones: [
       {
