@@ -5,6 +5,8 @@ import Select from "react-dropdown-select";
 import queryString from "query-string";
 import RangeSlider from "react-range-slider-input";
 import "react-range-slider-input/dist/style.css";
+import FilterRangeSlider from "./FilterRangeSlider";
+import FilterSelect from "./FilterSelect";
 
 const FilterBar = () => {
   const navigate = useNavigate();
@@ -219,95 +221,49 @@ const FilterBar = () => {
         </div>
       </div>
 
-      <div className="flex flex-col items-start gap-1 w-full">
-        <div className="font-bold text-xl">Type</div>
-        <div className="w-full">
-          <Select
-            key={selectedType}
-            options={typeOptions}
-            onChange={handleTypeChange}
-            values={
-              selectedType
-                ? typeOptions.filter((option) => option.value === selectedType)
-                : []
-            }
-            placeholder="Select type"
-            searchable
-            clearable
-            className="text-[18px]"
-          />
-        </div>
-      </div>
+      <FilterSelect
+        title="Type"
+        options={typeOptions}
+        selectedValue={selectedType}
+        onChange={handleTypeChange}
+        placeholder="Select type"
+      />
 
-      <div className="flex flex-col items-start gap-1 self-stretch w-full">
-        <div className="font-bold text-xl">Brand</div>
-        <div className="w-full">
-          <Select
-            key={`${selectedType}-${selectedBrand}`}
-            options={filteredBrands.map((brand) => ({
-              label: brand,
-              value: brand,
-            }))}
-            onChange={handleBrandChange}
-            values={
-              selectedBrand
-                ? [{ value: selectedBrand, label: selectedBrand }]
-                : []
-            }
-            placeholder="Select brand"
-            searchable
-            clearable
-            className="text-[18px]"
-            disabled={!selectedType}
-          />
-        </div>
-      </div>
+      <FilterSelect
+        title="Brand"
+        options={filteredBrands.map((brand) => ({
+          label: brand,
+          value: brand,
+        }))}
+        selectedValue={selectedBrand}
+        onChange={handleBrandChange}
+        disabled={!selectedType}
+        placeholder="Select brand"
+      />
 
-      <div className="flex flex-col items-start gap-1 self-stretch w-full">
-        <div className="font-bold text-xl">Model</div>
-        <div className="w-full">
-          <Select
-            key={`${selectedType}-${selectedBrand}-${selectedModel}`}
-            options={filteredModels.map((model) => ({
-              label: model.model,
-              value: model.model,
-            }))}
-            onChange={handleModelChange}
-            values={
-              selectedModel
-                ? [{ value: selectedModel, label: selectedModel }]
-                : []
-            }
-            placeholder="Select model"
-            searchable
-            clearable
-            className="text-[18px]"
-            disabled={!selectedBrand}
-          />
-        </div>
-      </div>
+      <FilterSelect
+        title="Model"
+        options={filteredModels.map((model) => ({
+          label: model.model,
+          value: model.model,
+        }))}
+        selectedValue={selectedModel}
+        onChange={handleModelChange}
+        disabled={!selectedBrand}
+        placeholder="Select Model"
+      />
 
-      <div className="flex flex-col items-start gap-1 self-stretch w-full">
-        <div className="font-bold text-xl">Trims</div>
-        <div className="w-full">
-          <Select
-            key={`${selectedType}-${selectedBrand}-${selectedModel}-${selectedTrim}`}
-            options={filteredTrims.map((trim) => ({
-              label: trim.name,
-              value: trim.name,
-            }))}
-            onChange={handleTrimChange}
-            values={
-              selectedTrim ? [{ value: selectedTrim, label: selectedTrim }] : []
-            }
-            placeholder="Select trim"
-            searchable
-            clearable
-            className="text-[18px]"
-            disabled={!selectedModel}
-          />
-        </div>
-      </div>
+      <FilterSelect
+        title="Trim"
+        options={filteredTrims.map((trim) => ({
+          label: trim.name,
+          value: trim.name,
+        }))}
+        selectedValue={selectedTrim}
+        onChange={handleTrimChange}
+        disabled={!selectedModel}
+        placeholder="Select Trim"
+      />
 
       <div className="w-full flex flex-col gap-3 justify-center items-center">
         <div className="font-bold text-xl">Condition</div>
@@ -366,65 +322,42 @@ const FilterBar = () => {
         </ul>
       </div>
 
-      <div className="flex flex-col justify-center items-start self-stretch gap-2">
-        <div className="font-bold text-[20px]">Price</div>
-        <div className="flex justify-between self-stretch font-[400] text-[18px] text-black">
-          <span>${formatNumber(price[0])}</span>
-          <span>${formatNumber(price[1])}</span>
-        </div>
-        <RangeSlider
-          id="range-slider"
-          min={0}
-          max={100000}
-          value={price}
-          onInput={(value) => setPrice(value)}
-        />
-      </div>
+      <FilterRangeSlider
+        title="Price"
+        value={price}
+        onInput={setPrice}
+        min={0}
+        max={100000}
+        formatValue={(val) => `$${formatNumber(val)}`}
+      />
 
-      <div className="flex flex-col justify-center items-start self-stretch gap-2">
-        <div className="font-bold text-[20px]">Mileage</div>
-        <div className="flex justify-between self-stretch font-[400] text-[18px] text-black">
-          <span>{formatNumber(mileage[0])}</span>
-          <span>{formatNumber(mileage[1])}</span>
-        </div>
-        <RangeSlider
-          id="range-slider"
-          min={0}
-          max={999999}
-          value={mileage}
-          onInput={(value) => setMileage(value)}
-        />
-      </div>
+      <FilterRangeSlider
+        title="Mileage"
+        value={mileage}
+        onInput={setMileage}
+        min={0}
+        max={999999}
+        formatValue={(val) => `${formatNumber(val)}`}
+      />
 
-      <div className="flex flex-col justify-center items-start self-stretch gap-2">
-        <div className="font-bold text-[20px]">Year</div>
-        <div className="flex justify-between self-stretch font-[400] text-[18px] text-black">
-          <span>{formatNumber(year[0])}</span>
-          <span>{formatNumber(year[1])}</span>
-        </div>
-        <RangeSlider
-          id="range-slider"
-          min={1895}
-          max={new Date().getFullYear()}
-          value={year}
-          onInput={(value) => setYear(value)}
-        />
-      </div>
+      <FilterRangeSlider
+        title="Year"
+        value={year}
+        onInput={setYear}
+        min={1895}
+        max={new Date().getFullYear()}
+        formatValue={(val) => `${formatNumber(val)}`}
+      />
 
-      <div className="flex flex-col justify-center items-start self-stretch gap-2">
-        <div className="font-bold text-[20px]">Engine Size</div>
-        <div className="flex justify-between self-stretch font-[400] text-[18px] text-black">
-          <span>{formatNumber(engineSize[0])}</span>
-          <span>{formatNumber(engineSize[1])}</span>
-        </div>
-        <RangeSlider
-          id="range-slider"
-          min={50}
-          max={3000}
-          value={engineSize}
-          onInput={(value) => setEngineSize(value)}
-        />
-      </div>
+      <FilterRangeSlider
+        title="Engine Size"
+        value={engineSize}
+        onInput={setEngineSize}
+        min={50}
+        max={3000}
+        formatValue={(val) => `${formatNumber(val)}`}
+      />
+
     </div>
   );
 };
