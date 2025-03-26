@@ -265,12 +265,12 @@ const Profile = () => {
         <header className="mb-5">
           <Header />
         </header>
-        <div className="flex flex-col gap-4">
-          <div className="relative rounded-xl w-full h-[270px] overflow-hidden flex justify-center items-center">
+        <div className="flex flex-col gap-4 pr-50 pl-50">
+          <div className="relative rounded-xl w-full h-fit md:h-[350px] overflow-hidden flex justify-center items-center">
             <img
               src={user?.banner_url}
               alt=""
-              className="object-cover w-full"
+              className="object-cover w-full rounded-xl"
             />
             {currentUser?.id === uid && (
               <div className="absolute">
@@ -346,7 +346,6 @@ const Profile = () => {
               </button>
             )}
           </div>
-
           <Modal
             isOpen={modalIsOpen}
             onRequestClose={() => setModalIsOpen(false)}
@@ -356,7 +355,6 @@ const Profile = () => {
           >
             <EditProfile user={user} onClose={() => setModalIsOpen(false)} />
           </Modal>
-
           <div className="bg-white w-full h-20 rounded-xl shadow-md flex flex-row gap-12 justify-start items-center p-5">
             <button
               className={`font-bold text-[28px] text-blue ${atListing ? "border-b-2" : "border-b-0"}`}
@@ -371,10 +369,9 @@ const Profile = () => {
               Reputation
             </button>
           </div>
-
           {atListing ? (
             <div className="w-full">
-              <div className="w-full flex flex-row flex-wrap justify-start items-start gap-8 overflow-hidden p-4">
+              <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:flex flex-row flex-wrap justify-start items-start gap-8 overflow-hidden p-4">
                 {moto.map((moto) => (
                   <ProductCard key={moto.id} moto={moto} />
                 ))}

@@ -16,9 +16,8 @@ const ProductCard = ({ moto, currentUserId, isOwnerPage }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false); 
+        setIsMenuOpen(false);
       }
     };
 
@@ -27,7 +26,7 @@ const ProductCard = ({ moto, currentUserId, isOwnerPage }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isMenuOpen]); 
+  }, [isMenuOpen]);
 
   return (
     <div className="relative home-card" ref={menuRef}>
@@ -50,6 +49,7 @@ const ProductCard = ({ moto, currentUserId, isOwnerPage }) => {
 
       <Link
         to={`/${moto.type}/${moto.brand}/${moto.model}/${moto.trim}/${moto.year}/${moto.uid}/${moto.id}`}
+        className="h-full"
       >
         <div id="product">
           <div id="img">

@@ -2,7 +2,6 @@ import React from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import FilterBar from "../components/FilterBar";
-import BrowseNavbar from "../components/BrowseNavbar";
 import BrowseProductList from "../components/BrowseProductList";
 
 const BrowsingPage = () => {
@@ -19,8 +18,6 @@ const BrowsingPage = () => {
 
             <BrowseProductList />
           </div>
-
-          <BrowseNavbar />
         </div>
 
         <div className="mb-5">

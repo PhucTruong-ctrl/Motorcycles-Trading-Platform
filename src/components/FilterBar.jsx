@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { motorcycleData } from "../data/motorcycleData";
-import Select from "react-dropdown-select";
 import queryString from "query-string";
-import RangeSlider from "react-range-slider-input";
-import "react-range-slider-input/dist/style.css";
 import FilterRangeSlider from "./FilterRangeSlider";
 import FilterSelect from "./FilterSelect";
 
@@ -111,6 +108,7 @@ const FilterBar = () => {
 
   const updateURL = () => {
     const queryParams = {
+      page: 1,
       type: selectedType !== "" ? selectedType : undefined,
       brand: selectedBrand !== "" ? selectedBrand : undefined,
       model: selectedModel !== "" ? selectedModel : undefined,
