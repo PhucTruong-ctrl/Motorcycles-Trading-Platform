@@ -48,13 +48,13 @@ const UserMenu = ({ user }) => {
           </div>
         </div>
         <Link
-          to={`/${currentUser.uid}/profile`}
+          to={`/profile/${currentUser.uid}`}
           className="w-full text-[16px] text-nowrap text-left rounded-[6px] flex flex-row gap-1 p-2 hover:bg-[#efeeee] hover:shadow-md transition"
         >
           <img className="w-6 h-6" src="/icons/User.svg" alt="" /> My Profile
         </Link>
         <Link
-          to={`/${currentUser.uid}/listing`}
+          to={`/listing/${currentUser.uid}`}
           className="w-full text-[16px] text-nowrap text-left rounded-[6px] flex flex-row gap-1 p-2 hover:bg-[#efeeee] hover:shadow-md transition"
         >
           <img className="w-6 h-6" src="/icons/List.svg" alt="" /> View My

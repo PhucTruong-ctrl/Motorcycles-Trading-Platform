@@ -1,6 +1,8 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { Link, useLocation } from "react-router";
 import queryString from "query-string";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 import supabase from "../supabase-client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -26,60 +28,21 @@ const MotoDetail = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [mainImage, setMainImage] = useState("");
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [currentMainIndex, setCurrentMainIndex] = useState(0);
   const [viewsIncreased, setViewsIncreased] = useState(false);
 
-  const imagesPerView = 7;
+  const mainCarouselRef = useRef(null);
+  const thumbCarouselRef = useRef(null);
+  const dealerCarouselRef = useRef(null);
 
-  const handleNext = () => {
-    if (currentIndex + imagesPerView < moto.image_url.length) {
-      setCurrentIndex((prev) => prev + 1);
-    } else {
-      setCurrentIndex(0);
-    }
+  const handleMainImageChange = (previousSlide, { currentSlide }) => {
+    setCurrentMainIndex(currentSlide);
+    thumbCarouselRef.current.goToSlide(currentSlide);
   };
 
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex((prev) => prev - 1);
-    } else {
-      setCurrentIndex(0);
-    }
-  };
-
-  const handleNextMain = () => {
-    if (currentMainIndex < moto.image_url.length - 1) {
-      setCurrentMainIndex((prev) => {
-        const newIndex = prev + 1;
-        setMainImage(moto.image_url[newIndex]);
-
-        if (newIndex >= currentIndex + imagesPerView) {
-          handleNext();
-        }
-
-        return newIndex;
-      });
-    }
-  };
-
-  const handlePrevMain = () => {
-    if (currentMainIndex > 0) {
-      setCurrentMainIndex((prev) => {
-        const newIndex = prev - 1;
-        setMainImage(moto.image_url[newIndex]);
-
-        if (newIndex < currentIndex) {
-          handlePrev();
-        }
-
-        return newIndex;
-      });
-    } else {
-      setCurrentMainIndex(0);
-      setMainImage(moto.image_url[0]);
-    }
+  const handleThumbnailClick = (index) => {
+    setCurrentMainIndex(index);
+    mainCarouselRef.current.goToSlide(index);
   };
 
   const increaseViews = useCallback(async () => {
@@ -120,8 +83,11 @@ const MotoDetail = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        setCurrentIndex(0);
         setCurrentMainIndex(0);
+
+        if (!queryParams.uid || !queryParams.id) {
+          throw new Error("Missing UID or ID in URL");
+        }
 
         const { data: motoData, error: motoError } = await supabase
           .from("MOTORCYCLE")
@@ -168,12 +134,6 @@ const MotoDetail = () => {
     }
   }, [moto, viewsIncreased, increaseViews]);
 
-  useEffect(() => {
-    if (moto?.image_url?.length > 0) {
-      setMainImage(moto.image_url[0]);
-    }
-  }, [moto]);
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -194,72 +154,90 @@ const MotoDetail = () => {
         </header>
 
         <div className="font-light mb-4 ">
-          {CapitalizeFirst(moto.type)} / {moto.brand} / {moto.model} /{" "}
-          {moto.trim} / {moto.year}
+          {CapitalizeFirst(
+            moto.type === "sport_touring" ? "Sport Touring" : moto.type
+          )}{" "}
+          / {moto.brand} / {moto.model} / {moto.trim} / {moto.year}
         </div>
 
         <div>
-          <div className="flex flex-col md:flex-row justify-center gap-15 items-center self-stretch mb-5">
-            <div className="flex flex-col gap-3.5 md:w-[1000px] md:h-fit rounded-xl">
-              <div className="relative flex flex-col justify-center items-center">
-                <img
-                  id="mainImg"
-                  src={mainImage || "/img/R7_Sample.jpg"}
-                  className="w-full md:w-full h-[700px] rounded-sm object-cover"
-                  alt="Main motorcycle"
-                />
-                <div className="absolute flex flex-row justify-between w-full">
-                  <button
-                    onClick={handlePrevMain}
-                    className={`${currentMainIndex > 0 ? "opacity-100" : "opacity-0"}`}
-                  >
-                    <img src="/icons/ArrowBack.svg" alt="Previous" />
-                  </button>
-                  <button
-                    onClick={handleNextMain}
-                    className={`${currentMainIndex < moto.image_url.length - 1 ? "opacity-100" : "opacity-0"}`}
-                  >
-                    <img src="/icons/ArrowForward.svg" alt="Next" />
-                  </button>
-                </div>
+          <div className="flex flex-col lg:flex-row justify-center gap-15 items-center self-stretch mb-5">
+            <div className="flex flex-col gap-3.5 w-full lg:w-[1000px] md:h-fit  rounded-xl">
+              <div className="relative flex flex-col justify-center items-center w-full">
+                <Carousel
+                  ref={mainCarouselRef}
+                  afterChange={handleMainImageChange}
+                  arrows
+                  className="w-full"
+                  containerClass="carousel-container"
+                  itemClass=""
+                  responsive={{
+                    desktop: {
+                      breakpoint: { max: 3000, min: 1024 },
+                      items: 1,
+                    },
+                    tablet: {
+                      breakpoint: { max: 1024, min: 464 },
+                      items: 1,
+                    },
+                    mobile: {
+                      breakpoint: { max: 464, min: 0 },
+                      items: 1,
+                    },
+                  }}
+                >
+                  {moto.image_url.map((img, index) => (
+                    <img
+                      key={index}
+                      src={img}
+                      className="w-full h-[250px] sm:h-[350px] md:h-[700px] rounded-sm object-cover"
+                      alt={`Main ${index + 1}`}
+                    />
+                  ))}
+                </Carousel>
               </div>
 
-              <div className="flex flex-col justify-center items-center">
-                {currentIndex > 0 && (
-                  <button onClick={handlePrev} className="absolute self-start">
-                    <img src="/icons/ArrowBack.svg" alt="Previous" />
-                  </button>
-                )}
-                <div className="flex flex-row justify-center items-center gap-3.5 ">
-                  {moto.image_url
-                    .slice(currentIndex, currentIndex + imagesPerView)
-                    .map((img, index) => (
-                      <img
-                        key={index}
-                        src={img}
-                        alt={`Thumbnail ${index + 1}`}
-                        className={`w-[130px] h-[100px] rounded-sm object-contain cursor-pointer hover:border-2 ${
-                          img === mainImage
-                            ? "border-2 border-black"
-                            : "border-0"
-                        }`}
-                        onClick={() => {
-                          setCurrentMainIndex(currentIndex + index);
-                          setMainImage(img);
-                        }}
-                      />
-                    ))}
-                </div>
-                {currentIndex + imagesPerView < moto.image_url.length && (
-                  <button onClick={handleNext} className="absolute self-end">
-                    <img src="/icons/ArrowForward.svg" alt="Next" />
-                  </button>
-                )}
+              <div className="hidden md:block">
+                <Carousel
+                  ref={thumbCarouselRef}
+                  arrows
+                  className="w-full"
+                  containerClass="carousel-container"
+                  responsive={{
+                    desktop: {
+                      breakpoint: { max: 3000, min: 1024 },
+                      items: 7,
+                    },
+                    tablet: {
+                      breakpoint: { max: 1024, min: 464 },
+                      items: 5,
+                    },
+                    mobile: {
+                      breakpoint: { max: 464, min: 0 },
+                      items: 4,
+                    },
+                  }}
+                  swipeable
+                >
+                  {moto.image_url.map((img, index) => (
+                    <img
+                      key={index}
+                      src={img}
+                      alt={`Thumbnail ${index + 1}`}
+                      className={`w-[130px] h-[100px] rounded-sm object-contain cursor-pointer hover:border-2 ${
+                        index === currentMainIndex
+                          ? "border-2 border-black"
+                          : "border-0"
+                      }`}
+                      onClick={() => handleThumbnailClick(index)}
+                    />
+                  ))}
+                </Carousel>
               </div>
             </div>
             <div
               id="RightSection"
-              className="flex flex-col justify-center items-center lg:justify-start lg:items-start self-stretch"
+              className="flex flex-col justify-start items-start self-stretch"
             >
               <div
                 id="BikeDetail"
@@ -267,7 +245,10 @@ const MotoDetail = () => {
               >
                 <div className="text-black font-light flex flex-row gap-4">
                   {moto.condition} {moto.year} {moto.brand}{" "}
-                  {CapitalizeFirst(moto.type)} {""}
+                  {CapitalizeFirst(
+                    moto.type === "sport_touring" ? "Sport Touring" : moto.type
+                  )}{" "}
+                  {""}
                   {moto.model} {moto.trim}
                 </div>
                 <div className="font-bold text-4xl">
@@ -286,11 +267,11 @@ const MotoDetail = () => {
               <div id="ContactSeller" className="">
                 <div
                   id="SellerDetail"
-                  className="flex flex-col md:flex-row justify-between items-center gap-5 md:gap-15 pt-5"
+                  className="flex flex-col md:flex-row justify-start items-start lg:items-center gap-5 md:gap-15 pt-5"
                 >
                   {user && (
                     <div className="flex items-center gap-2">
-                      <Link to={`/${user?.uid}/profile`}>
+                      <Link to={`/profile/${user?.uid}`}>
                         <img
                           src={user.avatar_url}
                           alt={user.name}
@@ -298,7 +279,7 @@ const MotoDetail = () => {
                         />
                       </Link>
                       <div className="flex flex-col items-start gap-1">
-                        <Link to={`/${user?.uid}/profile`}>
+                        <Link to={`/profile/${user?.uid}`}>
                           <div className="font-light text-grey text-[15px]">
                             {user.badge}
                           </div>
@@ -311,8 +292,8 @@ const MotoDetail = () => {
                       </div>
                     </div>
                   )}
-                  <div className="flex flex-row gap-3.5">
-                    <div className="flex items-center gap-1">
+                  <div className="flex flex-row gap-5 w-full justify-start items-start">
+                    <div className="flex-1">
                       <Button
                         textValue={`${user.phone_num}`}
                         bg_color={"black"}
@@ -320,7 +301,7 @@ const MotoDetail = () => {
                         icons={"/icons/Phone.svg"}
                       />
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex-none">
                       <Button
                         textValue={"Chat"}
                         bg_color={"blue"}
@@ -390,11 +371,38 @@ const MotoDetail = () => {
               <div className="font-light text-xl underline">
                 More From This Dealer
               </div>
-              <div className="w-full flex justify-start items-start gap-8 overflow-hidden p-4">
+              <Carousel
+                ref={dealerCarouselRef}
+                additionalTransfrom={0}
+                arrows
+                className="w-full p-4"
+                containerClass="carousel-container"
+                itemClass="carousel-item"
+                minimumTouchDrag={80}
+                responsive={{
+                  desktop: {
+                    breakpoint: { max: 3000, min: 1024 },
+                    items: 10,
+                  },
+                  tablet: {
+                    breakpoint: { max: 1024, min: 464 },
+                    items: 4,
+                  },
+                  mobile: {
+                    breakpoint: { max: 464, min: 0 },
+                    items: 2,
+                  },
+                }}
+                sliderClass=""
+                slidesToSlide={1}
+                swipeable
+              >
                 {motoMore.map((moto) => (
-                  <ProductCard key={moto.id} moto={moto} />
+                  <div key={moto.id} className="px-2">
+                    <ProductCard moto={moto} />
+                  </div>
                 ))}
-              </div>
+              </Carousel>
             </div>
           </div>
         </div>
