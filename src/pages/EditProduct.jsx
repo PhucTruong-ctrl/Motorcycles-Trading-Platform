@@ -25,7 +25,7 @@ const EditProduct = () => {
     { value: "sport", label: "Sport" },
     { value: "offroad", label: "Offroad" },
     { value: "adventure", label: "Adventure" },
-    { value: "sportTouring", label: "Sport Touring" },
+    { value: "sport_touring", label: "Sport Touring" },
     { value: "scooters", label: "Scooters" },
     { value: "underbones", label: "Underbones" },
   ];

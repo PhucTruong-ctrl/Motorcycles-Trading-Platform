@@ -5,6 +5,10 @@ import queryString from "query-string";
 import FilterRangeSlider from "./FilterRangeSlider";
 import FilterSelect from "./FilterSelect";
 
+const CapitalizeFirst = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 const FilterBar = () => {
   const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState("");
@@ -23,38 +27,79 @@ const FilterBar = () => {
   const [debouncedYear, setDebouncedYear] = useState(year);
   const [debouncedEngineSize, setDebouncedEngineSize] = useState(engineSize);
 
-  const [filteredBrands, setFilteredBrands] = useState([]);
-  const [filteredModels, setFilteredModels] = useState([]);
-  const [filteredTrims, setFilteredTrims] = useState([]);
+  const [availableTypes, setAvailableTypes] = useState([]);
+  const [availableModels, setAvailableModels] = useState([]);
+  const [availableTrims, setAvailableTrims] = useState([]);
 
-  const typeOptions = [
-    { value: "naked", label: "Naked" },
-    { value: "classic", label: "Classic" },
-    { value: "scrambler", label: "Scrambler" },
-    { value: "cruiser", label: "Cruiser" },
-    { value: "touring", label: "Touring" },
-    { value: "sport", label: "Sport" },
-    { value: "offroad", label: "Offroad" },
-    { value: "adventure", label: "Adventure" },
-    { value: "sport_touring", label: "Sport Touring" },
-    { value: "scooters", label: "Scooters" },
-    { value: "underbones", label: "Underbones" },
-  ];
+  const [isInitialMount, setIsInitialMount] = useState(true);
+
+  const brandOptions = Object.keys(motorcycleData).map((brand) => ({
+    label: brand,
+    value: brand,
+  }));
 
   useEffect(() => {
-    const brandsForType = Object.keys(motorcycleData).filter((brand) =>
-      Object.keys(motorcycleData[brand]).includes(selectedType)
-    );
-    setFilteredBrands(brandsForType);
-    const modelsForBrandAndType =
-      motorcycleData[selectedBrand]?.[selectedType] || [];
-    setFilteredModels(modelsForBrandAndType);
-    const modelDetails = motorcycleData[selectedBrand]?.[selectedType]?.find(
-      (model) => model.model === selectedModel
-    );
-    const trimsForModel = modelDetails?.trims || [];
-    setFilteredTrims(trimsForModel);
-  }, [selectedType, selectedBrand, selectedModel]);
+    const params = queryString.parse(window.location.search);
+    if (params.brand) {
+      setSelectedBrand(params.brand);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedBrand) {
+      const typesForBrand = Object.keys(motorcycleData[selectedBrand] || []);
+      setAvailableTypes(
+        typesForBrand.map((type) => ({
+          label: type.charAt(0).toUpperCase() + type.slice(1).replace("_", " "),
+          value: type,
+        }))
+      );
+    } else {
+      setAvailableTypes([]);
+    }
+
+    setSelectedType("");
+    setSelectedModel("");
+    setSelectedTrim("");
+    setAvailableModels([]);
+    setAvailableTrims([]);
+  }, [selectedBrand]);
+
+  useEffect(() => {
+    if (selectedBrand && selectedType) {
+      const modelsForType = motorcycleData[selectedBrand]?.[selectedType] || [];
+      setAvailableModels(
+        modelsForType.map((model) => ({
+          label: model.model,
+          value: model.model,
+        }))
+      );
+    } else {
+      setAvailableModels([]);
+    }
+
+    setSelectedModel("");
+    setSelectedTrim("");
+    setAvailableTrims([]);
+  }, [selectedType, selectedBrand]);
+
+  useEffect(() => {
+    if (selectedBrand && selectedType && selectedModel) {
+      const modelData = motorcycleData[selectedBrand]?.[selectedType]?.find(
+        (m) => m.model === selectedModel
+      );
+      setAvailableTrims(
+        (modelData?.trims || []).map((trim) => ({
+          label: trim.name,
+          value: trim.name,
+        }))
+      );
+    } else {
+      setAvailableTrims([]);
+    }
+
+    setSelectedTrim("");
+  }, [selectedModel, selectedBrand, selectedType]);
 
   const formatNumber = (number) => {
     return new Intl.NumberFormat("en-US", {
@@ -64,8 +109,11 @@ const FilterBar = () => {
   };
 
   useEffect(() => {
+    if (isInitialMount) {
+      setIsInitialMount(false);
+      return;
+    }
     updateURL();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     selectedType,
     selectedBrand,
@@ -109,11 +157,11 @@ const FilterBar = () => {
   const updateURL = () => {
     const queryParams = {
       page: 1,
-      type: selectedType !== "" ? selectedType : undefined,
-      brand: selectedBrand !== "" ? selectedBrand : undefined,
-      model: selectedModel !== "" ? selectedModel : undefined,
-      trim: selectedTrim !== "" ? selectedTrim : undefined,
-      condition: condition !== "" ? condition : undefined,
+      type: selectedType || undefined,
+      brand: selectedBrand || undefined,
+      model: selectedModel || undefined,
+      trim: selectedTrim || undefined,
+      condition: condition || undefined,
       price_min: price[0] > 0 ? price[0] : undefined,
       price_max: price[1] < 100000 ? price[1] : undefined,
       mileage_min: mileage[0] > 0 ? mileage[0] : undefined,
@@ -128,73 +176,43 @@ const FilterBar = () => {
     navigate(`/browse?${query}`);
   };
 
-  const handleTypeChange = (selectedOptions) => {
-    if (selectedOptions.length > 0) {
-      const selectedType = selectedOptions[0].value;
-      setSelectedType(selectedType);
-      setSelectedBrand("");
-      setSelectedModel("");
-      setSelectedTrim("");
-      setFilteredModels([]);
-      setFilteredTrims([]);
-      updateURL();
-    } else if (selectedOptions.length === 0) {
+  const handleBrandChange = (selectedOptions) => {
+    const newBrand = selectedOptions.length > 0 ? selectedOptions[0].value : "";
+    setSelectedBrand(newBrand);
+
+    if (!newBrand) {
       setSelectedType("");
-      setSelectedBrand("");
       setSelectedModel("");
       setSelectedTrim("");
-      setFilteredBrands([]);
-      setFilteredModels([]);
-      setFilteredTrims([]);
-      updateURL();
-      return;
     }
+    updateURL();
   };
 
-  const handleBrandChange = (selectedOptions) => {
-    if (selectedOptions.length > 0) {
-      const selectedBrand = selectedOptions[0].value;
-      setSelectedBrand(selectedBrand);
+  const handleTypeChange = (selectedOptions) => {
+    const newType = selectedOptions.length > 0 ? selectedOptions[0].value : "";
+    setSelectedType(newType);
+
+    if (!newType) {
       setSelectedModel("");
       setSelectedTrim("");
-      setFilteredTrims([]);
-      updateURL();
-    } else if (selectedOptions.length === 0) {
-      setSelectedBrand("");
-      setSelectedModel("");
-      setSelectedTrim("");
-      setFilteredModels([]);
-      setFilteredTrims([]);
-      updateURL();
-      return;
     }
+    updateURL();
   };
 
   const handleModelChange = (selectedOptions) => {
-    if (selectedOptions.length > 0) {
-      const selectedModel = selectedOptions[0].value;
-      setSelectedModel(selectedModel);
+    const newModel = selectedOptions.length > 0 ? selectedOptions[0].value : "";
+    setSelectedModel(newModel);
+
+    if (!newModel) {
       setSelectedTrim("");
-      updateURL();
-    } else if (selectedOptions.length === 0) {
-      setSelectedModel("");
-      setSelectedTrim("");
-      setFilteredTrims([]);
-      updateURL();
-      return;
     }
+    updateURL();
   };
 
   const handleTrimChange = (selectedOptions) => {
-    if (selectedOptions.length > 0) {
-      const selectedTrim = selectedOptions[0].value;
-      setSelectedTrim(selectedTrim);
-      updateURL();
-    } else if (selectedOptions.length === 0) {
-      setSelectedTrim("");
-      updateURL();
-      return;
-    }
+    const newTrim = selectedOptions.length > 0 ? selectedOptions[0].value : "";
+    setSelectedTrim(newTrim);
+    updateURL();
   };
 
   const handleConditionChange = (e) => {
@@ -222,47 +240,42 @@ const FilterBar = () => {
       </div>
 
       <FilterSelect
-        title="Type"
-        options={typeOptions}
-        selectedValue={selectedType}
-        onChange={handleTypeChange}
-        placeholder="Select type"
-      />
-
-      <FilterSelect
+        key={`brand-${selectedBrand}`}
         title="Brand"
-        options={filteredBrands.map((brand) => ({
-          label: brand,
-          value: brand,
-        }))}
+        options={brandOptions}
         selectedValue={selectedBrand}
         onChange={handleBrandChange}
-        disabled={!selectedType}
         placeholder="Select brand"
       />
 
       <FilterSelect
-        title="Model"
-        options={filteredModels.map((model) => ({
-          label: model.model,
-          value: model.model,
-        }))}
-        selectedValue={selectedModel}
-        onChange={handleModelChange}
+        key={`type-${selectedBrand}-${selectedType}`}
+        title="Type"
+        options={availableTypes}
+        selectedValue={CapitalizeFirst(selectedType)}
+        onChange={handleTypeChange}
         disabled={!selectedBrand}
-        placeholder="Select Model"
+        placeholder={selectedBrand ? "Select type" : "Select brand first"}
       />
 
       <FilterSelect
+        key={`model-${selectedBrand}-${selectedType}-${selectedModel}`}
+        title="Model"
+        options={availableModels}
+        selectedValue={selectedModel}
+        onChange={handleModelChange}
+        disabled={!selectedType}
+        placeholder={selectedType ? "Select model" : "Select type first"}
+      />
+
+      <FilterSelect
+        key={`trim-${selectedBrand}-${selectedType}-${selectedModel}-${selectedTrim}`}
         title="Trim"
-        options={filteredTrims.map((trim) => ({
-          label: trim.name,
-          value: trim.name,
-        }))}
+        options={availableTrims}
         selectedValue={selectedTrim}
         onChange={handleTrimChange}
         disabled={!selectedModel}
-        placeholder="Select Trim"
+        placeholder={selectedModel ? "Select trim" : "Select model first"}
       />
 
       <div className="w-full flex flex-col gap-3 justify-center items-center">

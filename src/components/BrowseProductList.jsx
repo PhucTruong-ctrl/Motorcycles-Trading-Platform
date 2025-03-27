@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import queryString from "query-string";
 import ReactPaginate from "react-paginate";
+import Select from "react-dropdown-select";
 import supabase from "../supabase-client";
 import BrowseProduct from "./BrowseProduct";
 
@@ -14,6 +15,7 @@ const BrowseProductList = () => {
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
   const currentPage = parseInt(queryParams.page) - 1 || 0;
+  const safeCurrentPage = Math.min(currentPage, Math.max(pageCount - 1, 0));
 
   useEffect(() => {
     const fetchMoto = async () => {
@@ -47,7 +49,23 @@ const BrowseProductList = () => {
         const totalPages = Math.ceil(count / maxItems);
         setPageCount(totalPages);
 
-        // Data query
+        const safeCurrentPage = Math.min(
+          currentPage,
+          Math.max(totalPages - 1, 0)
+        );
+
+        if (currentPage !== safeCurrentPage) {
+          const currentQuery = queryString.parse(location.search);
+          navigate(
+            `/browse?${queryString.stringify({
+              ...currentQuery,
+              page: safeCurrentPage + 1,
+            })}`,
+            { replace: true }
+          );
+          return;
+        }
+
         const { data, error } = await supabase
           .from("MOTORCYCLE")
           .select(`*, USER (*)`)
@@ -61,8 +79,10 @@ const BrowseProductList = () => {
           .gte("engine_size", queryParams.engine_size_min || 0)
           .lte("engine_size", queryParams.engine_size_max || 100000)
           .order("created_at", { ascending: false })
-          .range(currentPage * maxItems, (currentPage + 1) * maxItems - 1);
-
+          .range(
+            safeCurrentPage * maxItems,
+            (safeCurrentPage + 1) * maxItems - 1
+          );
         if (error) throw error;
 
         setMoto(data || []);
@@ -106,6 +126,9 @@ const BrowseProductList = () => {
 
   return (
     <div className="w-full flex flex-col gap-5 justify-start items-center">
+      <div className="self-end">
+        <Select />
+      </div>
       {loading ? (
         <div>Loading...</div>
       ) : (
@@ -117,18 +140,18 @@ const BrowseProductList = () => {
           </div>
 
           <ReactPaginate
-            previousLabel={"< Previous"}
-            nextLabel={"Next >"}
+            previousLabel={"<"}
+            nextLabel={">"}
             pageCount={pageCount}
             onPageChange={handlePageChange}
-            forcePage={currentPage}
+            forcePage={pageCount > 0 ? safeCurrentPage : undefined}
             pageRangeDisplayed={3}
             marginPagesDisplayed={2}
             pageClassName="page-item w-[50px] h-[50px] border-1 border-grey flex justify-center items-center font-bold rounded-md cursor-pointer active:scale-110 transition"
             pageLinkClassName="page-link w-full h-full flex justify-center items-center"
-            previousClassName="page-item w-[100px] h-[50px] border-1 border-grey flex justify-center items-center font-bold rounded-md cursor-pointer active:scale-110 transition"
+            previousClassName="page-item w-[50px] h-[50px] border-1 border-grey flex justify-center items-center text-2xl font-bold rounded-md cursor-pointer active:scale-110 transition"
             previousLinkClassName="page-link w-full h-full flex justify-center items-center"
-            nextClassName="page-item w-[100px] h-[50px] border-1 border-grey flex justify-center items-center font-bold rounded-md cursor-pointer active:scale-110 transition"
+            nextClassName="page-item w-[50px] h-[50px] border-1 border-grey flex justify-center items-center text-2xl font-bold rounded-md cursor-pointer active:scale-110 transition"
             nextLinkClassName="page-link w-full h-full flex justify-center items-center"
             breakLabel="..."
             breakClassName="page-item"

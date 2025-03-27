@@ -6,6 +6,17 @@ import Footer from "../components/Footer";
 import Button from "../components/Button";
 import ProductCard from "../components/ProductCard";
 
+const formatNumber = (number) => {
+  return new Intl.NumberFormat("en-US", {
+    style: "decimal",
+    minimumFractionDigits: 0,
+  }).format(number);
+};
+
+const CapitalizeFirst = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 const MotoDetail = () => {
   const { type, brand, model, trim, year, uid, id } = useParams();
   const [moto, setMoto] = useState(null);
@@ -21,17 +32,6 @@ const MotoDetail = () => {
   const imagesPerView = 7;
 
   console.log(type, brand, model, trim, year);
-
-  const formatNumber = (number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "decimal",
-      minimumFractionDigits: 0,
-    }).format(number);
-  };
-
-  const CapitalizeFirst = (str) => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
 
   const handleNext = () => {
     if (currentIndex + imagesPerView < moto.image_url.length) {
