@@ -155,24 +155,32 @@ const FilterBar = () => {
   }, [engineSize]);
 
   const updateURL = () => {
-    const queryParams = {
-      page: 1,
-      type: selectedType || undefined,
-      brand: selectedBrand || undefined,
-      model: selectedModel || undefined,
-      trim: selectedTrim || undefined,
-      condition: condition || undefined,
-      price_min: price[0] > 0 ? price[0] : undefined,
-      price_max: price[1] < 100000 ? price[1] : undefined,
-      mileage_min: mileage[0] > 0 ? mileage[0] : undefined,
-      mileage_max: mileage[1] < 999999 ? mileage[1] : undefined,
-      year_min: year[0] > 1895 ? year[0] : undefined,
-      year_max: year[1] < new Date().getFullYear() ? year[1] : undefined,
-      engine_size_min: engineSize[0] > 50 ? engineSize[0] : undefined,
-      engine_size_max: engineSize[1] < 3000 ? engineSize[1] : undefined,
-    };
+    const queryParams = new Map([
+      ["page", 1],
+      ["brand", selectedBrand || undefined],
+      ["type", selectedType || undefined],
+      ["model", selectedModel || undefined],
+      ["trim", selectedTrim || undefined],
+      ["condition", condition || undefined],
+      ["price_min", price[0] > 0 ? price[0] : undefined],
+      ["price_max", price[1] < 100000 ? price[1] : undefined],
+      ["mileage_min", mileage[0] > 0 ? mileage[0] : undefined],
+      ["mileage_max", mileage[1] < 999999 ? mileage[1] : undefined],
+      ["year_min", year[0] > 1895 ? year[0] : undefined],
+      ["year_max", year[1] < new Date().getFullYear() ? year[1] : undefined],
+      ["engine_size_min", engineSize[0] > 50 ? engineSize[0] : undefined],
+      ["engine_size_max", engineSize[1] < 3000 ? engineSize[1] : undefined],
+    ]);
 
-    const query = queryString.stringify(queryParams, { skipNull: true });
+    // Xóa các giá trị undefined khỏi Map
+    for (let [key, value] of queryParams) {
+      if (value === undefined) {
+        queryParams.delete(key);
+      }
+    }
+
+    // Tạo query string từ Map
+    const query = new URLSearchParams(queryParams).toString();
     navigate(`/browse?${query}`);
   };
 

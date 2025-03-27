@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link } from "react-router";
 import { useNavigate } from "react-router";
-import queryString from "query-string";
 import EditDeleteButton from "../components/EditDeleteButton";
 
 const ProductCard = ({ moto, currentUserId, isOwnerPage }) => {
