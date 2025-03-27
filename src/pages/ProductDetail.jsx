@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useLocation } from "react-router";
+import queryString from "query-string";
 import supabase from "../supabase-client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -18,7 +19,8 @@ const CapitalizeFirst = (str) => {
 };
 
 const MotoDetail = () => {
-  const { type, brand, model, trim, year, uid, id } = useParams();
+  const location = useLocation();
+  const queryParams = queryString.parse(location.search);
   const [moto, setMoto] = useState(null);
   const [motoMore, setMotoMore] = useState([]);
   const [user, setUser] = useState(null);
@@ -30,8 +32,6 @@ const MotoDetail = () => {
   const [viewsIncreased, setViewsIncreased] = useState(false);
 
   const imagesPerView = 7;
-
-  console.log(type, brand, model, trim, year);
 
   const handleNext = () => {
     if (currentIndex + imagesPerView < moto.image_url.length) {
@@ -90,13 +90,13 @@ const MotoDetail = () => {
 
     try {
       console.log(
-        `Increasing views for moto ID: ${id}, current views: ${moto.views}`
+        `Increasing views for moto ID: ${queryParams.id}, current views: ${moto.views}`
       );
 
       const { data, error } = await supabase
         .from("MOTORCYCLE")
         .update({ views: moto.views + 1 })
-        .eq("id", id)
+        .eq("id", queryParams.id)
         .select("*")
         .single();
 
@@ -110,15 +110,11 @@ const MotoDetail = () => {
           `Views updated successfully. New views count: ${data[0].views}`
         );
         setMoto((prevMoto) => ({ ...prevMoto, views: data[0].views }));
-      } else {
-        console.error(
-          "No data returned after update. Check if the ID is valid."
-        );
       }
     } catch (error) {
       console.error("Error increasing views:", error);
     }
-  }, [moto, id]);
+  }, [moto, queryParams.id]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -130,8 +126,8 @@ const MotoDetail = () => {
         const { data: motoData, error: motoError } = await supabase
           .from("MOTORCYCLE")
           .select("*")
-          .eq("uid", uid)
-          .eq("id", id)
+          .eq("uid", queryParams.uid)
+          .eq("id", queryParams.id)
           .single();
 
         if (motoError) throw motoError;
@@ -140,7 +136,7 @@ const MotoDetail = () => {
         const { data: userData, error: userError } = await supabase
           .from("USER")
           .select("*")
-          .eq("uid", uid)
+          .eq("uid", queryParams.uid)
           .single();
 
         if (userError) throw userError;
@@ -149,8 +145,8 @@ const MotoDetail = () => {
         const { data: moreMotoData, error: moreMotoError } = await supabase
           .from("MOTORCYCLE")
           .select("*")
-          .eq("uid", uid)
-          .neq("id", id);
+          .eq("uid", queryParams.uid)
+          .neq("id", queryParams.id);
 
         if (moreMotoError) throw moreMotoError;
         setMotoMore(moreMotoData || []);
@@ -163,7 +159,7 @@ const MotoDetail = () => {
     };
 
     fetchData();
-  }, [uid, id]);
+  }, [queryParams.uid, queryParams.id]);
 
   useEffect(() => {
     if (moto && !viewsIncreased) {

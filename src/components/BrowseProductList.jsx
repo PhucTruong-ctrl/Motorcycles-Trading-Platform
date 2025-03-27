@@ -17,6 +17,18 @@ const BrowseProductList = () => {
   const currentPage = parseInt(queryParams.page) - 1 || 0;
   const safeCurrentPage = Math.min(currentPage, Math.max(pageCount - 1, 0));
 
+  const [sortOption, setSortOption] = useState("");
+
+  const sortOptions = [
+    { value: "", label: "Sort by Default" },
+    { value: "price_asc", label: "Sort By Lowest Price" },
+    { value: "price_desc", label: "Sort By Highest Price" },
+    { value: "year_asc", label: "Sort By Oldest Year" },
+    { value: "year_desc", label: "Sort By Newest Year" },
+    { value: "mile_asc", label: "Sort By Lowest Mileages" },
+    { value: "mile_desc", label: "Sort By Highest Mileages" },
+  ];
+
   useEffect(() => {
     const fetchMoto = async () => {
       setLoading(true);
@@ -28,7 +40,6 @@ const BrowseProductList = () => {
         if (queryParams.trim) filter.trim = queryParams.trim;
         if (queryParams.condition) filter.condition = queryParams.condition;
 
-        // Count query
         const countQuery = supabase
           .from("MOTORCYCLE")
           .select("*", { count: "exact", head: true })
@@ -66,6 +77,40 @@ const BrowseProductList = () => {
           return;
         }
 
+        const sortParam = queryParams.sort || sortOption;
+        let orderBy = "created_at";
+        let ascending = false;
+
+        switch (sortParam) {
+          case "price_asc":
+            orderBy = "price";
+            ascending = true;
+            break;
+          case "price_desc":
+            orderBy = "price";
+            ascending = false;
+            break;
+          case "year_asc":
+            orderBy = "year";
+            ascending = true;
+            break;
+          case "year_desc":
+            orderBy = "year";
+            ascending = false;
+            break;
+          case "mile_asc":
+            orderBy = "mile";
+            ascending = true;
+            break;
+          case "mile_desc":
+            orderBy = "mile";
+            ascending = false;
+            break;
+          default:
+            orderBy = "created_at";
+            ascending = false;
+        }
+
         const { data, error } = await supabase
           .from("MOTORCYCLE")
           .select(`*, USER (*)`)
@@ -78,7 +123,7 @@ const BrowseProductList = () => {
           .lte("mile", queryParams.mileage_max || 100000)
           .gte("engine_size", queryParams.engine_size_min || 0)
           .lte("engine_size", queryParams.engine_size_max || 100000)
-          .order("created_at", { ascending: false })
+          .order(orderBy, { ascending })
           .range(
             safeCurrentPage * maxItems,
             (safeCurrentPage + 1) * maxItems - 1
@@ -96,6 +141,7 @@ const BrowseProductList = () => {
     fetchMoto();
   }, [
     location.search,
+    sortOption,
     queryParams.brand,
     queryParams.condition,
     queryParams.engine_size_max,
@@ -109,8 +155,29 @@ const BrowseProductList = () => {
     queryParams.type,
     queryParams.year_max,
     queryParams.year_min,
+    queryParams.sort,
     currentPage,
   ]);
+
+  const handleSortChange = (selectedOptions) => {
+    const selectedValue =
+      selectedOptions.length > 0 ? selectedOptions[0].value : "";
+    setSortOption(selectedValue);
+
+    const currentQuery = queryString.parse(location.search);
+    const updatedQuery = {
+      ...currentQuery,
+      sort: selectedValue || undefined,
+      page: 1,
+    };
+
+    navigate(
+      `/browse?${queryString.stringify(updatedQuery, { skipNull: true })}`,
+      {
+        replace: true,
+      }
+    );
+  };
 
   const handlePageChange = ({ selected }) => {
     const currentQuery = queryString.parse(location.search);
@@ -126,8 +193,21 @@ const BrowseProductList = () => {
 
   return (
     <div className="w-full flex flex-col gap-5 justify-start items-center">
-      <div className="self-end">
-        <Select />
+      <div className="self-end w-60">
+        <Select
+          options={sortOptions}
+          values={sortOptions.filter(
+            (option) => option.value === (queryParams.sort || sortOption)
+          )}
+          onChange={handleSortChange}
+          placeholder="Sort by..."
+          searchable={false}
+          clearable={false}
+          className="text-[16px] w-60"
+          dropdownHandleRenderer={({ state }) => (
+            <div className="dropdown-handle">{state.dropdown ? "▲" : "▼"}</div>
+          )}
+        />
       </div>
       {loading ? (
         <div>Loading...</div>

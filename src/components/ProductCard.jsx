@@ -1,11 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router";
+import { useNavigate } from "react-router";
+import queryString from "query-string";
 import EditDeleteButton from "../components/EditDeleteButton";
 
 const ProductCard = ({ moto, currentUserId, isOwnerPage }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const showActions = isOwnerPage && currentUserId === moto.uid;
   const menuRef = useRef(null);
+  const navigate = useNavigate();
 
   const formatNumber = (number) => {
     return new Intl.NumberFormat("en-US", {
@@ -28,6 +31,20 @@ const ProductCard = ({ moto, currentUserId, isOwnerPage }) => {
     };
   }, [isMenuOpen]);
 
+  const updateURL = () => {
+    const queryParams = new Map([
+      ["uid", moto.uid || undefined],
+      ["id", moto.id || undefined],
+      ["year", moto.year || undefined],
+      ["brand", moto.brand || undefined],
+      ["model", moto.model || undefined],
+      ["trim", moto.trim || undefined],
+    ]);
+
+    const query = new URLSearchParams(queryParams).toString();
+    navigate(`/motorcycle-detail?${query}`);
+  };
+
   return (
     <div className="relative home-card" ref={menuRef}>
       {showActions && (
@@ -47,10 +64,7 @@ const ProductCard = ({ moto, currentUserId, isOwnerPage }) => {
         />
       )}
 
-      <Link
-        to={`/${moto.type}/${moto.brand}/${moto.model}/${moto.trim}/${moto.year}/${moto.uid}/${moto.id}`}
-        className="h-full"
-      >
+      <div onClick={updateURL} className="h-full">
         <div id="product">
           <div id="img">
             <img
@@ -99,7 +113,7 @@ const ProductCard = ({ moto, currentUserId, isOwnerPage }) => {
             </div>
           </div>
         </div>
-      </Link>
+      </div>
     </div>
   );
 };
