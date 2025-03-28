@@ -9,7 +9,7 @@ const Header = () => {
       <Logo></Logo>
 
       {/* Right Section */}
-      <div className="flex justify-center items-center gap-5 lg:gap-10 md:gap-5">
+      <div className="flex justify-center items-center gap-5">
         <Link to={"/browse"}>
           <div className="text-[18px] md:text-2xl text-nowrap">
             <img

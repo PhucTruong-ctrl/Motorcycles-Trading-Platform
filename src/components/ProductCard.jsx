@@ -62,7 +62,7 @@ const ProductCard = ({ moto, currentUserId, isOwnerPage }) => {
         />
       )}
 
-      <div onClick={updateURL} className="h-full">
+      <div onClick={updateURL}>
         <div id="product">
           <div id="img">
             <img

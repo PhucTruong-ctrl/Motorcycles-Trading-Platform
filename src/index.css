@@ -1,6 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
-
 @import "tailwindcss";
 
 @theme {
@@ -38,16 +37,16 @@
   }
 
   button {
-    @apply hover:cursor-pointer;
+    @apply cursor-pointer;
   }
 }
 
 @layer components {
   .brand {
-    @apply flex flex-col justify-center items-center bg-white px-3 md:py-6 w-[200px] h-[90px] rounded-[6px] shadow-md shadow-grey;
+    @apply p-5 rounded-md flex flex-col justify-center items-center bg-white px-3  w-[160px] md:w-[200px] h-[110px] md:h-[90px] shadow-md shadow-grey cursor-pointer;
   }
   .home-card {
-    @apply rounded-md bg-white flex flex-col items-start shrink-0 w-[170px] h-[250px] shadow-md shadow-grey hover:cursor-pointer hover:scale-105 transition;
+    @apply rounded-md bg-white flex flex-col items-start w-[160px] md:w-[170px] h-[250px] shadow-md shadow-grey cursor-pointer;
   }
   .icon {
     @apply w-[25px] h-[25px] opacity-60;

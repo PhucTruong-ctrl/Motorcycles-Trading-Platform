@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router";
 import supabase from "../supabase-client";
 import Select from "react-dropdown-select";
 import Modal from "react-modal";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
@@ -24,6 +26,10 @@ const Profile = () => {
   const [alreadyRep, setAlreadyRep] = useState(false);
   const [repMessage, setRepMessage] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalUploadAvtIsOpen, setModalUploadAvtIsOpen] = useState(false);
+  const [modalUploadBanIsOpen, setModalUploadBanIsOpen] = useState(false);
+
+  const carouselRef = useRef(null);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -265,15 +271,84 @@ const Profile = () => {
         <header className="mb-5">
           <Header />
         </header>
-        <div className="flex flex-col gap-4 pr-50 pl-50">
+        <div className="flex flex-col gap-5 lg:pr-50 lg:pl-50">
+          <Modal
+            isOpen={modalUploadBanIsOpen}
+            onRequestClose={() => {
+              setModalUploadBanIsOpen(false);
+            }}
+            contentLabel="Edit Profile"
+            className="absolute flex items-end justify-center md:hidden w-full bottom-0"
+            overlayClassName="fixed inset-0 bg-[#fff]/75 block md:hidden pointer-events-auto"
+            shouldCloseOnOverlayClick={true}
+          >
+            <div className="relative flex flex-col gap-5 justify-center items-center bg-white border-2 border-black p-5 w-full rounded-t-xl">
+              <div className="font-semibold text-xl p-2 active:bg-grey active:scale-102 transition rounded-md w-full">
+                <label
+                  htmlFor="banner-upload"
+                  className="flex flex-row gap-1 justify-start items-center cursor-pointer"
+                >
+                  <img
+                    src="/icons/UploadWhite.svg"
+                    alt=""
+                    className="bg-black rounded-full p-2"
+                  />
+                  <div>Choose cover photo</div>
+                </label>
+                <input
+                  id="banner-upload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleBannerUpload}
+                />
+              </div>
+            </div>
+          </Modal>
+
+          <Modal
+            isOpen={modalUploadAvtIsOpen}
+            onRequestClose={() => {
+              setModalUploadAvtIsOpen(false);
+            }}
+            contentLabel="Edit Profile"
+            className="absolute flex items-end justify-center md:hidden w-full bottom-0"
+            overlayClassName="fixed inset-0 bg-[#fff]/75 block md:hidden pointer-events-auto"
+            shouldCloseOnOverlayClick={true}
+          >
+            <div className="relative flex flex-col gap-5 justify-center items-center bg-white border-2 border-black p-5 w-full rounded-t-xl">
+              <div className="font-semibold text-xl p-2 active:bg-grey active:scale-102 transition rounded-md w-full">
+                <label
+                  htmlFor="avatar-upload"
+                  className="flex flex-row gap-1 justify-start items-center cursor-pointer"
+                >
+                  <img
+                    src="/icons/UploadWhite.svg"
+                    alt=""
+                    className="bg-black rounded-full p-2"
+                  />
+                  <div>Choose avatar photo</div>
+                </label>
+                <input
+                  id="avatar-upload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleAvatarUpload}
+                />
+              </div>
+            </div>
+          </Modal>
+
           <div className="relative rounded-xl w-full h-fit md:h-[350px] overflow-hidden flex justify-center items-center">
             <img
+              onClick={() => setModalUploadBanIsOpen(true)}
               src={user?.banner_url}
               alt=""
-              className="object-cover w-full rounded-xl"
+              className="object-cover w-full rounded-xl active:scale-95 md:active:scale-100 transition"
             />
             {currentUser?.id === uid && (
-              <div className="absolute">
+              <div className="absolute hidden md:block">
                 <label htmlFor="banner-upload">
                   <img
                     src="/icons/Upload.svg"
@@ -295,13 +370,14 @@ const Profile = () => {
           <div className="flex flex-col md:flex-row gap-6 w-full bg-white rounded-xl shadow-md relative p-5">
             <div className="relative flex justify-center items-center">
               <img
+                onClick={() => setModalUploadAvtIsOpen(true)}
                 src={user?.avatar_url}
                 alt=""
-                className="w-[150px] h-[150px] rounded-xl border-2 border-grey"
+                className="w-[150px] h-[150px] rounded-xl active:scale-95 transition"
               />
               {currentUser?.id === uid && (
-                <div className="absolute">
-                  <label htmlFor="avt-upload">
+                <div className="absolute hidden md:block">
+                  <label htmlFor="avt-upload" className="hidden md:block">
                     <img
                       src="/icons/Upload.svg"
                       alt=""
@@ -318,8 +394,8 @@ const Profile = () => {
                 </div>
               )}
             </div>
-            <div className="flex flex-row gap-6 justify-center items-center">
-              <div className="flex flex-col gap-2.5">
+            <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
+              <div className="flex flex-col gap-2.5 text-nowrap">
                 <h2>{user?.name}</h2>
                 <div className="flex flex-row gap-2 justify-start items-center">
                   <img src="/icons/Location.svg" alt="" className="w-2.5" />
@@ -338,14 +414,24 @@ const Profile = () => {
               </div>
             </div>
             {currentUser?.id === uid && (
-              <button
-                className="font-bold text-[24px] text-black absolute right-5 top-5"
-                onClick={() => setModalIsOpen(true)}
-              >
-                Edit Profile
-              </button>
+              <div>
+                <button
+                  className="hidden md:block font-bold text-[24px] text-black absolute right-5 top-5"
+                  onClick={() => setModalIsOpen(true)}
+                >
+                  Edit Profile
+                </button>
+
+                <button
+                  className="block md:hidden absolute right-5 top-5 border-1 border-grey p-2 rounded-sm"
+                  onClick={() => setModalIsOpen(true)}
+                >
+                  <img src="/icons/Edit.svg" className="w-[30px]" />
+                </button>
+              </div>
             )}
           </div>
+
           <Modal
             isOpen={modalIsOpen}
             onRequestClose={() => setModalIsOpen(false)}
@@ -355,6 +441,7 @@ const Profile = () => {
           >
             <EditProfile user={user} onClose={() => setModalIsOpen(false)} />
           </Modal>
+
           <div className="bg-white w-full h-20 rounded-xl shadow-md flex flex-row gap-12 justify-start items-center p-5">
             <button
               className={`font-bold text-[28px] text-blue ${atListing ? "border-b-2" : "border-b-0"}`}
@@ -370,12 +457,37 @@ const Profile = () => {
             </button>
           </div>
           {atListing ? (
-            <div className="w-full">
-              <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:flex flex-row flex-wrap justify-start items-start gap-8 overflow-hidden p-4">
+            <div>
+              <Carousel
+                ref={carouselRef}
+                additionalTransfrom={0}
+                arrows
+                className="w-full p-2"
+                containerClass="carousel-container"
+                itemClass="carousel-item"
+                minimumTouchDrag={80}
+                responsive={{
+                  desktop: {
+                    breakpoint: { max: 3000, min: 1024 },
+                    items: 8,
+                  },
+                  tablet: {
+                    breakpoint: { max: 1024, min: 464 },
+                    items: 4,
+                  },
+                  mobile: {
+                    breakpoint: { max: 464, min: 0 },
+                    items: 2,
+                  },
+                }}
+                sliderClass=""
+                slidesToSlide={1}
+                swipeable
+              >
                 {moto.map((moto) => (
                   <ProductCard key={moto.id} moto={moto} />
                 ))}
-              </div>
+              </Carousel>
             </div>
           ) : (
             <div className="w-full">

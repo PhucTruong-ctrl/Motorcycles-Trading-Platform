@@ -9,12 +9,12 @@ const HomeBrand = ({ brand }) => {
     });
   };
   return (
-    <button
+    <div
       onClick={handleBrandClick}
-      className="brand border-1 border-grey p-5 rounded-md"
+      className="brand"
     >
-      <img className="min-w-[80px] w-[80px]" src={brand.logo_url} alt="" />
-    </button>
+      <img className="w-[100px] md:w-[80px] object-cover" src={brand.logo_url} alt="" />
+    </div>
   );
 };
 

@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 import ProductCard from "./ProductCard";
 import supabase from "../supabase-client";
 
 const HomeProductList = ({ condition }) => {
   const [motorcycles, setMotorcycles] = useState([]);
+  const carouselRef = useRef(null);
 
   useEffect(() => {
     const fetchMotorcycles = async () => {
@@ -34,7 +37,7 @@ const HomeProductList = ({ condition }) => {
       : "Pre-loved bikes with stories to tell.";
 
   return (
-    <div className="self-stretch border-b-1 border-grey px-4 pb-5">
+    <div className="self-stretch border-b-1 border-grey pb-5">
       <div className="flex flex-col items-start gap-1 mb-2">
         <div className="flex gap-2">
           <div className="font-bold text-[16px]">{title}</div>
@@ -42,10 +45,37 @@ const HomeProductList = ({ condition }) => {
         </div>
         <div className="font-light">{description}</div>
       </div>
-      <div className="w-full flex justify-start items-start gap-8 overflow-hidden p-4">
-        {motorcycles.map((moto) => (
-          <ProductCard key={moto.id} moto={moto} />
-        ))}
+      <div>
+        <Carousel
+          ref={carouselRef}
+          additionalTransfrom={0}
+          arrows
+          className="w-full p-2"
+          containerClass="carousel-container"
+          itemClass="carousel-item"
+          minimumTouchDrag={80}
+          responsive={{
+            desktop: {
+              breakpoint: { max: 3000, min: 1024 },
+              items: 10,
+            },
+            tablet: {
+              breakpoint: { max: 1024, min: 464 },
+              items: 4,
+            },
+            mobile: {
+              breakpoint: { max: 464, min: 0 },
+              items: 2,
+            },
+          }}
+          sliderClass=""
+          slidesToSlide={1}
+          swipeable
+        >
+          {motorcycles.map((moto) => (
+            <ProductCard key={moto.id} moto={moto} />
+          ))}
+        </Carousel>
       </div>
     </div>
   );

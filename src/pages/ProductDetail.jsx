@@ -264,10 +264,10 @@ const MotoDetail = () => {
                 </div>
               </div>
 
-              <div id="ContactSeller" className="">
+              <div id="ContactSeller" className="w-full">
                 <div
                   id="SellerDetail"
-                  className="flex flex-col md:flex-row justify-start items-start lg:items-center gap-5 md:gap-15 pt-5"
+                  className="flex flex-col md:flex-row justify-center items-center gap-5 md:gap-15 pt-5"
                 >
                   {user && (
                     <div className="flex items-center gap-2">
@@ -292,8 +292,8 @@ const MotoDetail = () => {
                       </div>
                     </div>
                   )}
-                  <div className="flex flex-row gap-5 w-full justify-start items-start">
-                    <div className="flex-1">
+                  <div className="flex flex-row gap-5 w-full justify-center items-center">
+                    <div>
                       <Button
                         textValue={`${user.phone_num}`}
                         bg_color={"black"}
@@ -301,7 +301,7 @@ const MotoDetail = () => {
                         icons={"/icons/Phone.svg"}
                       />
                     </div>
-                    <div className="flex-none">
+                    <div>
                       <Button
                         textValue={"Chat"}
                         bg_color={"blue"}
@@ -311,7 +311,7 @@ const MotoDetail = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col gap-5 pt-5 pb-5 border-b-1 border-grey">
+                <div className="flex flex-col gap-5 pt-5 pb-5 border-b-1 border-grey w-full">
                   <div className="flex flex-row gap-5 text-grey">
                     <input
                       type="text"
@@ -362,12 +362,11 @@ const MotoDetail = () => {
           </div>
 
           <div>
-            {" "}
             <div className="flex flex-col gap-5 items-start justify-start mb-5">
               <div className="font-semibold text-2xl">Description</div>
               <div className="text-[16px]">{moto.desc}</div>
             </div>
-            <div>
+            <div className="flex flex-col justify-start items-start gap-5">
               <div className="font-light text-xl underline">
                 More From This Dealer
               </div>
@@ -375,7 +374,7 @@ const MotoDetail = () => {
                 ref={dealerCarouselRef}
                 additionalTransfrom={0}
                 arrows
-                className="w-full p-4"
+                className="w-full p-2"
                 containerClass="carousel-container"
                 itemClass="carousel-item"
                 minimumTouchDrag={80}
@@ -398,9 +397,7 @@ const MotoDetail = () => {
                 swipeable
               >
                 {motoMore.map((moto) => (
-                  <div key={moto.id} className="px-2">
-                    <ProductCard moto={moto} />
-                  </div>
+                  <ProductCard key={moto.id} moto={moto} />
                 ))}
               </Carousel>
             </div>
