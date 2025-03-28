@@ -3,11 +3,13 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import FilterBar from "../components/FilterBar";
 import BrowseProductList from "../components/BrowseProductList";
+import { Message } from "../components/Message";
 
 const BrowsingPage = () => {
   return (
     <div>
       <main className="my-[15px] mx-[25px]">
+        <Message />
         <div className="mb-5">
           <Header />
         </div>

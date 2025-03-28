@@ -6,6 +6,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
 import Loading from "../components/Loading";
+import { Message } from "../components/Message";
 
 const Sell = () => {
   const [user, setUser] = useState(null);
@@ -284,6 +285,7 @@ const Sell = () => {
   return (
     <div>
       <main className="my-[15px] mx-[25px]">
+        <Message />
         <header className="mb-5">
           <Header />
         </header>

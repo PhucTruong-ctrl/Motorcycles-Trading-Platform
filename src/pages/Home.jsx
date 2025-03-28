@@ -5,11 +5,13 @@ import HomeBanner from "../components/HomeBanner";
 import HomeBrandList from "../components/HomeBrandList";
 import HomeProductList from "../components/HomeProductList";
 import HomeSell from "../components/HomeSell";
+import { Message } from "../components/Message";
 
 const HomePage = () => {
   return (
     <div>
       <main className="my-[15px] mx-[25px]">
+        <Message />
         <div className="mb-5">
           <Header />
         </div>

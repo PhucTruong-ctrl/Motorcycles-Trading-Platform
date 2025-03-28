@@ -137,6 +137,23 @@ const AuthContext = () => {
       provider: "google",
     });
   };
+  const signOut = async () => {
+    try {
+      localStorage.removeItem("sb-" + session?.user.id + "-auth-token");
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+
+      setSession(null);
+      setUser(null);
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Sign out error:", error);
+      // Fallback manual
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = "/";
+    }
+  };
 
   if (!session) {
     return (
@@ -164,7 +181,7 @@ const AuthContext = () => {
             )}
           </span>
         </button>
-        {isMenuOpen && <UserMenu user={session.user} />}
+        {isMenuOpen && <UserMenu user={session.user} signOut={signOut} />}
       </div>
     );
   }

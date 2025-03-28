@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useRef, use } from "react";
 import { Link, useLocation } from "react-router";
 import queryString from "query-string";
 import Carousel from "react-multi-carousel";
@@ -8,6 +8,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Button from "../components/Button";
 import ProductCard from "../components/ProductCard";
+import { Message } from "./../components/Message";
 
 const formatNumber = (number) => {
   return new Intl.NumberFormat("en-US", {
@@ -20,12 +21,14 @@ const CapitalizeFirst = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-const MotoDetail = () => {
+const ProductDetail = () => {
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
   const [moto, setMoto] = useState(null);
   const [motoMore, setMotoMore] = useState([]);
   const [user, setUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [messageReceiver, setMessageReceiver] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentMainIndex, setCurrentMainIndex] = useState(0);
@@ -34,6 +37,10 @@ const MotoDetail = () => {
   const mainCarouselRef = useRef(null);
   const thumbCarouselRef = useRef(null);
   const dealerCarouselRef = useRef(null);
+
+  const handleChat = () => {
+    setMessageReceiver(user);
+  };
 
   const handleMainImageChange = (previousSlide, { currentSlide }) => {
     setCurrentMainIndex(currentSlide);
@@ -78,6 +85,17 @@ const MotoDetail = () => {
       console.error("Error increasing views:", error);
     }
   }, [moto, queryParams.id]);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setCurrentUser(session?.user || null);
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -153,6 +171,8 @@ const MotoDetail = () => {
           <Header />
         </header>
 
+        <Message newChatReceiver={messageReceiver} />
+        
         <div className="font-light mb-4 ">
           {CapitalizeFirst(
             moto.type === "sport_touring" ? "Sport Touring" : moto.type
@@ -190,7 +210,7 @@ const MotoDetail = () => {
                     <img
                       key={index}
                       src={img}
-                      className="w-full h-[250px] sm:h-[350px] md:h-[700px] rounded-sm object-cover"
+                      className="w-full h-[250px] sm:h-[350px] md:h-[700px] rounded-sm object-cover border-1 border-grey"
                       alt={`Main ${index + 1}`}
                     />
                   ))}
@@ -302,12 +322,19 @@ const MotoDetail = () => {
                       />
                     </div>
                     <div>
-                      <Button
-                        textValue={"Chat"}
-                        bg_color={"blue"}
-                        text_color={"white"}
-                        icons={"/icons/Chat.svg"}
-                      />
+                      <button
+                        onClick={handleChat}
+                        className={`w-full p-2.5 flex flex-row justify-center items-center gap-1.5 shadow-md shadow-grey bg-blue rounded-sm hover:scale-110 hover:cursor-pointer transition`}
+                      >
+                        <img
+                          className="w-7 h-auto"
+                          src="/icons/Chat.svg"
+                          alt=""
+                        />
+                        <div className={`text-white text-[23px] font-[500]`}>
+                          Chat
+                        </div>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -412,4 +439,4 @@ const MotoDetail = () => {
   );
 };
 
-export default MotoDetail;
+export default ProductDetail;

@@ -7,10 +7,28 @@ const UserMenu = ({ user }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (!error) navigate("/");
-  };
+    try {
+      localStorage.removeItem(
+        "sb-" + supabase.auth.currentSession?.user.id + "-auth-token"
+      );
+      sessionStorage.clear();
 
+      const { error } = await supabase.auth.signOut();
+
+      if (error) throw error;
+
+      setCurrentUser(null);
+      navigate("/");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error signing out:", error);
+
+      localStorage.clear();
+      sessionStorage.clear();
+      navigate("/");
+      window.location.reload();
+    }
+  };
   useEffect(() => {
     const fetchUserData = async () => {
       const { data: userData, error } = await supabase

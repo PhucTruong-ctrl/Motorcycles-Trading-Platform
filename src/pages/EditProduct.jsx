@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Select from "react-dropdown-select";
 import { motorcycleData } from "../data/motorcycleData";
+import { Message } from "../components/Message";
 
 const EditProduct = () => {
   const navigate = useNavigate();
@@ -224,10 +225,11 @@ const EditProduct = () => {
   return (
     <div>
       <main className="my-[15px] mx-[25px]">
+        <Message />
         <Header />
 
         <form onSubmit={handleSubmit} className="edit-form">
-          {}
+          { }
           <div className="w-fit">
             <Select
               options={typeOptions}
@@ -353,7 +355,7 @@ const EditProduct = () => {
             />
           </div>
 
-          {}
+          { }
           <div className="image-section">
             <h3>Current Images:</h3>
             <div className="image-grid grid grid-cols-10">

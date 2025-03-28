@@ -10,6 +10,7 @@ import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
 import { ReputationMessage } from "../components/ReputationMessage";
 import EditProfile from "./../components/EditProfile";
+import { Message } from "../components/Message";
 
 Modal.setAppElement("#root");
 
@@ -268,6 +269,7 @@ const Profile = () => {
   return (
     <div>
       <main className="my-[15px] mx-[25px]">
+        <Message />
         <header className="mb-5">
           <Header />
         </header>
