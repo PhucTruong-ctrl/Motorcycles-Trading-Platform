@@ -9,7 +9,7 @@ const formatDate = (dateString) => {
 export const Message = ({ newChatReceiver }) => {
   const [loading, setLoading] = useState(false);
   const [openMessage, setOpenMessage] = useState(false);
-  const [closeMessage, setCloseMessage] = useState(false);
+  const [closeMessage, setCloseMessage] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -49,12 +49,7 @@ export const Message = ({ newChatReceiver }) => {
         console.error("Error fetching messages for contacts:", error);
         return;
       }
-
-      console.log("Raw messages from Supabase:", data);
-
       const contactsMap = new Map();
-      console.log("Contacts Map:", Array.from(contactsMap.entries()));
-
 
       data.forEach((msg) => {
 
@@ -161,6 +156,10 @@ export const Message = ({ newChatReceiver }) => {
         (payload) => {
           if (payload.eventType === "INSERT") {
             setMessages((prev) => [...prev, payload.new]);
+            const audio = document.getElementById("notification-sound");
+            if (audio) {
+              audio.play().catch((error) => console.error("Audio play failed:", error));
+            }
           }
         }
       )
@@ -281,6 +280,7 @@ export const Message = ({ newChatReceiver }) => {
           id="Message"
           className={`bg-white w-[402px] ${closeMessage ? "h-[55px]" : "h-[428px]"} border-2 border-grey rounded-t-xl`}
         >
+          <audio id="notification-sound" src="/sounds/notificationMessage.mp3" preload="auto"></audio>
           <div
             id="MessageHeader"
             className="flex flex-row justify-between items-center border-b-1 border-grey bg-white w-full p-3 rounded-t-md"
