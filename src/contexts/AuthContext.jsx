@@ -135,8 +135,14 @@ const AuthContext = () => {
   const signUp = async () => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
+      options: {
+        queryParams: {
+          prompt: 'select_account',
+        },
+      },
     });
   };
+
   const signOut = async () => {
     try {
       localStorage.removeItem("sb-" + session?.user.id + "-auth-token");
