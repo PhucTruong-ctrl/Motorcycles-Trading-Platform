@@ -30,7 +30,7 @@ const HomePage = () => {
         <div className="mb-5">
           <HomeSell />
         </div>
-        <div className="mb-5">
+        <div>
           <Footer />
         </div>
       </main>

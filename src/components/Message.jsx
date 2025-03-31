@@ -17,7 +17,6 @@ export const Message = ({ newChatReceiver }) => {
   const [selectedContact, setSelectedContact] = useState(null);
   const messagesEndRef = useRef(null);
 
-
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
@@ -52,13 +51,13 @@ export const Message = ({ newChatReceiver }) => {
       const contactsMap = new Map();
 
       data.forEach((msg) => {
-
         const otherUserId =
           msg.uid_send === currentUser.id ? msg.uid_recv : msg.uid_send;
 
         if (
           !contactsMap.has(otherUserId) ||
-          new Date(msg.created_at) > new Date(contactsMap.get(otherUserId).lastMessageTime)
+          new Date(msg.created_at) >
+            new Date(contactsMap.get(otherUserId).lastMessageTime)
         ) {
           contactsMap.set(otherUserId, {
             uid: otherUserId,
@@ -90,7 +89,6 @@ export const Message = ({ newChatReceiver }) => {
 
       setContacts(contactsWithLastMessage);
     };
-
 
     fetchContacts();
   }, [currentUser, messages]);
@@ -158,7 +156,9 @@ export const Message = ({ newChatReceiver }) => {
             setMessages((prev) => [...prev, payload.new]);
             const audio = document.getElementById("notification-sound");
             if (audio) {
-              audio.play().catch((error) => console.error("Audio play failed:", error));
+              audio
+                .play()
+                .catch((error) => console.error("Audio play failed:", error));
             }
           }
         }
@@ -230,7 +230,10 @@ export const Message = ({ newChatReceiver }) => {
             </button>
           </div>
 
-          <div id="MessageListBody" className="w-full h-[428px] overflow-y-scroll p-3">
+          <div
+            id="MessageListBody"
+            className="w-full h-[428px] overflow-y-scroll p-3"
+          >
             {contacts.length === 0 ? (
               <div>No conversations yet</div>
             ) : (
@@ -273,14 +276,17 @@ export const Message = ({ newChatReceiver }) => {
               ))
             )}
           </div>
-
         </div>
       ) : (
         <div
           id="Message"
           className={`bg-white w-[402px] ${closeMessage ? "h-[55px]" : "h-[428px]"} border-2 border-grey rounded-t-xl`}
         >
-          <audio id="notification-sound" src="/sounds/notificationMessage.mp3" preload="auto"></audio>
+          <audio
+            id="notification-sound"
+            src="/sounds/notificationMessage.mp3"
+            preload="auto"
+          ></audio>
           <div
             id="MessageHeader"
             className="flex flex-row justify-between items-center border-b-1 border-grey bg-white w-full p-3 rounded-t-md"
@@ -306,25 +312,35 @@ export const Message = ({ newChatReceiver }) => {
             </button>
           </div>
 
-          <div id="MessageBody" className="w-full h-[300px] overflow-y-scroll p-3">
+          <div
+            id="MessageBody"
+            className="w-full h-[300px] overflow-y-scroll p-3"
+          >
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`my-2 flex ${msg.uid_send === currentUser.id ? "justify-end" : "justify-start"
-                  }`}
+                className={`my-2 flex ${
+                  msg.uid_send === currentUser.id
+                    ? "justify-end"
+                    : "justify-start"
+                }`}
               >
                 <div
-                  className={`flex flex-col max-w-[70%] p-2 rounded-md ${msg.uid_send === currentUser.id ? "bg-blue-100" : "bg-gray-100"
-                    }`}
+                  className={`flex flex-col max-w-[70%] p-2 rounded-md ${
+                    msg.uid_send === currentUser.id
+                      ? "bg-blue-100"
+                      : "bg-gray-100"
+                  }`}
                 >
                   <div>{msg.message}</div>
-                  <div className="text-[11px]">{formatDate(msg.created_at)}</div>
+                  <div className="text-[11px]">
+                    {formatDate(msg.created_at)}
+                  </div>
                 </div>
               </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
-
 
           <form
             onSubmit={handleSendMessage}

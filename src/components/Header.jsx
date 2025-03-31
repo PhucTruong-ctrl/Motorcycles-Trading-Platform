@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router";
 import Logo from "./Logo";
-import AuthContext from "../contexts/AuthContext";
+import SignInButton from "./SignInButton";
 
 const Header = () => {
   return (
@@ -40,7 +40,7 @@ const Header = () => {
           </button>
         </Link>
 
-        <AuthContext />
+        <SignInButton />
       </div>
     </div>
   );
