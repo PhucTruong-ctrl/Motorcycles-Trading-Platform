@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { format } from "date-fns";
 import supabase from "../supabase-client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { Message } from "../components/Message";
 
 const formatDate = (dateString) => {
   return format(new Date(dateString), " HH:mm MM-dd-yyyy");
@@ -11,6 +13,7 @@ const formatDate = (dateString) => {
 const Transaction = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [transactions, setTransactions] = useState([]);
+  const [messageReceiver, setMessageReceiver] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -79,6 +82,31 @@ const Transaction = () => {
     fetchTransactions();
   }, [currentUser]);
 
+  const handleSold = async (id) => {
+    try {
+      await supabase
+        .from("TRANSACTION")
+        .update({ completed: true })
+        .eq("id", id);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  const handleChat = (transaction) => {
+    if (!transaction || !currentUser) return;
+
+    const receiver =
+      transaction.uid_buyer === currentUser.id
+        ? transaction.seller
+        : transaction.buyer;
+
+    if (receiver) {
+      setMessageReceiver(receiver);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -87,7 +115,7 @@ const Transaction = () => {
       <header className="mb-5">
         <Header />
       </header>
-
+      <Message newChatReceiver={messageReceiver} />
       <div
         id="title"
         className="flex flex-col justify-center items-center w-full gap-2.5 mb-5"
@@ -216,7 +244,8 @@ const Transaction = () => {
                   <div className="flex flex-col justify-center items-start">
                     <span>
                       {transaction.motorcycle?.brand}{" "}
-                      {transaction.motorcycle?.model}
+                      {transaction.motorcycle?.model}{" "}
+                      {transaction.motorcycle?.trim}
                     </span>
                     <span className="font-light text-[12px]">
                       {transaction.motorcycle?.mile} miles
@@ -267,11 +296,53 @@ const Transaction = () => {
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center p-2.5 gap-[5px] w-full">
-                  <div className="flex items-center gap-[5px] rounded-sm border-1 border-grey p-[5px]">
-                    <span className="text-grey">Detail</span>
-                    <img src="/icons/MoreDot.svg" alt="" />
-                  </div>
+                <div className="relative flex items-center p-2.5 gap-[5px] w-full">
+                  <Menu as="div" className="relative inline-block text-left">
+                    <div>
+                      <MenuButton className="flex items-center gap-[5px] rounded-sm border-1 border-grey p-[5px] hover:bg-gray-50">
+                        <span className="text-grey">Action</span>
+                        <img src="/icons/MoreDot.svg" alt="" />
+                      </MenuButton>
+                    </div>
+
+                    <MenuItems className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div className="py-1">
+                        {transaction.type === "Selling" &&
+                          transaction.completed === false && (
+                            <MenuItem>
+                              {({ active }) => (
+                                <button
+                                  type="button"
+                                  onClick={() => handleSold(transaction.id)}
+                                  className={`${
+                                    active
+                                      ? "bg-gray-100 text-gray-900"
+                                      : "text-gray-700"
+                                  } block w-full px-4 py-2 text-left text-sm`}
+                                >
+                                  Mark as Sold
+                                </button>
+                              )}
+                            </MenuItem>
+                          )}
+                        <MenuItem>
+                          {({ active }) => (
+                            <button
+                              type="button"
+                              onClick={() => handleChat(transaction)}
+                              className={`${
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700"
+                              } block w-full px-4 py-2 text-left text-sm`}
+                            >
+                              Chat with other user
+                            </button>
+                          )}
+                        </MenuItem>
+                      </div>
+                    </MenuItems>
+                  </Menu>
                 </div>
               </div>
             ))
