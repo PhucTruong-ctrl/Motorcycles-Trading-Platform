@@ -17,6 +17,8 @@ const Transaction = () => {
   const [messageReceiver, setMessageReceiver] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   const [filters, setFilters] = useState({
     type: "All",
     status: "All",
@@ -109,6 +111,21 @@ const Transaction = () => {
 
   const filteredTransactions = transactions
     .filter((transaction) => {
+      if (searchTerm) {
+        const searchLower = searchTerm.toLowerCase();
+        const matchesBrand = transaction.motorcycle?.brand
+          ?.toLowerCase()
+          .includes(searchLower);
+        const matchesModel = transaction.motorcycle?.model
+          ?.toLowerCase()
+          .includes(searchLower);
+        const matchesId = transaction.id_moto?.toString().includes(searchTerm);
+
+        if (!matchesBrand && !matchesModel && !matchesId) {
+          return false;
+        }
+      }
+
       if (filters.type !== "All" && transaction.type !== filters.type) {
         return false;
       }
@@ -212,13 +229,18 @@ const Transaction = () => {
             className="flex p-2.5 items-center gap-2.5 border-1 border-grey rounded-sm"
           >
             <img src="/icons/BlackSearch.svg" alt="" />
-            <span className="text-grey">Search by motorcycle id, type...</span>
+            <input
+              type="text"
+              placeholder="Search by motorcycle id, brand, model..."
+              className="text-grey bg-transparent outline-none w-full"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
           <div
             id="typeStatusTimeBar-transaction"
             className="flex items-center gap-2.5 p-2.5"
           >
-            {/* Transaction Type Dropdown */}
             <div className="flex items-center gap-[5px]">
               <Select
                 options={filterOptions.type}
@@ -230,7 +252,6 @@ const Transaction = () => {
               />
             </div>
 
-            {/* Transaction Status Dropdown */}
             <div className="flex items-center gap-[5px]">
               <Select
                 options={filterOptions.status}
@@ -242,7 +263,6 @@ const Transaction = () => {
               />
             </div>
 
-            {/* Transaction Date Dropdown */}
             <div className="flex items-center gap-[5px]">
               <Select
                 options={filterOptions.date}
