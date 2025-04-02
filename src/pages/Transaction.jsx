@@ -17,6 +17,30 @@ const Transaction = () => {
   const [messageReceiver, setMessageReceiver] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [filters, setFilters] = useState({
+    type: "All",
+    status: "All",
+    date: "All",
+  });
+
+  const filterOptions = {
+    type: [
+      { value: "All", label: "All Types" },
+      { value: "Buying", label: "Buying" },
+      { value: "Selling", label: "Selling" },
+    ],
+    status: [
+      { value: "All", label: "All Statuses" },
+      { value: "Completed", label: "Completed" },
+      { value: "In Progress", label: "In Progress" },
+    ],
+    date: [
+      { value: "All", label: "All Dates" },
+      { value: "Newest", label: "Newest First" },
+      { value: "Oldest", label: "Oldest First" },
+    ],
+  };
+
   useEffect(() => {
     const fetchCurrentUser = async () => {
       const {
@@ -82,6 +106,38 @@ const Transaction = () => {
 
     fetchTransactions();
   }, [currentUser]);
+
+  const filteredTransactions = transactions
+    .filter((transaction) => {
+      if (filters.type !== "All" && transaction.type !== filters.type) {
+        return false;
+      }
+
+      if (filters.status !== "All") {
+        const statusMatch =
+          filters.status === "Completed"
+            ? transaction.completed
+            : !transaction.completed;
+        if (!statusMatch) return false;
+      }
+
+      return true;
+    })
+    .sort((a, b) => {
+      if (filters.date === "Newest") {
+        return new Date(b.created_at) - new Date(a.created_at);
+      } else if (filters.date === "Oldest") {
+        return new Date(a.created_at) - new Date(b.created_at);
+      }
+      return 0;
+    });
+
+  const handleFilterChange = (filterName, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [filterName]: value,
+    }));
+  };
 
   const handleSold = async (id, motoId) => {
     try {
@@ -162,26 +218,40 @@ const Transaction = () => {
             id="typeStatusTimeBar-transaction"
             className="flex items-center gap-2.5 p-2.5"
           >
-            <div
-              id="transactionType"
-              className="flex items-center justify-center gap-[5px] p-2.5 rounded-sm border-1 border-grey"
-            >
-              <span>Transaction Type</span>
-              <img src="/icons/SmallDropdown.svg" alt="" />
+            {/* Transaction Type Dropdown */}
+            <div className="flex items-center gap-[5px]">
+              <Select
+                options={filterOptions.type}
+                defaultValue={filterOptions.type[0]}
+                onChange={(selected) =>
+                  handleFilterChange("type", selected.value)
+                }
+                className="w-40 text-sm"
+              />
             </div>
-            <div
-              id="transactionStatus"
-              className="flex items-center justify-center gap-[5px] p-2.5 rounded-sm border-1 border-grey"
-            >
-              <span>Transaction Status</span>
-              <img src="/icons/SmallDropdown.svg" alt="" />
+
+            {/* Transaction Status Dropdown */}
+            <div className="flex items-center gap-[5px]">
+              <Select
+                options={filterOptions.status}
+                defaultValue={filterOptions.status[0]}
+                onChange={(selected) =>
+                  handleFilterChange("status", selected.value)
+                }
+                className="w-40 text-sm"
+              />
             </div>
-            <div
-              id="transactionDate"
-              className="flex items-center justify-center gap-[5px] p-2.5 rounded-sm border-1 border-grey"
-            >
-              <img src="/icons/Calendar.svg" alt="" />
-              <span>Transaction Date</span>
+
+            {/* Transaction Date Dropdown */}
+            <div className="flex items-center gap-[5px]">
+              <Select
+                options={filterOptions.date}
+                defaultValue={filterOptions.date[0]}
+                onChange={(selected) =>
+                  handleFilterChange("date", selected.value)
+                }
+                className="w-40 text-sm"
+              />
             </div>
           </div>
         </div>
@@ -245,7 +315,7 @@ const Transaction = () => {
           {transactions.length === 0 ? (
             <div className="text-center py-10">No transactions found</div>
           ) : (
-            transactions.map((transaction) => (
+            filteredTransactions.map((transaction) => (
               <div
                 key={transaction.id}
                 className="flex items-center gap-2.5 p-2.5 w-full bg-white border-1 border-border-white rounded-md"
