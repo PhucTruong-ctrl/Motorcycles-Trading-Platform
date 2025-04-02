@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Select from "react-dropdown-select";
+import Select from "react-select";
 import geodata from "../data/US_States_and_Cities.json";
 import supabase from "../supabase-client";
 
@@ -246,31 +246,23 @@ const EditProfile = ({ user, onClose }) => {
           <div className="flex flex-col gap-1 w-full">
             <label className="text-[16px] text-grey">State</label>
             <Select
-              required
               options={states}
-              onChange={handleStateChange}
+              value={states.find((option) => option.value === selectedState)}
+              onChange={(selectedOption) => handleStateChange([selectedOption])}
               placeholder="Select a state"
-              values={
-                selectedState
-                  ? [{ value: selectedState, label: selectedState }]
-                  : []
-              }
+              isSearchable
             />
           </div>
 
           <div className="flex flex-col gap-1 w-full">
             <label className="text-[16px] text-grey">City</label>
             <Select
-              required
               options={cities}
-              onChange={handleCityChange}
+              value={cities.find((option) => option.value === selectedCity)}
+              onChange={(selectedOption) => handleCityChange([selectedOption])}
               placeholder="Select a city"
-              values={
-                selectedCity
-                  ? [{ value: selectedCity, label: selectedCity }]
-                  : []
-              }
-              disabled={!selectedState}
+              isSearchable
+              isDisabled={!selectedState}
             />
           </div>
         </div>

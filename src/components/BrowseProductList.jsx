@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import queryString from "query-string";
 import ReactPaginate from "react-paginate";
-import Select from "react-dropdown-select";
+import Select from "react-select";
 import supabase from "../supabase-client";
 import BrowseProduct from "./BrowseProduct";
 
@@ -159,9 +159,8 @@ const BrowseProductList = () => {
     currentPage,
   ]);
 
-  const handleSortChange = (selectedOptions) => {
-    const selectedValue =
-      selectedOptions.length > 0 ? selectedOptions[0].value : "";
+  const handleSortChange = (selectedOption) => {
+    const selectedValue = selectedOption ? selectedOption.value : "";
     setSortOption(selectedValue);
 
     const currentQuery = queryString.parse(location.search);
@@ -196,17 +195,13 @@ const BrowseProductList = () => {
       <div className="self-end w-60">
         <Select
           options={sortOptions}
-          values={sortOptions.filter(
+          value={sortOptions.find(
             (option) => option.value === (queryParams.sort || sortOption)
           )}
           onChange={handleSortChange}
           placeholder="Sort by..."
-          searchable={false}
-          clearable={false}
-          className="text-[16px] w-60"
-          dropdownHandleRenderer={({ state }) => (
-            <div className="dropdown-handle">{state.dropdown ? "▲" : "▼"}</div>
-          )}
+          isSearchable={false}
+          className="w-60"
         />
       </div>
       {loading ? (
@@ -214,9 +209,12 @@ const BrowseProductList = () => {
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:flex flex-col gap-5 md:gap-3.5 items-stretch justify-between">
-            {moto.map((moto) => (
-              <BrowseProduct key={moto.id} moto={moto} user={moto.USER} />
-            ))}
+            {moto.map(
+              (moto) =>
+                moto.is_sold === false && (
+                  <BrowseProduct key={moto.id} moto={moto} user={moto.USER} />
+                )
+            )}
           </div>
 
           <ReactPaginate

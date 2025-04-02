@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import supabase from "../supabase-client";
-import Select from "react-dropdown-select";
+import Select from "react-select";
 import { motorcycleData } from "../data/motorcycleData";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import ProductCard from "../components/ProductCard";
 import Loading from "../components/Loading";
 import { Message } from "../components/Message";
 
@@ -308,12 +307,14 @@ const Sell = () => {
                 <div className="font-bold text-xl p-2 text-center">Type</div>
                 <Select
                   options={typeOptions}
-                  onChange={handleTypeChange}
-                  values={typeOptions.filter(
+                  onChange={(selectedOption) =>
+                    handleTypeChange([selectedOption])
+                  }
+                  value={typeOptions.find(
                     (option) => option.value === NewMoto.type
                   )}
                   placeholder="Select type"
-                  searchable
+                  isSearchable
                   className="text-[18px]"
                   required
                 />
@@ -326,14 +327,16 @@ const Sell = () => {
                     label: brand,
                     value: brand,
                   }))}
-                  onChange={handleBrandChange}
-                  values={filteredBrands
+                  onChange={(selectedOption) =>
+                    handleBrandChange([selectedOption])
+                  }
+                  value={filteredBrands
                     .map((brand) => ({ label: brand, value: brand }))
-                    .filter((option) => option.value === NewMoto.brand)}
+                    .find((option) => option.value === NewMoto.brand)}
                   placeholder="Select brand"
-                  searchable
+                  isSearchable
                   className="text-[18px]"
-                  disabled={!NewMoto.type}
+                  isDisabled={!NewMoto.type}
                   required
                 />
               </div>
@@ -345,17 +348,19 @@ const Sell = () => {
                     label: model.model,
                     value: model.model,
                   }))}
-                  onChange={handleModelChange}
-                  values={filteredModels
+                  onChange={(selectedOption) =>
+                    handleModelChange([selectedOption])
+                  }
+                  value={filteredModels
                     .map((model) => ({
                       label: model.model,
                       value: model.model,
                     }))
-                    .filter((option) => option.value === NewMoto.model)}
+                    .find((option) => option.value === NewMoto.model)}
                   placeholder="Select model"
-                  searchable
+                  isSearchable
                   className="text-[18px]"
-                  disabled={!NewMoto.brand}
+                  isDisabled={!NewMoto.brand}
                   required
                 />
               </div>
@@ -367,14 +372,16 @@ const Sell = () => {
                     label: trim.name,
                     value: trim.name,
                   }))}
-                  onChange={handleTrimChange}
-                  values={filteredTrims
+                  onChange={(selectedOption) =>
+                    handleTrimChange([selectedOption])
+                  }
+                  value={filteredTrims
                     .map((trim) => ({ label: trim.name, value: trim.name }))
-                    .filter((option) => option.value === NewMoto.trim)}
+                    .find((option) => option.value === NewMoto.trim)}
                   placeholder="Select trim"
-                  searchable
+                  isSearchable
                   className="text-[18px]"
-                  disabled={!NewMoto.model}
+                  isDisabled={!NewMoto.model}
                   required
                 />
               </div>

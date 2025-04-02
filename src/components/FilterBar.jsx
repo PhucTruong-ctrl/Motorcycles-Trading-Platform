@@ -260,7 +260,7 @@ const FilterBar = () => {
         key={`type-${selectedBrand}-${selectedType}`}
         title="Type"
         options={availableTypes}
-        selectedValue={CapitalizeFirst(selectedType)}
+        selectedValue={selectedType}
         onChange={handleTypeChange}
         disabled={!selectedBrand}
         placeholder={selectedBrand ? "Select type" : "Select brand first"}

@@ -1,5 +1,5 @@
 import React from "react";
-import Select from "react-dropdown-select";
+import Select from "react-select";
 
 const FilterSelect = ({
   title,
@@ -15,17 +15,17 @@ const FilterSelect = ({
       <div className="w-full">
         <Select
           options={options}
-          onChange={onChange}
-          values={
-            selectedValue
-              ? [{ value: selectedValue, label: selectedValue }]
-              : []
+          onChange={(selectedOption) =>
+            onChange(selectedOption ? [selectedOption] : [])
+          }
+          value={
+            options.find((option) => option.value === selectedValue) || null
           }
           placeholder={placeholder}
-          searchable
-          clearable
+          isSearchable
+          isClearable
           className="text-[18px]"
-          disabled={disabled}
+          isDisabled={disabled}
         />
       </div>
     </div>

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router";
 import supabase from "../supabase-client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import Select from "react-dropdown-select";
+import Select from "react-select";
 import { motorcycleData } from "../data/motorcycleData";
 import { Message } from "../components/Message";
 
@@ -229,44 +229,58 @@ const EditProduct = () => {
         <Header />
 
         <form onSubmit={handleSubmit} className="edit-form">
-          { }
+          {}
           <div className="w-fit">
             <Select
               options={typeOptions}
-              onChange={handleTypeChange}
-              values={typeOptions.filter((opt) => opt.value === moto.type)}
+              value={typeOptions.find((opt) => opt.value === moto.type)}
+              onChange={(selectedOption) => handleTypeChange([selectedOption])}
               placeholder="Select type"
+              isSearchable
             />
             <Select
               options={filteredBrands.map((b) => ({ label: b, value: b }))}
-              onChange={handleBrandChange}
-              values={[{ label: moto.brand, value: moto.brand }]}
+              value={
+                filteredBrands.find((b) => b === moto.brand)
+                  ? { label: moto.brand, value: moto.brand }
+                  : null
+              }
+              onChange={(selectedOption) => handleBrandChange([selectedOption])}
               placeholder="Select brand"
-              disabled={!moto.type}
+              isDisabled={!moto.type}
+              isSearchable
             />
-
             <Select
               options={filteredModels.map((m) => ({
                 label: m.model,
                 value: m.model,
               }))}
-              onChange={handleModelChange}
-              values={[{ label: moto.model, value: moto.model }]}
+              value={
+                filteredModels.find((m) => m.model === moto.model)
+                  ? { label: moto.model, value: moto.model }
+                  : null
+              }
+              onChange={(selectedOption) => handleModelChange([selectedOption])}
               placeholder="Select model"
-              disabled={!moto.brand}
+              isDisabled={!moto.brand}
+              isSearchable
             />
-
             <Select
               options={filteredTrims.map((t) => ({ label: t, value: t }))}
-              onChange={(selected) =>
+              value={
+                filteredTrims.includes(moto.trim)
+                  ? { label: moto.trim, value: moto.trim }
+                  : null
+              }
+              onChange={(selectedOption) =>
                 setMoto((prev) => ({
                   ...prev,
-                  trim: selected[0]?.value,
+                  trim: selectedOption?.value || "",
                 }))
               }
-              values={[{ label: moto.trim, value: moto.trim }]}
               placeholder="Select trim"
-              disabled={!moto.model}
+              isDisabled={!moto.model}
+              isSearchable
             />
           </div>
 
@@ -355,7 +369,7 @@ const EditProduct = () => {
             />
           </div>
 
-          { }
+          {}
           <div className="image-section">
             <h3>Current Images:</h3>
             <div className="image-grid grid grid-cols-10">

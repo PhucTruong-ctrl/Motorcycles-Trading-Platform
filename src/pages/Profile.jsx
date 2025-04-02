@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router";
 import supabase from "../supabase-client";
-import Select from "react-dropdown-select";
+import Select from "react-select";
 import Modal from "react-modal";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -486,9 +486,12 @@ const Profile = () => {
                 slidesToSlide={1}
                 swipeable
               >
-                {moto.map((moto) => (
-                  <ProductCard key={moto.id} moto={moto} />
-                ))}
+                {moto.map(
+                  (moto) =>
+                    moto.is_sold === false && (
+                      <ProductCard key={moto.id} moto={moto} />
+                    )
+                )}
               </Carousel>
             </div>
           ) : (
@@ -504,7 +507,17 @@ const Profile = () => {
                       { value: false, label: "Report" },
                     ]}
                     placeholder="Send a reputation"
-                    onChange={(selected) => setRepType(selected[0]?.value)}
+                    onChange={(selected) => setRepType(selected?.value)}
+                    isSearchable={false}
+                    className="w-full"
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        borderColor: "#ccc",
+                        boxShadow: "none",
+                        "&:hover": { borderColor: "#888" },
+                      }),
+                    }}
                   />
                   <input
                     type="text"

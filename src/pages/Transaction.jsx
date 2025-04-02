@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import Select from "react-select";
 import { format } from "date-fns";
 import supabase from "../supabase-client";
 import Header from "../components/Header";
@@ -82,15 +83,36 @@ const Transaction = () => {
     fetchTransactions();
   }, [currentUser]);
 
-  const handleSold = async (id) => {
+  const handleSold = async (id, motoId) => {
     try {
-      await supabase
+      const { error: transactionError } = await supabase
         .from("TRANSACTION")
         .update({ completed: true })
         .eq("id", id);
-      window.location.reload();
+
+      if (transactionError) throw transactionError;
+
+      const { error: motoError } = await supabase
+        .from("MOTORCYCLE")
+        .update({ is_sold: true })
+        .eq("id", motoId);
+
+      if (motoError) throw motoError;
+
+      setTransactions(
+        transactions.map((t) =>
+          t.id === id
+            ? {
+                ...t,
+                completed: true,
+                motorcycle: { ...t.motorcycle, is_sold: true },
+              }
+            : t
+        )
+      );
     } catch (error) {
       console.error("Error updating status:", error);
+      alert("Failed to update status");
     }
   };
 
@@ -313,13 +335,19 @@ const Transaction = () => {
                               {({ active }) => (
                                 <button
                                   type="button"
-                                  onClick={() => handleSold(transaction.id)}
+                                  onClick={() =>
+                                    handleSold(
+                                      transaction.id,
+                                      transaction.id_moto
+                                    )
+                                  }
                                   className={`${
                                     active
                                       ? "bg-gray-100 text-gray-900"
                                       : "text-gray-700"
-                                  } block w-full px-4 py-2 text-left text-sm`}
+                                  } w-full px-4 py-2 text-left text-md flex flex-row gap-2`}
                                 >
+                                  <img src="/icons/CheckCircle.svg" alt="" />
                                   Mark as Sold
                                 </button>
                               )}
@@ -334,8 +362,9 @@ const Transaction = () => {
                                 active
                                   ? "bg-gray-100 text-gray-900"
                                   : "text-gray-700"
-                              } block w-full px-4 py-2 text-left text-sm`}
+                              } w-full px-4 py-2 text-left text-md flex flex-row gap-2`}
                             >
+                              <img src="/icons/BlackChat.svg" alt="" />
                               Chat with other user
                             </button>
                           )}

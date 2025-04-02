@@ -72,9 +72,12 @@ const HomeProductList = ({ condition }) => {
           slidesToSlide={1}
           swipeable
         >
-          {motorcycles.map((moto) => (
-            <ProductCard key={moto.id} moto={moto} />
-          ))}
+          {motorcycles.map(
+            (moto) =>
+              moto.is_sold === false && (
+                <ProductCard key={moto.id} moto={moto} />
+              )
+          )}
         </Carousel>
       </div>
     </div>
