@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 
 const LoginSignUp = () => {
   const [atLogin, setAtLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
   const [newUser, setNewUser] = useState({
     email: "",
     password: "",
@@ -408,7 +409,7 @@ const LoginSignUp = () => {
                     id="password"
                     name="password"
                     required
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={newUser.password}
                     onChange={handleInputChange}
                     className="rounded-sm border-1 border-grey p-[10px] w-full"
@@ -417,7 +418,12 @@ const LoginSignUp = () => {
                 </div>
                 <div className="flex justify-between items-start self-stretch">
                   <div className="flex justify-start items-center gap-[5px]">
-                    <input id="showPass" type="checkbox" />
+                    <input
+                      id="showPass"
+                      type="checkbox"
+                      checked={showPassword}
+                      onChange={(e) => setShowPassword(e.target.checked)}
+                    />
                     <label
                       htmlFor="showPass"
                       className="text-[14px] font-semibold"
