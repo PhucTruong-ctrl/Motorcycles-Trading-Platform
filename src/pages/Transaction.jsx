@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import Select from "react-select";
 import { format } from "date-fns";
@@ -20,12 +21,19 @@ const Transaction = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [filters, setFilters] = useState({
+    sortBy: "Default",
     type: "All",
     status: "All",
-    date: "All",
+    date: "Newest",
   });
 
   const filterOptions = {
+    sortBy: [
+      { value: "Newest", label: "Newest First" },
+      { value: "Oldest", label: "Oldest First" },
+      { value: "Highest", label: "Highest Price" },
+      { value: "Lowest", label: "Lowest Price" },
+    ],
     type: [
       { value: "All", label: "All Types" },
       { value: "Buying", label: "Buying" },
@@ -35,11 +43,6 @@ const Transaction = () => {
       { value: "All", label: "All Statuses" },
       { value: "Completed", label: "Completed" },
       { value: "In Progress", label: "In Progress" },
-    ],
-    date: [
-      { value: "All", label: "All Dates" },
-      { value: "Newest", label: "Newest First" },
-      { value: "Oldest", label: "Oldest First" },
     ],
   };
 
@@ -107,6 +110,25 @@ const Transaction = () => {
     };
 
     fetchTransactions();
+
+    const channel = supabase
+      .channel("transaction-updates")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "TRANSACTION",
+        },
+        () => {
+          fetchTransactions();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [currentUser]);
 
   const filteredTransactions = transactions
@@ -141,12 +163,18 @@ const Transaction = () => {
       return true;
     })
     .sort((a, b) => {
-      if (filters.date === "Newest") {
-        return new Date(b.created_at) - new Date(a.created_at);
-      } else if (filters.date === "Oldest") {
-        return new Date(a.created_at) - new Date(b.created_at);
+      switch (filters.sortBy) {
+        case "Newest":
+          return new Date(b.created_at) - new Date(a.created_at);
+        case "Oldest":
+          return new Date(a.created_at) - new Date(b.created_at);
+        case "Highest":
+          return (b.motorcycle?.price || 0) - (a.motorcycle?.price || 0);
+        case "Lowest":
+          return (a.motorcycle?.price || 0) - (b.motorcycle?.price || 0);
+        default:
+          return 0;
       }
-      return 0;
     });
 
   const handleFilterChange = (filterName, value) => {
@@ -158,12 +186,22 @@ const Transaction = () => {
 
   const handleSold = async (id, motoId) => {
     try {
-      const { error: transactionError } = await supabase
+      const { data: transactionData, error: transactionError } = await supabase
+        .from("TRANSACTION")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (transactionError) throw transactionError;
+
+      const sellerId = transactionData.uid_seller;
+
+      const { error: updateTransactionError } = await supabase
         .from("TRANSACTION")
         .update({ completed: true })
         .eq("id", id);
 
-      if (transactionError) throw transactionError;
+      if (updateTransactionError) throw updateTransactionError;
 
       const { error: motoError } = await supabase
         .from("MOTORCYCLE")
@@ -172,20 +210,25 @@ const Transaction = () => {
 
       if (motoError) throw motoError;
 
-      setTransactions(
-        transactions.map((t) =>
-          t.id === id
-            ? {
-                ...t,
-                completed: true,
-                motorcycle: { ...t.motorcycle, is_sold: true },
-              }
-            : t
-        )
-      );
+      const { data: sellerData, error: sellerError } = await supabase
+        .from("USER")
+        .select("sold_list")
+        .eq("uid", sellerId)
+        .single();
+
+      if (sellerError) throw sellerError;
+
+      const updatedSellerSoldList = sellerData.sold_list
+        ? [...sellerData.sold_list, motoId]
+        : [motoId];
+
+      await supabase
+        .from("USER")
+        .update({ sold_list: updatedSellerSoldList })
+        .eq("uid", sellerId);
     } catch (error) {
-      console.error("Error updating status:", error);
-      alert("Failed to update status");
+      console.error("Error completing transaction:", error);
+      alert("Failed to complete transaction");
     }
   };
 
@@ -215,14 +258,14 @@ const Transaction = () => {
         id="title"
         className="flex flex-col justify-center items-center w-full gap-2.5 mb-5"
       >
-        <span className="text-black font-bold text-4xl">Transaction</span>
+        <span className="text-black font-bold text-4xl">Transactions</span>
         <span className="text-grey font-light text-xl">Track your orders</span>
       </div>
 
       <div className="flex flex-col items-center gap-2.5 p-2.5 w-full bg-white rounded-xl">
         <div
           id="actionBar-transaction"
-          className="flex flex-row p-2.5 justify-between items-center w-full"
+          className="flex flex-col md:flex-row p-2.5 justify-between items-center w-full"
         >
           <div
             id="searchBar"
@@ -231,7 +274,7 @@ const Transaction = () => {
             <img src="/icons/BlackSearch.svg" alt="" />
             <input
               type="text"
-              placeholder="Search by motorcycle id, brand, model..."
+              placeholder="Search by id, brand, model"
               className="text-grey bg-transparent outline-none w-full"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -239,16 +282,35 @@ const Transaction = () => {
           </div>
           <div
             id="typeStatusTimeBar-transaction"
-            className="flex items-center gap-2.5 p-2.5"
+            className="hidden md:grid grid-cols-3 items-center gap-2.5 p-2.5"
           >
+            <div className="flex items-center gap-[5px]">
+              <div className="flex items-center gap-[5px]">
+                <div className="flex items-center gap-[5px]">
+                  <Select
+                    options={filterOptions.sortBy}
+                    defaultValue={filterOptions.sortBy.find(
+                      (opt) => opt.value === "Newest"
+                    )}
+                    isSearchable={false}
+                    onChange={(selected) =>
+                      handleFilterChange("sortBy", selected.value)
+                    }
+                    className="w-40 text-md"
+                  />
+                </div>
+              </div>
+            </div>
+
             <div className="flex items-center gap-[5px]">
               <Select
                 options={filterOptions.type}
                 defaultValue={filterOptions.type[0]}
+                isSearchable={false}
                 onChange={(selected) =>
                   handleFilterChange("type", selected.value)
                 }
-                className="w-40 text-sm"
+                className="w-40 text-md"
               />
             </div>
 
@@ -256,21 +318,11 @@ const Transaction = () => {
               <Select
                 options={filterOptions.status}
                 defaultValue={filterOptions.status[0]}
+                isSearchable={false}
                 onChange={(selected) =>
                   handleFilterChange("status", selected.value)
                 }
-                className="w-40 text-sm"
-              />
-            </div>
-
-            <div className="flex items-center gap-[5px]">
-              <Select
-                options={filterOptions.date}
-                defaultValue={filterOptions.date[0]}
-                onChange={(selected) =>
-                  handleFilterChange("date", selected.value)
-                }
-                className="w-40 text-sm"
+                className="w-40 text-md"
               />
             </div>
           </div>
@@ -280,50 +332,47 @@ const Transaction = () => {
       <div className="flex flex-col items-center w-full py-[15px] gap-[5px]">
         <div
           id="rowType"
-          className="flex items-center gap-2.5 p-2.5 w-full bg-white border-1 border-border-white rounded-md"
+          className="flex justify-center items-center md:grid md:grid-cols-7 gap-2.5 p-2.5 w-full bg-white border-1 border-border-white rounded-md"
         >
           <div
             id="transactionCol"
-            className="flex items-center p-2.5 gap-[5px] min-w-[300px]"
+            className="flex items-center p-2.5 gap-[5px]"
           >
-            <input id="selectTransaction" type="checkbox" />
-            <label htmlFor="selectTransaction" className="font-bold">
-              Transaction
-            </label>
+            <span className="font-bold">Transaction</span>
           </div>
           <div
             id="userCol"
-            className="flex items-center p-2.5 gap-[5px] w-full"
+            className="hidden md:flex items-center p-2.5 gap-[5px]"
           >
             <span className="font-bold">User</span>
           </div>
           <div
             id="dateCol"
-            className="flex items-center p-2.5 gap-[5px] w-full"
+            className="hidden md:flex items-center p-2.5 gap-[5px]"
           >
             <span className="font-bold">Date</span>
           </div>
           <div
             id="typeCol"
-            className="flex items-center p-2.5 gap-[5px] w-full"
+            className="hidden md:flex items-center p-2.5 gap-[5px]"
           >
             <span className="font-bold">Type</span>
           </div>
           <div
-            id="typeCol"
-            className="flex items-center p-2.5 gap-[5px] w-full"
+            id="amountCol"
+            className="hidden md:flex items-center p-2.5 gap-[5px]"
           >
             <span className="font-bold">Amount</span>
           </div>
           <div
-            id="typeCol"
-            className="flex items-center p-2.5 gap-[5px] w-full"
+            id="statusCol"
+            className="hidden md:flex items-center p-2.5 gap-[5px]"
           >
             <span className="font-bold">Status</span>
           </div>
           <div
-            id="typeCol"
-            className="flex items-center p-2.5 gap-[5px] w-full"
+            id="actionCol"
+            className="hidden md:flex items-center p-2.5 gap-[5px]"
           >
             <span className="font-bold">Actions</span>
           </div>
@@ -336,132 +385,266 @@ const Transaction = () => {
             <div className="text-center py-10">No transactions found</div>
           ) : (
             filteredTransactions.map((transaction) => (
-              <div
-                key={transaction.id}
-                className="flex items-center gap-2.5 p-2.5 w-full bg-white border-1 border-border-white rounded-md"
-              >
-                <div className="flex items-center p-2.5 gap-[10px] min-w-[300px]">
-                  <input
-                    id={`selectTransaction-${transaction.id}`}
-                    type="checkbox"
-                  />
-                  <img
-                    src={
-                      transaction.motorcycle?.image_url?.[0] ||
-                      "/img/R7_Sample.jpg"
-                    }
-                    alt="Motorcycle"
-                    className="rounded-sm w-[40px] h-[40px] object-cover"
-                  />
-                  <div className="flex flex-col justify-center items-start">
-                    <span>
-                      {transaction.motorcycle?.brand}{" "}
-                      {transaction.motorcycle?.model}{" "}
-                      {transaction.motorcycle?.trim}
-                    </span>
-                    <span className="font-light text-[12px]">
-                      {transaction.motorcycle?.mile} miles
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center p-2.5 gap-[5px] w-full">
-                  <img
-                    src={
-                      transaction.type === "Buying"
-                        ? transaction.seller?.avatar_url
-                        : transaction.buyer?.avatar_url || "/img/R7_Sample.jpg"
-                    }
-                    alt="User"
-                    className="rounded-sm w-[40px] h-[40px] object-cover"
-                  />
-                  <span>
-                    {transaction.type === "Buying"
-                      ? transaction.seller?.name
-                      : transaction.buyer?.name}
-                  </span>
-                </div>
-                <div className="flex items-center p-2.5 gap-[5px] w-full">
-                  <span>{formatDate(transaction.created_at)}</span>
-                </div>
-                <div className="flex items-center p-2.5 gap-[5px] w-full">
-                  <span>{transaction.type}</span>
-                </div>
-                <div className="flex items-center p-2.5 gap-[5px] w-full">
-                  <span>
-                    ${transaction.motorcycle?.price?.toLocaleString()}
-                  </span>
-                </div>
-                <div className="flex items-center p-2.5 gap-[5px] w-full">
-                  <div
-                    className={`flex flex-row items-center p-[5px] gap-[5px] rounded-sm ${
-                      transaction.completed
-                        ? "bg-[#C4FFAE] text-[#1B7200]"
-                        : "bg-[#FFECAE] text-[#725C00]"
-                    }`}
-                  >
+              <div>
+                <div
+                  key={transaction.id}
+                  className="hidden md:grid grid-cols-7 gap-2.5 p-2.5 w-full bg-white border-1 border-border-white rounded-md"
+                >
+                  <div className="flex justify-start items-start p-1 gap-[10px]">
                     <img
-                      src={`${transaction.completed ? "/icons/CheckCircle.svg" : "/icons/PendingCircle.svg"}`}
-                      alt=""
+                      src={
+                        transaction.motorcycle?.image_url?.[0] ||
+                        "/img/R7_Sample.jpg"
+                      }
+                      alt="Motorcycle"
+                      className="rounded-sm w-[40px] h-[40px] object-cover"
+                    />
+                    <div className="flex flex-col justify-start items-start gap-1">
+                      <Link
+                        to={{
+                          pathname: "/motorcycle-detail",
+                          search: `?${new URLSearchParams({
+                            uid: transaction.motorcycle?.uid || "",
+                            id: transaction.motorcycle?.id || "",
+                            year: transaction.motorcycle?.year || "",
+                            brand: transaction.motorcycle?.brand || "",
+                            model: transaction.motorcycle?.model || "",
+                            trim: transaction.motorcycle?.trim || "",
+                          }).toString()}`,
+                        }}
+                        className="font-bold text-blue underline"
+                      >
+                        {transaction.motorcycle?.brand}{" "}
+                        {transaction.motorcycle?.model}{" "}
+                        {transaction.motorcycle?.trim}
+                      </Link>
+                      <div className="flex flex-col justify-start items-start gap-0">
+                        <span className="font-light text-sm">
+                          {transaction.motorcycle?.mile} Miles
+                        </span>
+                        <span className="font-light text-sm">
+                          {transaction.motorcycle?.year}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center p-1 gap-[5px]">
+                    <img
+                      src={
+                        transaction.type === "Buying"
+                          ? transaction.seller?.avatar_url
+                          : transaction.buyer?.avatar_url ||
+                            "/img/R7_Sample.jpg"
+                      }
+                      alt="User"
+                      className="rounded-sm w-[40px] h-[40px] object-cover"
                     />
                     <span>
-                      {transaction.completed ? "Completed" : "In Progress"}
+                      {transaction.type === "Buying"
+                        ? transaction.seller?.name
+                        : transaction.buyer?.name}
                     </span>
                   </div>
-                </div>
-                <div className="relative flex items-center p-2.5 gap-[5px] w-full">
-                  <Menu as="div" className="relative inline-block text-left">
-                    <div>
-                      <MenuButton className="flex items-center gap-[5px] rounded-sm border-1 border-grey p-[5px] hover:bg-gray-50">
-                        <span className="text-grey">Action</span>
-                        <img src="/icons/MoreDot.svg" alt="" />
-                      </MenuButton>
+                  <div className="flex items-center p-1 gap-[5px]">
+                    <span>{formatDate(transaction.created_at)}</span>
+                  </div>
+                  <div className="flex items-center p-1 gap-[5px]">
+                    <span>{transaction.type}</span>
+                  </div>
+                  <div className="flex items-center p-1 gap-[5px]">
+                    <span>
+                      ${transaction.motorcycle?.price?.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex flex-col justify-center items-start">
+                    <div
+                      className={`flex flex-row justify-center items-center p-[5px] gap-[5px] rounded-sm w-fit ${
+                        transaction.completed
+                          ? "bg-[#C4FFAE] text-[#1B7200]"
+                          : "bg-[#FFECAE] text-[#725C00]"
+                      }`}
+                    >
+                      <img
+                        src={`${transaction.completed ? "/icons/CheckCircle.svg" : "/icons/PendingCircle.svg"}`}
+                        alt=""
+                      />
+                      <span className="font-light">
+                        {transaction.completed ? "Completed" : "In Progress"}
+                      </span>
                     </div>
-
-                    <MenuItems className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <div className="py-1">
-                        {transaction.type === "Selling" &&
-                          transaction.completed === false && (
-                            <MenuItem>
-                              {({ active }) => (
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    handleSold(
-                                      transaction.id,
-                                      transaction.id_moto
-                                    )
-                                  }
-                                  className={`${
-                                    active
-                                      ? "bg-gray-100 text-gray-900"
-                                      : "text-gray-700"
-                                  } w-full px-4 py-2 text-left text-md flex flex-row gap-2`}
-                                >
-                                  <img src="/icons/CheckCircle.svg" alt="" />
-                                  Mark as Sold
-                                </button>
-                              )}
-                            </MenuItem>
-                          )}
-                        <MenuItem>
-                          {({ active }) => (
-                            <button
-                              type="button"
-                              onClick={() => handleChat(transaction)}
-                              className={`${
-                                active
-                                  ? "bg-gray-100 text-gray-900"
-                                  : "text-gray-700"
-                              } w-full px-4 py-2 text-left text-md flex flex-row gap-2`}
-                            >
-                              <img src="/icons/BlackChat.svg" alt="" />
-                              Chat with other user
-                            </button>
-                          )}
-                        </MenuItem>
+                  </div>
+                  <div className="relative flex items-center p-2.5 gap-[5px]">
+                    <Menu as="div" className="relative inline-block text-left">
+                      <div>
+                        <MenuButton className="flex items-center gap-[5px] rounded-sm border-1 border-grey p-[5px] hover:bg-gray-50">
+                          <span className="text-grey">Action</span>
+                          <img src="/icons/MoreDot.svg" alt="" />
+                        </MenuButton>
                       </div>
-                    </MenuItems>
-                  </Menu>
+
+                      <MenuItems className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-border-white ring-opacity-5 focus:outline-none">
+                        <div className="py-1">
+                          {transaction.type === "Selling" &&
+                            transaction.completed === false && (
+                              <MenuItem>
+                                {({ active }) => (
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleSold(
+                                        transaction.id,
+                                        transaction.id_moto
+                                      )
+                                    }
+                                    className={`${
+                                      active
+                                        ? "bg-gray-100 text-gray-900"
+                                        : "text-gray-700"
+                                    } w-full px-4 py-2 text-left text-md flex flex-row gap-2`}
+                                  >
+                                    <img src="/icons/CheckCircle.svg" alt="" />
+                                    Mark as Sold
+                                  </button>
+                                )}
+                              </MenuItem>
+                            )}
+                          <MenuItem>
+                            {({ active }) => (
+                              <button
+                                type="button"
+                                onClick={() => handleChat(transaction)}
+                                className={`${
+                                  active
+                                    ? "bg-gray-100 text-gray-900"
+                                    : "text-gray-700"
+                                } w-full px-4 py-2 text-left text-md flex flex-row gap-2`}
+                              >
+                                <img src="/icons/BlackChat.svg" alt="" />
+                                Chat with other user
+                              </button>
+                            )}
+                          </MenuItem>
+                        </div>
+                      </MenuItems>
+                    </Menu>
+                  </div>
+                </div>
+                <div className="flex md:hidden justify-center items-start gap-2.5 p-1 w-full bg-white border-1 border-border-white rounded-md">
+                  <div className="flex flex-col p-2.5 gap-3 w-full">
+                    <div className="flex flex-col w-full">
+                      <div className="flex gap-5">
+                        <div className="flex flex-col gap-1 justify-center items-center">
+                          <img
+                            src={
+                              transaction.motorcycle?.image_url?.[0] ||
+                              "/img/R7_Sample.jpg"
+                            }
+                            alt="User"
+                            className="rounded-sm w-[50px] h-[50px] object-cover"
+                          />
+                          <div className="w-full h-[1px] bg-grey"></div>
+                          <div>
+                            {transaction.type === "Buying" ? (
+                              <span className="font-light text-sm bg-red text-white p-1 rounded-sm">
+                                Buying
+                              </span>
+                            ) : (
+                              <span className="font-light text-sm bg-blue text-white p-1 rounded-sm">
+                                Selling
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <Link
+                            to={{
+                              pathname: "/motorcycle-detail",
+                              search: `?${new URLSearchParams({
+                                uid: transaction.motorcycle?.uid || "",
+                                id: transaction.motorcycle?.id || "",
+                                year: transaction.motorcycle?.year || "",
+                                brand: transaction.motorcycle?.brand || "",
+                                model: transaction.motorcycle?.model || "",
+                                trim: transaction.motorcycle?.trim || "",
+                              }).toString()}`,
+                            }}
+                            className="font-bold text-blue underline"
+                          >
+                            {transaction.motorcycle?.brand}{" "}
+                            {transaction.motorcycle?.model}
+                          </Link>
+                          <div className="flex flex-col gap-0">
+                            <span className="font-light italic text-sm">
+                              {transaction.motorcycle?.trim} Edition
+                            </span>
+                            <span className="font-light text-sm">
+                              {transaction.motorcycle?.mile} Miles
+                            </span>
+                            <span className="font-light text-sm">
+                              {transaction.motorcycle?.year}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-grey w-full h-[1px]"></div>
+                    <div>
+                      {transaction.type === "Buying" ? (
+                        <span>
+                          Buying from{" "}
+                          <span className="font-bold text-blue underline">
+                            {transaction.seller?.name}
+                          </span>
+                        </span>
+                      ) : (
+                        <span>
+                          Order from{" "}
+                          <span className="font-bold text-blue underline">
+                            {transaction.buyer?.name}
+                          </span>
+                        </span>
+                      )}
+                    </div>
+                    <div
+                      className={`flex flex-row justify-center items-center p-[5px] gap-[5px] rounded-sm w-fit ${
+                        transaction.completed
+                          ? "bg-[#C4FFAE] text-[#1B7200]"
+                          : "bg-[#FFECAE] text-[#725C00]"
+                      }`}
+                    >
+                      <img
+                        src={`${transaction.completed ? "/icons/CheckCircle.svg" : "/icons/PendingCircle.svg"}`}
+                        alt=""
+                      />
+                      <span className="font-light">
+                        {transaction.completed ? "Completed" : "In Progress"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2.5 w-40 p-2.5">
+                    <button
+                      onClick={() => handleChat(transaction)}
+                      className="bg-blue flex flex-row gap-1 justify-center items-start p-2.5 rounded-sm "
+                    >
+                      <img src="/icons/Chat.svg" alt="" />
+                      <span className="text-md text-white font-bold">Chat</span>
+                    </button>
+                    {transaction.type === "Selling" &&
+                      transaction.completed === false && (
+                        <button
+                          onClick={() =>
+                            handleSold(transaction.id, transaction.id_moto)
+                          }
+                          className="bg-[#C4FFAE] flex flex-row gap-1 justify-center items-start p-2.5 rounded-sm "
+                        >
+                          <img src="/icons/CheckCircle.svg" alt="" />
+                          <span className="text-md font-bold text-[#1B7200]">
+                            Sold
+                          </span>
+                        </button>
+                      )}
+                    <div className="flex items-center p-2.5 gap-[5px] w-full"></div>
+                  </div>
                 </div>
               </div>
             ))

@@ -312,123 +312,127 @@ const ProductDetail = () => {
                 </div>
               </div>
 
-              <div
-                id="ContactSeller"
-                className="w-full flex flex-col justify-start items-start gap-5 mt-5"
-              >
+              {currentUser.id !== moto.uid && (
                 <div
-                  id="SellerDetail"
-                  className="flex flex-col md:flex-row justify-center items-center gap-5 md:gap-15"
+                  id="ContactSeller"
+                  className="w-full flex flex-col justify-start items-start gap-5 mt-5"
                 >
-                  {user && (
-                    <div className="flex items-center gap-2">
-                      <Link to={`/profile/${user?.uid}`}>
-                        <img
-                          src={user.avatar_url}
-                          alt={user.name}
-                          className="w-[60px] h-[60px] sm:min-w-[80px] sm:min-h-[80px] md:min-w-[95px] md:min-h-[95px] border-1 rounded-full shrink-0"
-                        />
-                      </Link>
-                      <div className="flex flex-col items-start gap-1">
+                  <div
+                    id="SellerDetail"
+                    className="flex flex-col md:flex-row justify-center items-center gap-5 md:gap-15"
+                  >
+                    {user && (
+                      <div className="flex items-center gap-2">
                         <Link to={`/profile/${user?.uid}`}>
-                          <div className="font-light text-grey text-[15px]">
-                            {user.badge}
-                          </div>
-                          <div className="font-bold text-2xl">{user.name}</div>
+                          <img
+                            src={user.avatar_url}
+                            alt={user.name}
+                            className="w-[60px] h-[60px] sm:min-w-[80px] sm:min-h-[80px] md:min-w-[95px] md:min-h-[95px] border-1 rounded-full shrink-0"
+                          />
                         </Link>
-                        <div className="flex flex-row gap-1 font-light text-grey text-nowrap text-[15px]">
-                          <img src="/icons/Location.svg" alt="" /> {user?.state}
-                          , {user?.city}
+                        <div className="flex flex-col items-start gap-1">
+                          <Link to={`/profile/${user?.uid}`}>
+                            <div className="font-light text-grey text-[15px]">
+                              {user.badge}
+                            </div>
+                            <div className="font-bold text-2xl">
+                              {user.name}
+                            </div>
+                          </Link>
+                          <div className="flex flex-row gap-1 font-light text-grey text-nowrap text-[15px]">
+                            <img src="/icons/Location.svg" alt="" />{" "}
+                            {user?.state}, {user?.city}
+                          </div>
                         </div>
                       </div>
+                    )}
+                    <div className="flex flex-row gap-5 w-full justify-center items-center">
+                      <div>
+                        <Button
+                          textValue={`${user.phone_num}`}
+                          bg_color={"black"}
+                          text_color={"white"}
+                          icons={"/icons/Phone.svg"}
+                        />
+                      </div>
+                      <div>
+                        <button
+                          onClick={handleChat}
+                          className={`w-full p-2.5 flex flex-row justify-center items-center gap-1.5 shadow-md shadow-grey bg-blue rounded-sm hover:scale-110 hover:cursor-pointer transition`}
+                        >
+                          <img
+                            className="w-7 h-auto"
+                            src="/icons/Chat.svg"
+                            alt=""
+                          />
+                          <div className={`text-white text-[23px] font-[500]`}>
+                            Chat
+                          </div>
+                        </button>
+                      </div>
                     </div>
-                  )}
-                  <div className="flex flex-row gap-5 w-full justify-center items-center">
-                    <div>
-                      <Button
-                        textValue={`${user.phone_num}`}
-                        bg_color={"black"}
-                        text_color={"white"}
-                        icons={"/icons/Phone.svg"}
+                  </div>
+
+                  <button
+                    onClick={handleBuy}
+                    className="bg-yellow text-black rounded-sm shadow-md shadow-grey p-2.5 w-full text-[22px] font-bold flex flex-col justify-center items-center"
+                  >
+                    Buy now
+                  </button>
+
+                  <div
+                    id="or"
+                    className="flex justify-center items-center gap-[10px] self-stretch"
+                  >
+                    <div className="h-[1px] w-full bg-grey"></div>
+                    <span className="text-grey">or</span>
+                    <div className="h-[1px] w-full bg-grey"></div>
+                  </div>
+
+                  <div className="flex flex-col gap-5 border-b-1 border-grey w-full">
+                    <div className="flex flex-row gap-5 text-black">
+                      <input
+                        type="text"
+                        placeholder="First Name"
+                        className="rounded-sm border-[1px] border-grey h-10 bg-white w-full px-5"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Last Name"
+                        className="rounded-sm border-[1px] border-grey h-10 bg-white w-full px-5"
                       />
                     </div>
-                    <div>
-                      <button
-                        onClick={handleChat}
-                        className={`w-full p-2.5 flex flex-row justify-center items-center gap-1.5 shadow-md shadow-grey bg-blue rounded-sm hover:scale-110 hover:cursor-pointer transition`}
-                      >
-                        <img
-                          className="w-7 h-auto"
-                          src="/icons/Chat.svg"
-                          alt=""
-                        />
-                        <div className={`text-white text-[23px] font-[500]`}>
-                          Chat
-                        </div>
-                      </button>
+                    <div className="flex flex-row gap-5 text-black">
+                      <input
+                        type="text"
+                        placeholder="Email Address"
+                        defaultValue={user.email}
+                        className="rounded-sm border-[1px] border-grey h-10 bg-white w-full px-5"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Phone Number"
+                        defaultValue={user.phone_num}
+                        className="rounded-sm border-[1px] border-grey h-10 bg-white w-full px-5"
+                      />
                     </div>
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleBuy}
-                  className="bg-yellow text-black rounded-sm shadow-md shadow-grey p-2.5 w-full text-[22px] font-bold flex flex-col justify-center items-center"
-                >
-                  Buy now
-                </button>
-
-                <div
-                  id="or"
-                  className="flex justify-center items-center gap-[10px] self-stretch"
-                >
-                  <div className="h-[1px] w-full bg-grey"></div>
-                  <span className="text-grey">or</span>
-                  <div className="h-[1px] w-full bg-grey"></div>
-                </div>
-
-                <div className="flex flex-col gap-5 border-b-1 border-grey w-full">
-                  <div className="flex flex-row gap-5 text-black">
-                    <input
-                      type="text"
-                      placeholder="First Name"
-                      className="rounded-sm border-[1px] border-grey h-10 bg-white w-full px-5"
+                    <textarea
+                      placeholder="Message"
+                      className="rounded-sm border-[1px] border-grey h-30 bg-white w-full p-2.5"
+                      defaultValue={`Is this ${moto.brand} ${moto.model} ${moto.trim} still available? `}
                     />
-                    <input
-                      type="text"
-                      placeholder="Last Name"
-                      className="rounded-sm border-[1px] border-grey h-10 bg-white w-full px-5"
+                    <Button
+                      textValue={"Send Email"}
+                      bg_color={"black"}
+                      text_color={"white"}
+                      width={"full"}
+                      icons={"/icons/Chat.svg"}
                     />
                   </div>
-                  <div className="flex flex-row gap-5 text-black">
-                    <input
-                      type="text"
-                      placeholder="Email Address"
-                      defaultValue={user.email}
-                      className="rounded-sm border-[1px] border-grey h-10 bg-white w-full px-5"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Phone Number"
-                      defaultValue={user.phone_num}
-                      className="rounded-sm border-[1px] border-grey h-10 bg-white w-full px-5"
-                    />
-                  </div>
-                  <textarea
-                    placeholder="Message"
-                    className="rounded-sm border-[1px] border-grey h-30 bg-white w-full p-2.5"
-                    defaultValue={`Is this ${moto.brand} ${moto.model} ${moto.trim} still available? `}
-                  />
-                  <Button
-                    textValue={"Send Email"}
-                    bg_color={"black"}
-                    text_color={"white"}
-                    width={"full"}
-                    icons={"/icons/Chat.svg"}
-                  />
-                </div>
 
-                <div className="bg-black w-full h-[1px]"></div>
-              </div>
+                  <div className="bg-black w-full h-[1px]"></div>
+                </div>
+              )}
 
               <div className="pt-5">
                 <div className="font-semibold">Popularity Stats</div>
