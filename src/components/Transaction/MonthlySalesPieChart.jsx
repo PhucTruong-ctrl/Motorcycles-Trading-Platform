@@ -4,13 +4,18 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const MonthlySalesPieChart = ({ transactions, currentUser }) => {
+const MonthlySalesPieChart = ({ transactions, currentUser, selectedYear }) => {
   const processData = () => {
     let newCount = 0;
     let oldCount = 0;
 
     transactions
-      .filter((t) => t.completed && t.uid_seller === currentUser?.id)
+      .filter(
+        (t) =>
+          t.completed &&
+          t.uid_seller === currentUser?.id &&
+          new Date(t.created_at).getFullYear() === selectedYear
+      )
       .forEach((transaction) => {
         if (transaction.motorcycle?.condition === "New") {
           newCount++;

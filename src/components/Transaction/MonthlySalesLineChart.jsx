@@ -21,14 +21,15 @@ ChartJS.register(
   Legend
 );
 
-const MonthlySalesLineChart = ({ transactions, currentUser }) => {const processData = () => {
+const MonthlySalesLineChart = ({ transactions, currentUser, selectedYear }) => {const processData = () => {
   const monthlyData = {
     old: Array(12).fill(0),
     new: Array(12).fill(0),
   };
 
   transactions
-    .filter((t) => t.completed && t.uid_seller === currentUser?.id)
+    .filter((t) => t.completed && t.uid_seller === currentUser?.id &&
+    new Date(t.created_at).getFullYear() === selectedYear)
     .forEach((transaction) => {
       const month = new Date(transaction.created_at).getMonth();
       if (transaction.motorcycle?.condition === "New") {
@@ -40,7 +41,6 @@ const MonthlySalesLineChart = ({ transactions, currentUser }) => {const processD
 
   return monthlyData;
 };
-
 
   const monthlyStats = processData();
 

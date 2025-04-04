@@ -16,6 +16,13 @@ const Transaction = () => {
   const [messageReceiver, setMessageReceiver] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 6 }, (_, i) => {
+    const year = currentYear - i;
+    return { value: year, label: year.toString() };
+  });
+  const [selectedYear, setSelectedYear] = useState(years[0].value);
+
   const [searchTerm, setSearchTerm] = useState("");
 
   const [filters, setFilters] = useState({
@@ -175,7 +182,9 @@ const Transaction = () => {
     });
 
   const hasSellerTransactions = transactions.some(
-    (transaction) => transaction.uid_seller === currentUser?.id
+    (transaction) =>
+      transaction.uid_seller === currentUser?.id &&
+      new Date(transaction.created_at).getFullYear() === selectedYear
   );
 
   const handleFilterChange = (filterName, value) => {
@@ -246,6 +255,8 @@ const Transaction = () => {
     }
   };
 
+  console.log(selectedYear);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -264,12 +275,23 @@ const Transaction = () => {
         <span className="text-grey font-light text-xl">Track your orders</span>
       </div>
 
-      {hasSellerTransactions && (
-        <div className="flex flex-col md:flex-row justify-center items-center md:h-100 mb-5">
+      <div className="flex justify-center items-center mb-2.5">
+        <div>
+          <Select
+            options={years}
+            defaultValue={years[0]}
+            onChange={(selected) => setSelectedYear(selected.value)}
+          ></Select>
+        </div>
+      </div>
+
+      {hasSellerTransactions ? (
+        <div className="relative flex flex-col md:flex-row justify-center items-center md:h-100 mb-5">
           <div className="w-full md:w-[50vw] md:h-full flex justify-center items-center">
             <MonthlySalesLineChart
               transactions={transactions}
               currentUser={currentUser}
+              selectedYear={selectedYear}
             />
           </div>
           <div className="md:hidden w-full h-[1px] bg-grey"></div>
@@ -277,8 +299,13 @@ const Transaction = () => {
             <MonthlySalesPieChart
               transactions={transactions}
               currentUser={currentUser}
+              selectedYear={selectedYear}
             />
           </div>
+        </div>
+      ) : (
+        <div className="flex justify-center items-center mb-5">
+          <span className="font-light">No data to show</span>
         </div>
       )}
 
@@ -479,7 +506,7 @@ const Transaction = () => {
                     </div>
                   </div>
                   <div className="flex items-center p-1 gap-[5px]">
-                    <span>
+                    <span className="font-bold">
                       ${transaction.motorcycle?.price?.toLocaleString()}
                     </span>
                   </div>
@@ -611,6 +638,9 @@ const Transaction = () => {
                               {transaction.motorcycle?.year}
                             </span>
                           </div>
+                          <span className="font-bold">
+                            ${transaction.motorcycle?.price?.toLocaleString()}
+                          </span>
                         </div>
                       </div>
                     </div>
