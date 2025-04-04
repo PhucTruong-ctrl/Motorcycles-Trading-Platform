@@ -396,7 +396,7 @@ export const Message = ({ newChatReceiver }) => {
                   <img
                     src={selectedContact.avatar_url}
                     alt={selectedContact.name}
-                    className="border-2 w-[35px] h-[35px] rounded-full"
+                    className="border-1 w-[35px] h-[35px] rounded-full"
                   />
                 ) : (
                   <div className="border-2 w-[35px] h-[35px] rounded-full bg-gray-200" />
