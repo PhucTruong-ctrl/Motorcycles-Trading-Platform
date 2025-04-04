@@ -4,20 +4,15 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const MonthlySalesLineChart = ({ transactions }) => {
-  const isNewMotorcycle = (motorcycle) => {
-    const currentYear = new Date().getFullYear();
-    return motorcycle?.year >= currentYear - 2;
-  };
-
+const MonthlySalesPieChart = ({ transactions, currentUser }) => {
   const processData = () => {
     let newCount = 0;
     let oldCount = 0;
 
     transactions
-      .filter((t) => t.completed)
+      .filter((t) => t.completed && t.uid_seller === currentUser?.id)
       .forEach((transaction) => {
-        if (isNewMotorcycle(transaction.motorcycle)) {
+        if (transaction.motorcycle?.condition === "New") {
           newCount++;
         } else {
           oldCount++;
@@ -34,7 +29,7 @@ const MonthlySalesLineChart = ({ transactions }) => {
   const typeStats = processData();
 
   const data = {
-    labels: ["New Motorcycles", "Old Motorcycles"],
+    labels: ["New", "Used"],
     datasets: [
       {
         data: [typeStats.new, typeStats.old],
@@ -54,7 +49,7 @@ const MonthlySalesLineChart = ({ transactions }) => {
       },
       title: {
         display: true,
-        text: `Motorcycle Sales by Type (Total: ${typeStats.total})`,
+        text: `Motorcycle Sales by Condition (Total: ${typeStats.total})`,
         font: { size: 16 },
       },
       tooltip: {
@@ -79,4 +74,4 @@ const MonthlySalesLineChart = ({ transactions }) => {
   return null;
 };
 
-export default MonthlySalesLineChart;
+export default MonthlySalesPieChart;

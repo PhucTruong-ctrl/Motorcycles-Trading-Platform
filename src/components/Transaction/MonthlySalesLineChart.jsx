@@ -21,52 +21,34 @@ ChartJS.register(
   Legend
 );
 
-const MonthlySalesLineChart = ({ transactions }) => {
-  const isNewMotorcycle = (motorcycle) => {
-    const currentYear = new Date().getFullYear();
-    return motorcycle?.year >= currentYear - 2;
+const MonthlySalesLineChart = ({ transactions, currentUser }) => {const processData = () => {
+  const monthlyData = {
+    old: Array(12).fill(0),
+    new: Array(12).fill(0),
   };
 
-  const processData = () => {
-    const monthlyData = {
-      old: Array(12).fill(0),
-      new: Array(12).fill(0),
-    };
+  transactions
+    .filter((t) => t.completed && t.uid_seller === currentUser?.id)
+    .forEach((transaction) => {
+      const month = new Date(transaction.created_at).getMonth();
+      if (transaction.motorcycle?.condition === "New") {
+        monthlyData.new[month]++;
+      } else {
+        monthlyData.old[month]++;
+      }
+    });
 
-    transactions
-      .filter((t) => t.completed)
-      .forEach((transaction) => {
-        const month = new Date(transaction.created_at).getMonth();
-        if (isNewMotorcycle(transaction.motorcycle)) {
-          monthlyData.new[month]++;
-        } else {
-          monthlyData.old[month]++;
-        }
-      });
+  return monthlyData;
+};
 
-    return monthlyData;
-  };
 
   const monthlyStats = processData();
 
   const data = {
-    labels: [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ],
+    labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
     datasets: [
       {
-        label: "Old Motorcycles",
+        label: "Used",
         data: monthlyStats.old,
         borderColor: "#FF6384",
         backgroundColor: "rgba(255, 99, 132, 0.2)",
@@ -74,7 +56,7 @@ const MonthlySalesLineChart = ({ transactions }) => {
         fill: false,
       },
       {
-        label: "New Motorcycles",
+        label: "New",
         data: monthlyStats.new,
         borderColor: "#36A2EB",
         backgroundColor: "rgba(54, 162, 235, 0.2)",
@@ -92,7 +74,7 @@ const MonthlySalesLineChart = ({ transactions }) => {
       },
       title: {
         display: true,
-        text: "Motorcycle Sales by Type",
+        text: "Motorcycle Sales by Condition",
         font: { size: 16 },
       },
       tooltip: {
@@ -108,10 +90,10 @@ const MonthlySalesLineChart = ({ transactions }) => {
     scales: {
       y: {
         beginAtZero: true,
-        title: { display: true, text: "Number of Motorcycles Sold" },
+        title: { display: true, text: "Sold" },
       },
       x: {
-        title: { display: true, text: "Month of the Year" },
+        title: { display: true, text: "Month" },
       },
     },
     interaction: {

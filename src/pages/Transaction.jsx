@@ -175,6 +175,10 @@ const Transaction = () => {
       }
     });
 
+  const hasSellerTransactions = transactions.some(
+    (transaction) => transaction.uid_seller === currentUser?.id
+  );
+
   const handleFilterChange = (filterName, value) => {
     setFilters((prev) => ({
       ...prev,
@@ -261,14 +265,23 @@ const Transaction = () => {
         <span className="text-grey font-light text-xl">Track your orders</span>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-center items-center w-full h-50 md:h-100 mb-5">
-        <div className="w-full h-full flex justify-center items-center">
-          <MonthlySalesLineChart transactions={transactions} />
+      {hasSellerTransactions && (
+        <div className="flex flex-col md:flex-row justify-center items-center md:h-100 mb-5">
+          <div className="w-full md:w-[50vw] md:h-full flex justify-center items-center">
+            <MonthlySalesLineChart
+              transactions={transactions}
+              currentUser={currentUser}
+            />
+          </div>
+          <div className="md:hidden w-full h-[1px] bg-grey"></div>
+          <div className="w-full md:w-[50vw] h-75 md:h-full flex justify-center items-center">
+            <MonthlySalesPieChart
+              transactions={transactions}
+              currentUser={currentUser}
+            />
+          </div>
         </div>
-        <div className="w-full h-full flex justify-center items-center">
-          <MonthlySalesPieChart transactions={transactions} />
-        </div>
-      </div>
+      )}
 
       <div className="flex flex-col items-center gap-2.5 p-2.5 w-full bg-white rounded-xl">
         <div
