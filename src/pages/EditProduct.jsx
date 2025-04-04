@@ -6,11 +6,13 @@ import Footer from "../components/Footer";
 import Select from "react-select";
 import { motorcycleData } from "../data/motorcycleData";
 import { Message } from "../components/Message";
+import Loading from "../components/Loading";
 
 const EditProduct = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [moto, setMoto] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -19,6 +21,7 @@ const EditProduct = () => {
   const [filteredBrands, setFilteredBrands] = useState([]);
   const [filteredModels, setFilteredModels] = useState([]);
   const [filteredTrims, setFilteredTrims] = useState([]);
+
   const typeOptions = [
     { value: "naked", label: "Naked" },
     { value: "cruiser", label: "Cruiser" },
@@ -73,8 +76,8 @@ const EditProduct = () => {
     setFilteredTrims(trims);
   };
 
-  const handleTypeChange = (selectedOptions) => {
-    const type = selectedOptions[0]?.value;
+  const handleTypeChange = (selectedOption) => {
+    const type = selectedOption?.value;
     if (!type) return;
 
     const brands = Object.keys(motorcycleData).filter((brand) =>
@@ -94,8 +97,8 @@ const EditProduct = () => {
     }));
   };
 
-  const handleBrandChange = (selectedOptions) => {
-    const brand = selectedOptions[0]?.value;
+  const handleBrandChange = (selectedOption) => {
+    const brand = selectedOption?.value;
     if (!brand) return;
 
     const models = motorcycleData[brand]?.[moto.type] || [];
@@ -111,8 +114,23 @@ const EditProduct = () => {
     }));
   };
 
-  const handleModelChange = (selectedOptions) => {
-    const model = selectedOptions[0]?.value;
+  const handleTrimChange = (selectedOptions) => {
+    if (selectedOptions.length > 0) {
+      const selectedTrimName = selectedOptions[0].value;
+
+      const selectedTrim = filteredTrims.find(
+        (trim) => trim.name === selectedTrimName
+      );
+      setMoto((prevState) => ({
+        ...prevState,
+        trim: selectedTrimName,
+        engine_size: selectedTrim ? selectedTrim.engine_size : "",
+      }));
+    }
+  };
+
+  const handleModelChange = (selectedOption) => {
+    const model = selectedOption?.value;
     if (!model) return;
 
     const trims = filteredModels.find((m) => m.model === model)?.trims || [];
@@ -125,6 +143,23 @@ const EditProduct = () => {
     }));
   };
 
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setMoto((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleFileSelect = (e) => {
+    const files = Array.from(e.target.files);
+    setSelectedFiles((prevFiles) => [...files.toReversed(), ...prevFiles]);
+  };
+
+  const removeFile = (index) => {
+    setSelectedFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
+
   const handleDeleteImage = async (imageUrl) => {
     try {
       const pathParts = imageUrl.split("/");
@@ -134,7 +169,6 @@ const EditProduct = () => {
       const { error } = await supabase.storage
         .from("motorcycle-media")
         .remove([filePath]);
-      console.log(filePath);
 
       if (error) throw error;
 
@@ -176,6 +210,7 @@ const EditProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
 
     try {
       const newImageUrls = await uploadNewImages();
@@ -209,12 +244,22 @@ const EditProduct = () => {
       }
 
       alert("Update complete!");
-      navigate(
-        `/${moto.type}/${moto.brand}/${moto.model}/${moto.trim}/${moto.year}/${moto.uid}/${moto.id}`
-      );
+      const queryParams = new Map([
+        ["uid", moto.uid || undefined],
+        ["id", moto.id || undefined],
+        ["year", moto.year || undefined],
+        ["brand", moto.brand || undefined],
+        ["model", moto.model || undefined],
+        ["trim", moto.trim || undefined],
+      ]);
+
+      const query = new URLSearchParams(queryParams).toString();
+      navigate(`/motorcycle-detail?${query}`);
     } catch (error) {
       console.error("Update error:", error);
       alert("Update failed!");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -226,195 +271,268 @@ const EditProduct = () => {
     <div>
       <main className="my-[15px] mx-[25px]">
         <Message />
-        <Header />
+        <header className="mb-5">
+          <Header />
+        </header>
 
-        <form onSubmit={handleSubmit} className="edit-form">
-          {}
-          <div className="w-fit">
-            <Select
-              options={typeOptions}
-              value={typeOptions.find((opt) => opt.value === moto.type)}
-              onChange={(selectedOption) => handleTypeChange([selectedOption])}
-              placeholder="Select type"
-              isSearchable
-            />
-            <Select
-              options={filteredBrands.map((b) => ({ label: b, value: b }))}
-              value={
-                filteredBrands.find((b) => b === moto.brand)
-                  ? { label: moto.brand, value: moto.brand }
-                  : null
-              }
-              onChange={(selectedOption) => handleBrandChange([selectedOption])}
-              placeholder="Select brand"
-              isDisabled={!moto.type}
-              isSearchable
-            />
-            <Select
-              options={filteredModels.map((m) => ({
-                label: m.model,
-                value: m.model,
-              }))}
-              value={
-                filteredModels.find((m) => m.model === moto.model)
-                  ? { label: moto.model, value: moto.model }
-                  : null
-              }
-              onChange={(selectedOption) => handleModelChange([selectedOption])}
-              placeholder="Select model"
-              isDisabled={!moto.brand}
-              isSearchable
-            />
-            <Select
-              options={filteredTrims.map((t) => ({ label: t, value: t }))}
-              value={
-                filteredTrims.includes(moto.trim)
-                  ? { label: moto.trim, value: moto.trim }
-                  : null
-              }
-              onChange={(selectedOption) =>
-                setMoto((prev) => ({
-                  ...prev,
-                  trim: selectedOption?.value || "",
-                }))
-              }
-              placeholder="Select trim"
-              isDisabled={!moto.model}
-              isSearchable
-            />
-          </div>
-
-          <div>
-            <div>Mileage</div>
-            <input
-              name="mile"
-              value={moto.mile}
-              onChange={(e) =>
-                setMoto((prev) => ({
-                  ...prev,
-                  mile: e.target.value,
-                }))
-              }
-              className="border-2"
-            />
-          </div>
-          <div>
-            <div>Year</div>
-            <input
-              name="year"
-              value={moto.year}
-              onChange={(e) =>
-                setMoto((prev) => ({
-                  ...prev,
-                  year: e.target.value,
-                }))
-              }
-              className="border-2"
-            />
-          </div>
-          <div>
-            <div>Description</div>
-            <input
-              name="desc"
-              value={moto.desc}
-              onChange={(e) =>
-                setMoto((prev) => ({
-                  ...prev,
-                  desc: e.target.value,
-                }))
-              }
-              className="border-2"
-            />
-          </div>
-          <div>
-            <div>Engine Number</div>
-            <input
-              name="engine_num"
-              value={moto.engine_num}
-              onChange={(e) =>
-                setMoto((prev) => ({
-                  ...prev,
-                  engine_num: e.target.value,
-                }))
-              }
-              className="border-2"
-            />
-          </div>
-          <div>
-            <div>Chasiss Number</div>
-            <input
-              name="chassis_num"
-              value={moto.chassis_num}
-              onChange={(e) =>
-                setMoto((prev) => ({
-                  ...prev,
-                  chassis_num: e.target.value,
-                }))
-              }
-              className="border-2"
-            />
-          </div>
-          <div>
-            <div>Price</div>
-            <input
-              name="price"
-              value={moto.price}
-              onChange={(e) =>
-                setMoto((prev) => ({
-                  ...prev,
-                  price: e.target.value,
-                }))
-              }
-              className="border-2"
-            />
-          </div>
-
-          {}
-          <div className="image-section">
-            <h3>Current Images:</h3>
-            <div className="image-grid grid grid-cols-10">
-              {moto.image_url.map((url, index) => (
-                <div key={index}>
-                  <img
-                    src={url}
-                    alt={`Preview ${index}`}
-                    className="w-50 h-50 object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteImage(url)}
-                    className="delete-btn"
-                  >
-                    Delete
-                  </button>
-                </div>
-              ))}
+        <div className="flex flex-row justify-evenly items-center">
+          <form
+            className="flex flex-col gap-3 items-center justify-center w-200 bg-white shadow-md shadow-grey p-10 rounded-[6px]"
+            onSubmit={handleSubmit}
+          >
+            <div className="self-start flex flex-col gap-1 pb-5 border-b-1 border-grey">
+              <div className="font-bold text-4xl">Edit Your Motorcycle</div>
+              <div className="">
+                Update your listing with the latest information and photos.
+              </div>
             </div>
-          </div>
 
-          <div className="new-images">
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={(e) => setSelectedFiles([...e.target.files])}
-            />
-            <div className="previews">
-              {selectedFiles.map((file, index) => (
-                <img
-                  key={index}
-                  src={URL.createObjectURL(file)}
-                  alt="Preview"
-                  className="preview-image"
+            <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-5">
+              <div className="flex flex-col w-full">
+                <div className="font-bold text-xl p-2 text-center">Type</div>
+                <Select
+                  options={typeOptions}
+                  onChange={handleTypeChange}
+                  value={typeOptions.find((opt) => opt.value === moto.type)}
+                  placeholder="Select type"
+                  isSearchable
+                  className="text-[18px]"
+                  required
                 />
-              ))}
+              </div>
+
+              <div className="flex flex-col w-full">
+                <div className="font-bold text-xl p-2 text-center">Brand</div>
+                <Select
+                  options={filteredBrands.map((b) => ({ label: b, value: b }))}
+                  value={
+                    filteredBrands.find((b) => b === moto.brand)
+                      ? { label: moto.brand, value: moto.brand }
+                      : null
+                  }
+                  onChange={handleBrandChange}
+                  placeholder="Select brand"
+                  isSearchable
+                  className="text-[18px]"
+                  isDisabled={!moto.type}
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col w-full">
+                <div className="font-bold text-xl p-2 text-center">Model</div>
+                <Select
+                  options={filteredModels.map((m) => ({
+                    label: m.model,
+                    value: m.model,
+                  }))}
+                  value={
+                    filteredModels.find((m) => m.model === moto.model)
+                      ? { label: moto.model, value: moto.model }
+                      : null
+                  }
+                  onChange={handleModelChange}
+                  placeholder="Select model"
+                  isSearchable
+                  className="text-[18px]"
+                  isDisabled={!moto.brand}
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col w-full">
+                <div className="font-bold text-xl p-2 text-center">Trim</div>
+                <Select
+                  options={filteredTrims.map((trim) => ({
+                    label: trim.name,
+                    value: trim.name,
+                  }))}
+                  onChange={(selectedOption) =>
+                    handleTrimChange([selectedOption])
+                  }
+                  value={filteredTrims
+                    .map((trim) => ({ label: trim.name, value: trim.name }))
+                    .find((option) => option.value === moto.trim)}
+                  placeholder="Select trim"
+                  isSearchable
+                  className="text-[18px]"
+                  isDisabled={!moto.model}
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col gap-3 justify-center items-center w-full">
+                <div className="font-bold text-xl p-2 text-center">Year</div>
+                <input
+                  type="number"
+                  name="year"
+                  className="border-2 border-grey rounded-[4px] p-2 w-full"
+                  placeholder="Enter Manufacture Year"
+                  value={moto.year}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col gap-3 justify-center items-center w-full">
+                <div className="font-bold text-xl p-2 text-center">Mileage</div>
+                <input
+                  type="number"
+                  name="mile"
+                  className="border-2 border-grey rounded-[4px] p-2 w-full"
+                  placeholder="Enter Current Mileage"
+                  value={moto.mile}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col gap-3 justify-center items-center w-full">
+                <div className="font-bold text-xl p-2 text-center">
+                  Engine Number
+                </div>
+                <input
+                  type="text"
+                  name="engine_num"
+                  className="border-2 border-grey rounded-[4px] p-2 w-full"
+                  placeholder="Enter Engine Number"
+                  value={moto.engine_num}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col gap-3 justify-center items-center w-full">
+                <div className="font-bold text-xl p-2 text-center">
+                  Chassis Number
+                </div>
+                <input
+                  type="text"
+                  name="chassis_num"
+                  className="border-2 border-grey rounded-[4px] p-2 w-full"
+                  placeholder="Enter Chassis Number"
+                  value={moto.chassis_num}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
             </div>
-          </div>
 
-          <button type="submit">Save Changes</button>
-        </form>
+            <div className="w-full flex flex-col gap-3 justify-center items-center">
+              <div className="font-bold text-xl">Description</div>
+              <textarea
+                name="desc"
+                className="border-2 border-grey rounded-[4px] p-2 w-full min-h-50"
+                placeholder="Enter Description"
+                value={moto.desc}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
 
-        <Footer />
+            <div className="flex flex-row gap-3 justify-center items-center w-full">
+              <div className="flex flex-col gap-3 justify-center items-center w-full">
+                <div className="font-bold text-xl p-2 text-center">Price</div>
+                <input
+                  type="number"
+                  name="price"
+                  className="border-2 border-grey rounded-[4px] p-2 w-full"
+                  placeholder="Enter Price"
+                  value={moto.price}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-3 justify-center items-center w-full">
+                <div className="font-bold text-xl p-2 text-center">
+                  Registration
+                </div>
+                <input
+                  type="checkbox"
+                  name="registration"
+                  className="border-2 w-5 h-5"
+                  checked={moto.registration}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col w-full">
+              <label
+                htmlFor="current_images"
+                className="block mb-2 font-bold text-xl p-2 text-center"
+              >
+                Current Images:
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {moto.image_url.map((url, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={url}
+                      alt={`Preview ${index}`}
+                      className="w-full h-30 object-cover rounded-[6px]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteImage(url)}
+                      className="absolute top-0 right-0 bg-black text-white rounded-[6px] p-1"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col w-full">
+              <label
+                htmlFor="new_images"
+                className="block mb-2 font-bold text-xl p-2 text-center"
+              >
+                Add New Images:
+              </label>
+              <input
+                id="new_images"
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileSelect}
+                className="p-5 text-sm text-gray-900 border-2 border-gray rounded-[6px] cursor-pointer bg-gray-50 hover:scale-105 transition"
+              />
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
+                {selectedFiles.map((file, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt="Preview"
+                      className="w-full h-30 object-cover rounded-[6px]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeFile(index)}
+                      className="absolute top-0 right-0 bg-black text-white rounded-[6px] p-1"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full rounded-[6px] bg-black text-white text-2xl font-bold p-3 hover:scale-105 transition"
+              disabled={submitting}
+            >
+              {submitting ? <Loading /> : "Update Listing"}
+            </button>
+          </form>
+        </div>
+
+        <div className="mt-5">
+          <Footer />
+        </div>
       </main>
     </div>
   );
