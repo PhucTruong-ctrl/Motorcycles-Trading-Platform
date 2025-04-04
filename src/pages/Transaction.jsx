@@ -19,10 +19,9 @@ const Transaction = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [filters, setFilters] = useState({
-    sortBy: "Default",
+    sortBy: "Newest",
     type: "All",
     status: "All",
-    date: "Newest",
   });
 
   const filterOptions = {
