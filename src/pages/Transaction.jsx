@@ -390,7 +390,7 @@ const Transaction = () => {
                   key={transaction.id}
                   className="hidden md:grid grid-cols-7 gap-2.5 p-2.5 w-full bg-white border-1 border-border-white rounded-md"
                 >
-                  <div className="flex justify-start items-start p-1 gap-[10px]">
+                  <div className="flex justify-start items-center p-1 gap-[10px]">
                     <img
                       src={
                         transaction.motorcycle?.image_url?.[0] ||
@@ -449,7 +449,17 @@ const Transaction = () => {
                     <span>{formatDate(transaction.created_at)}</span>
                   </div>
                   <div className="flex items-center p-1 gap-[5px]">
-                    <span>{transaction.type}</span>
+                    <div>
+                      {transaction.type === "Buying" ? (
+                        <span className="font-light text-md bg-blue text-white p-1 rounded-sm">
+                          Buying
+                        </span>
+                      ) : (
+                        <span className="font-light text-md bg-yellow text-black p-1 rounded-sm">
+                          Selling
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="flex items-center p-1 gap-[5px]">
                     <span>
@@ -548,7 +558,7 @@ const Transaction = () => {
                           <div className="w-full h-[1px] bg-grey"></div>
                           <div>
                             {transaction.type === "Buying" ? (
-                              <span className="font-light text-sm bg-red text-white p-1 rounded-sm">
+                              <span className="font-light text-sm bg-blue text-white p-1 rounded-sm">
                                 Buying
                               </span>
                             ) : (
