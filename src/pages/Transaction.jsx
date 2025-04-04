@@ -529,7 +529,10 @@ const Transaction = () => {
                     </Menu>
                   </div>
                 </div>
-                <div className="flex md:hidden justify-center items-start gap-2.5 p-1 w-full bg-white border-1 border-border-white rounded-md">
+                <div
+                  key={transaction.id}
+                  className="flex md:hidden justify-center items-start gap-2.5 p-1 w-full bg-white border-1 border-border-white rounded-md"
+                >
                   <div className="flex flex-col p-2.5 gap-3 w-full">
                     <div className="flex flex-col w-full">
                       <div className="flex gap-5">
@@ -549,7 +552,7 @@ const Transaction = () => {
                                 Buying
                               </span>
                             ) : (
-                              <span className="font-light text-sm bg-blue text-white p-1 rounded-sm">
+                              <span className="font-light text-sm bg-yellow text-black p-1 rounded-sm">
                                 Selling
                               </span>
                             )}
@@ -592,16 +595,20 @@ const Transaction = () => {
                       {transaction.type === "Buying" ? (
                         <span>
                           Buying from{" "}
-                          <span className="font-bold text-blue underline">
-                            {transaction.seller?.name}
-                          </span>
+                          <Link to={`/profile/${transaction.seller?.uid}`}>
+                            <span className="font-bold text-blue underline">
+                              {transaction.seller?.name}
+                            </span>
+                          </Link>
                         </span>
                       ) : (
                         <span>
                           Order from{" "}
-                          <span className="font-bold text-blue underline">
-                            {transaction.buyer?.name}
-                          </span>
+                          <Link to={`/profile/${transaction.buyer?.uid}`}>
+                            <span className="font-bold text-blue underline">
+                              {transaction.buyer?.name}
+                            </span>
+                          </Link>
                         </span>
                       )}
                     </div>

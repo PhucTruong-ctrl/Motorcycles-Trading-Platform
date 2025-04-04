@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import supabase from "../supabase-client";
 import { format } from "date-fns";
+import Modal from "react-modal";
 
 const formatDate = (dateString) => {
   return format(new Date(dateString), " HH:mm MM-dd-yyyy");
 };
+
+Modal.setAppElement("#root");
 
 export const Message = ({ newChatReceiver }) => {
   const [loading, setLoading] = useState(false);
@@ -174,6 +177,24 @@ export const Message = ({ newChatReceiver }) => {
     }
   }, [messages]);
 
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 300);
+  };
+
+  useEffect(() => {
+    if (openMessage) {
+      scrollToBottom();
+    }
+  }, [openMessage, selectedContact]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() || !currentUser?.id || !selectedContact?.uid) return;
@@ -213,154 +234,351 @@ export const Message = ({ newChatReceiver }) => {
   }
 
   return (
-    <div className="fixed z-10 bottom-0 right-[1%]">
+    <div className="fixed z-10 bottom-1 md:bottom-0 right-1 md:right-0">
       {openMessage === false ? (
-        <div
-          id="MessageList"
-          className={`bg-white w-[402px] ${closeMessage ? "h-[55px]" : "h-[428px]"} border-2 border-grey rounded-t-xl`}
-        >
+        <div>
           <div
-            id="MessageListHeader"
-            className="flex flex-row justify-between items-center border-b-1 border-grey bg-white w-full p-3 rounded-t-md"
-            onClick={() => closeMessage && setCloseMessage(false)}
+            id="MessageList"
+            className={`bg-white w-[402px] ${closeMessage ? "h-[55px]" : "h-[428px]"} border-2 border-grey rounded-t-xl hidden md:block`}
           >
-            <span>Message List</span>
-            <button onClick={() => !closeMessage && setCloseMessage(true)}>
-              <img src="/icons/Close.svg" alt="Close" />
-            </button>
-          </div>
+            <div
+              id="MessageListHeader"
+              className="flex flex-row justify-between items-center border-b-1 border-grey bg-white w-full p-3 rounded-t-md"
+              onClick={() => closeMessage && setCloseMessage(false)}
+            >
+              <span>Message List</span>
+              <button onClick={() => !closeMessage && setCloseMessage(true)}>
+                <img src="/icons/Close.svg" alt="Close" />
+              </button>
+            </div>
 
-          <div
-            id="MessageListBody"
-            className="w-full h-[428px] overflow-y-scroll p-3"
-          >
-            {contacts.length === 0 ? (
-              <div>No conversations yet</div>
-            ) : (
-              contacts.map((contact) => (
-                <div
-                  key={contact.uid}
-                  className="flex flex-row justify-start items-center gap-2 mb-2 cursor-pointer"
-                  onClick={() => {
-                    setSelectedContact(contact);
-                    setOpenMessage(true);
-                  }}
-                >
-                  {contact.avatar_url ? (
-                    <img
-                      src={contact.avatar_url}
-                      alt={contact.name}
-                      className="border w-[30px] h-[30px] rounded-full"
-                    />
-                  ) : (
-                    <div className="border min-w-[30px] min-h-[30px] rounded-full bg-gray-200" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="font-medium truncate">{contact.name}</div>
-                    <div
-                      className="text-sm text-gray-500 truncate"
-                      style={{
-                        display: "-webkit-box",
-                        WebkitBoxOrient: "vertical",
-                        WebkitLineClamp: 1,
-                      }}
-                    >
-                      {contact.lastMessage
-                        ? contact.sender === currentUser.id
-                          ? `You: ${contact.lastMessage}`
-                          : contact.lastMessage
-                        : "No messages yet"}
+            <div
+              id="MessageListBody"
+              className="w-full h-[428px] overflow-y-scroll p-3"
+            >
+              {contacts.length === 0 ? (
+                <div>No conversations yet</div>
+              ) : (
+                contacts.map((contact) => (
+                  <div
+                    key={contact.uid}
+                    className="flex flex-row justify-start items-center gap-2 mb-2 cursor-pointer"
+                    onClick={() => {
+                      setSelectedContact(contact);
+                      setOpenMessage(true);
+                    }}
+                  >
+                    {contact.avatar_url ? (
+                      <img
+                        src={contact.avatar_url}
+                        alt={contact.name}
+                        className="border w-[30px] h-[30px] rounded-full"
+                      />
+                    ) : (
+                      <div className="border min-w-[30px] min-h-[30px] rounded-full bg-gray-200" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium truncate">{contact.name}</div>
+                      <div
+                        className="text-sm text-gray-500 truncate"
+                        style={{
+                          display: "-webkit-box",
+                          WebkitBoxOrient: "vertical",
+                          WebkitLineClamp: 1,
+                        }}
+                      >
+                        {contact.lastMessage
+                          ? contact.sender === currentUser.id
+                            ? `You: ${contact.lastMessage}`
+                            : contact.lastMessage
+                          : "No messages yet"}
+                      </div>
                     </div>
                   </div>
+                ))
+              )}
+            </div>
+          </div>
+          <div className="block md:hidden">
+            <div>
+              <button
+                onClick={() => setCloseMessage((prev) => !prev)}
+                id="MobileMessageButton"
+                className="bg-white outline-1 outline-grey w-12 h-12 rounded-full flex justify-center items-center"
+              >
+                <img src="/icons/BlackChat.svg" alt="" />
+              </button>
+            </div>
+            <Modal
+              isOpen={!closeMessage && !openMessage}
+              onRequestClose={() => {
+                setCloseMessage(true);
+              }}
+              contentLabel="Edit Profile"
+              className="absolute flex flex-col justify-center items-center md:hidden w-full h-[100vh] bottom-0"
+              overlayClassName="fixed inset-0 bg-[#fff]/75 block md:hidden pointer-events-auto"
+              shouldCloseOnOverlayClick={true}
+            >
+              <div className="relative bg-white outline-1 outline-grey rounded-xl w-[90%] h-[90%] flex flex-col gap-5 justify-start items-start p-5">
+                <span className="text-2xl font-bold">Message</span>
+                <div className="bg-grey w-full h-[1px]"></div>
+                <div
+                  id="MobileMessageListBody"
+                  className="w-full h-[428px] overflow-y-scroll"
+                >
+                  {contacts.length === 0 ? (
+                    <div>No conversations yet</div>
+                  ) : (
+                    contacts.map((contact) => (
+                      <div
+                        key={contact.uid}
+                        className="flex flex-row justify-start items-center gap-2 mb-2 cursor-pointer"
+                        onClick={() => {
+                          setSelectedContact(contact);
+                          setOpenMessage(true);
+                        }}
+                      >
+                        {contact.avatar_url ? (
+                          <img
+                            src={contact.avatar_url}
+                            alt={contact.name}
+                            className="border w-[50px] h-[50px] rounded-full"
+                          />
+                        ) : (
+                          <div className="border w-[50px] h-[50px] rounded-full bg-gray-200" />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <div className="text-[18px]">{contact.name}</div>
+                          <div
+                            className="text-sm text-gray-500"
+                            style={{
+                              display: "-webkit-box",
+                              WebkitBoxOrient: "vertical",
+                              WebkitLineClamp: 1,
+                            }}
+                          >
+                            {contact.lastMessage
+                              ? contact.sender === currentUser.id
+                                ? `You: ${contact.lastMessage}`
+                                : contact.lastMessage
+                              : "No messages yet"}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
-              ))
-            )}
+              </div>
+            </Modal>
           </div>
         </div>
       ) : (
-        <div
-          id="Message"
-          className={`bg-white w-[402px] ${closeMessage ? "h-[55px]" : "h-[428px]"} border-2 border-grey rounded-t-xl`}
-        >
-          <audio
-            id="notification-sound"
-            src="/sounds/notificationMessage.mp3"
-            preload="auto"
-          ></audio>
+        <div>
           <div
-            id="MessageHeader"
-            className="flex flex-row justify-between items-center border-b-1 border-grey bg-white w-full p-3 rounded-t-md"
-            onClick={() => closeMessage && setCloseMessage(false)}
+            id="Message"
+            className={`bg-white w-[402px] ${closeMessage ? "h-[55px]" : "h-[428px]"} border-2 border-grey rounded-t-xl hidden md:block`}
           >
-            <div className="flex flex-row justify-start items-center gap-2">
-              <button onClick={() => setOpenMessage(false)}>
-                <img src="/icons/NavArrowBackward.svg" alt="Back" />
+            <audio
+              id="notification-sound"
+              src="/sounds/notificationMessage.mp3"
+              preload="auto"
+            ></audio>
+            <div
+              id="MessageHeader"
+              className="flex flex-row justify-between items-center border-b-1 border-grey bg-white w-full p-3 rounded-t-md"
+              onClick={() => closeMessage && setCloseMessage(false)}
+            >
+              <div className="flex flex-row justify-start items-center gap-2">
+                <button onClick={() => setOpenMessage(false)}>
+                  <img src="/icons/NavArrowBackward.svg" alt="Back" />
+                </button>
+                {selectedContact?.avatar_url ? (
+                  <img
+                    src={selectedContact.avatar_url}
+                    alt={selectedContact.name}
+                    className="border-2 w-[35px] h-[35px] rounded-full"
+                  />
+                ) : (
+                  <div className="border-2 w-[35px] h-[35px] rounded-full bg-gray-200" />
+                )}
+                <span>{selectedContact?.name}</span>
+              </div>
+              <button onClick={() => !closeMessage && setCloseMessage(true)}>
+                <img src="/icons/Close.svg" alt="Close" />
               </button>
-              {selectedContact?.avatar_url ? (
-                <img
-                  src={selectedContact.avatar_url}
-                  alt={selectedContact.name}
-                  className="border-2 w-[35px] h-[35px] rounded-full"
-                />
-              ) : (
-                <div className="border-2 w-[35px] h-[35px] rounded-full bg-gray-200" />
-              )}
-              <span>{selectedContact?.name}</span>
             </div>
-            <button onClick={() => !closeMessage && setCloseMessage(true)}>
-              <img src="/icons/Close.svg" alt="Close" />
-            </button>
-          </div>
 
-          <div
-            id="MessageBody"
-            className="w-full h-[300px] overflow-y-scroll p-3"
-          >
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`my-2 flex ${
-                  msg.uid_send === currentUser.id
-                    ? "justify-end"
-                    : "justify-start"
-                }`}
-              >
+            <div
+              id="MessageBody"
+              className="w-full h-[300px] overflow-y-auto p-3"
+              ref={(el) => {
+                if (el) {
+                  setTimeout(() => {
+                    el.scrollTop = el.scrollHeight;
+                  }, 300);
+                }
+              }}
+            >
+              {messages.map((msg, index) => (
                 <div
-                  className={`flex flex-col max-w-[70%] p-2 rounded-md ${
+                  key={index}
+                  className={`my-2 flex ${
                     msg.uid_send === currentUser.id
-                      ? "bg-blue-100"
-                      : "bg-gray-100"
+                      ? "justify-end"
+                      : "justify-start"
                   }`}
                 >
-                  <div>{msg.message}</div>
-                  <div className="text-[11px]">
-                    {formatDate(msg.created_at)}
+                  <div
+                    className={`flex flex-col max-w-[70%] p-2 rounded-md ${
+                      msg.uid_send === currentUser.id
+                        ? "bg-blue-100"
+                        : "bg-gray-100"
+                    }`}
+                  >
+                    <div>{msg.message}</div>
+                    <div className="text-[11px]">
+                      {formatDate(msg.created_at)}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
+              ))}
+              <div ref={messagesEndRef} />
+            </div>
 
-          <form
-            onSubmit={handleSendMessage}
-            className="fixed w-[398px] border-t-1 border-grey flex flex-row justify-between items-center p-2.5 bg-white"
-          >
-            <input
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              id="MessageInput"
-              type="text"
-              placeholder="Aa"
-              className="h-[45px] w-full text-left p-2.5 border-1 rounded-xl"
-            />
-            <button
-              type="submit"
-              className="w-[50px] flex justify-center items-center"
+            <form
+              onSubmit={handleSendMessage}
+              className="fixed w-[398px] border-t-1 border-grey flex flex-row justify-between items-center p-2.5 bg-white"
             >
-              <img src="/icons/Send.svg" alt="Send" className="w-[30px]" />
+              <input
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                id="MessageInput"
+                type="text"
+                placeholder="Aa"
+                className="h-[45px] w-full text-left p-2.5 border-1 rounded-xl"
+              />
+              <button
+                type="submit"
+                className="w-[50px] flex justify-center items-center"
+              >
+                <img src="/icons/Send.svg" alt="Send" className="w-[30px]" />
+              </button>
+            </form>
+          </div>
+          <div className="block md:hidden">
+            <button
+              onClick={() => closeMessage && setCloseMessage(false)}
+              id="MobileMessageButton"
+              className="bg-white outline-1 outline-grey w-12 h-12 rounded-full flex justify-center items-center"
+            >
+              <img src="/icons/BlackChat.svg" alt="" />
             </button>
-          </form>
+            <Modal
+              isOpen={openMessage}
+              onRequestClose={() => {
+                setCloseMessage(true);
+              }}
+              contentLabel="Edit Profile"
+              className="absolute flex flex-col justify-center items-center md:hidden w-full h-[100vh] bottom-0"
+              overlayClassName="fixed inset-0 bg-[#fff]/75 block md:hidden pointer-events-auto"
+              shouldCloseOnOverlayClick={true}
+            >
+              <div className="relative bg-white outline-1 outline-grey rounded-xl w-[90%] h-[90%] flex flex-col gap-2.5 justify-start items-start p-2.5">
+                <audio
+                  id="notification-sound"
+                  src="/sounds/notificationMessage.mp3"
+                  preload="auto"
+                ></audio>
+                <div
+                  id="MobileMessageHeader"
+                  className="flex flex-row justify-between items-center border-b-1 border-grey bg-white w-full p-3 rounded-t-md"
+                  onClick={() => closeMessage && setCloseMessage(false)}
+                >
+                  <div className="flex flex-row justify-start items-center gap-2">
+                    <button onClick={() => setOpenMessage(false)}>
+                      <img src="/icons/NavArrowBackward.svg" alt="Back" />
+                    </button>
+                    {selectedContact?.avatar_url ? (
+                      <img
+                        src={selectedContact.avatar_url}
+                        alt={selectedContact.name}
+                        className="border-2 w-[35px] h-[35px] rounded-full"
+                      />
+                    ) : (
+                      <div className="border-2 w-[35px] h-[35px] rounded-full bg-gray-200" />
+                    )}
+                    <span>{selectedContact?.name}</span>
+                  </div>
+                  <button
+                    onClick={() => !closeMessage && setCloseMessage(true)}
+                  >
+                    <img src="/icons/Close.svg" alt="Close" />
+                  </button>
+                </div>
+
+                <div
+                  id="MobileMessageBody"
+                  className="w-full h-[calc(100%-120px)] overflow-y-auto p-3"
+                  ref={(el) => {
+                    if (el) {
+                      setTimeout(() => {
+                        el.scrollTop = el.scrollHeight;
+                      }, 300);
+                    }
+                  }}
+                >
+                  {messages.map((msg, index) => (
+                    <div
+                      key={index}
+                      className={`my-2 flex ${
+                        msg.uid_send === currentUser.id
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
+                      <div
+                        className={`flex flex-col max-w-[70%] p-2 rounded-md ${
+                          msg.uid_send === currentUser.id
+                            ? "bg-blue-100"
+                            : "bg-gray-100"
+                        }`}
+                      >
+                        <div>{msg.message}</div>
+                        <div className="text-[11px]">
+                          {formatDate(msg.created_at)}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <div ref={messagesEndRef} />
+                </div>
+
+                <form
+                  onSubmit={handleSendMessage}
+                  className="w-full border-t-1 border-grey flex flex-row justify-between items-center p-2.5 bg-white"
+                >
+                  <input
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    id="MessageInput"
+                    type="text"
+                    placeholder="Aa"
+                    className="h-[45px] w-full text-left p-2.5 border-1 rounded-xl"
+                  />
+                  <button
+                    type="submit"
+                    className="w-[50px] flex justify-center items-center"
+                  >
+                    <img
+                      src="/icons/Send.svg"
+                      alt="Send"
+                      className="w-[30px]"
+                    />
+                  </button>
+                </form>
+              </div>
+            </Modal>
+          </div>
         </div>
       )}
     </div>
