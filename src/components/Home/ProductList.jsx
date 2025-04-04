@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import ProductCard from "../ProductCard";
@@ -7,6 +8,7 @@ import supabase from "../../supabase-client";
 const ProductList = ({ condition }) => {
   const [motorcycles, setMotorcycles] = useState([]);
   const carouselRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMotorcycles = async () => {
@@ -30,6 +32,12 @@ const ProductList = ({ condition }) => {
     fetchMotorcycles();
   }, [condition]);
 
+  const handleSeeAllButton = () => {
+    navigate(`/browse?condition=${condition}&page=1`, {
+      replace: true,
+    });
+  };
+
   const title = condition === "New" ? "Brand New" : "Used Motorcycles";
   const description =
     condition === "New"
@@ -41,7 +49,9 @@ const ProductList = ({ condition }) => {
       <div className="flex flex-col items-start gap-1 mb-2">
         <div className="flex gap-2">
           <div className="font-bold text-[16px]">{title}</div>
-          <button className="text-blue">See All</button>
+          <button onClick={handleSeeAllButton} className="text-blue">
+            See All
+          </button>
         </div>
         <div className="font-light">{description}</div>
       </div>

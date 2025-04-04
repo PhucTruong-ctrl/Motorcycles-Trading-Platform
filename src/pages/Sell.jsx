@@ -569,7 +569,7 @@ const Sell = () => {
                   <div className="font-bold text-xl p-2 text-center">
                     Description
                   </div>
-                  <input
+                  <textarea
                     type="text"
                     name="desc"
                     className="border-2 border-grey rounded-[4px] p-2 w-full min-h-50"
