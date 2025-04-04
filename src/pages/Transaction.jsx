@@ -181,18 +181,18 @@ const Transaction = () => {
       }
     });
 
-  const hasSellerTransactions = transactions.some(
-    (transaction) =>
-      transaction.uid_seller === currentUser?.id &&
-      new Date(transaction.created_at).getFullYear() === selectedYear
-  );
-
   const handleFilterChange = (filterName, value) => {
     setFilters((prev) => ({
       ...prev,
       [filterName]: value,
     }));
   };
+
+  const hasSellerTransactions = transactions.some(
+    (transaction) =>
+      transaction.uid_seller === currentUser?.id &&
+      new Date(transaction.created_at).getFullYear() === selectedYear
+  );
 
   const handleSold = async (id, motoId) => {
     try {

@@ -1,11 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 import { useNavigate } from "react-router";
-import EditDeleteButton from "../components/EditDeleteButton";
 
-const ProductCard = ({ moto, currentUserId, isOwnerPage }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const showActions = isOwnerPage && currentUserId === moto.uid;
-  const menuRef = useRef(null);
+const ProductCard = ({ moto }) => {
   const navigate = useNavigate();
 
   const formatNumber = (number) => {
@@ -14,21 +10,6 @@ const ProductCard = ({ moto, currentUserId, isOwnerPage }) => {
       minimumFractionDigits: 0,
     }).format(number);
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isMenuOpen]);
-
   const updateURL = () => {
     const queryParams = new Map([
       ["uid", moto.uid || undefined],
@@ -44,24 +25,7 @@ const ProductCard = ({ moto, currentUserId, isOwnerPage }) => {
   };
 
   return (
-    <div className="relative home-card" ref={menuRef}>
-      {showActions && (
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="absolute right-0 bottom-0 bg-black rounded-md w-10 shadow-md active:scale-140 transition"
-        >
-          <img src="/icons/More.svg" alt="" className="w-full" />
-        </button>
-      )}
-
-      {isMenuOpen && showActions && (
-        <EditDeleteButton
-          motoUID={moto.uid}
-          motoID={moto.id}
-          currentUserId={currentUserId}
-        />
-      )}
-
+    <div className="relative home-card">
       <div onClick={updateURL}>
         <div id="product">
           <div id="img">

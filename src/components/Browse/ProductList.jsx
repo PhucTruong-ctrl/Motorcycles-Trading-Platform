@@ -209,12 +209,11 @@ const BrowseProductList = () => {
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:flex flex-col gap-5 md:gap-3.5 items-stretch justify-between">
-            {moto.map(
-              (moto) =>
-                moto.is_sold === false && (
-                  <Product key={moto.id} moto={moto} user={moto.USER} />
-                )
-            )}
+            {moto
+              .filter((motoItem) => motoItem.is_sold === false)
+              .map((moto) => (
+                <Product key={moto.id} moto={moto} user={moto.USER} />
+              ))}
           </div>
 
           <ReactPaginate
