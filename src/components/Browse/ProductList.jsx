@@ -5,6 +5,7 @@ import ReactPaginate from "react-paginate";
 import Select from "react-select";
 import supabase from "../../supabase-client";
 import Product from "./Product";
+import LoadingSmall from "../LoadingSmall";
 
 const BrowseProductList = () => {
   const [moto, setMoto] = useState([]);
@@ -205,7 +206,7 @@ const BrowseProductList = () => {
         />
       </div>
       {loading ? (
-        <div>Loading...</div>
+        <LoadingSmall />
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:flex flex-col gap-5 md:gap-3.5 items-stretch justify-between">

@@ -64,6 +64,7 @@ const ProductList = ({ condition }) => {
           containerClass="carousel-container"
           itemClass="carousel-item"
           minimumTouchDrag={80}
+         
           responsive={{
             desktop: {
               breakpoint: { max: 3000, min: 1024 },

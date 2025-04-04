@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router";
 import supabase from "../../supabase-client";
 import { formatDate } from "./../FormatDate";
+import LoadingSmall from "../LoadingSmall";
 
 export const ReputationMessage = ({ uid_send, created_at, message, type }) => {
   const [user, setUser] = useState(null);
@@ -28,7 +29,7 @@ export const ReputationMessage = ({ uid_send, created_at, message, type }) => {
   }, [uid_send, user]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSmall/>;
   }
 
   return (

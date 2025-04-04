@@ -181,7 +181,7 @@ const ProductDetail = () => {
   }, [queryParams.uid, queryParams.id]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingFull />;
   }
 
   if (error) {
@@ -315,11 +315,11 @@ const ProductDetail = () => {
               {currentUser.id !== moto.uid && (
                 <div
                   id="ContactSeller"
-                  className="w-full flex flex-col justify-start items-start gap-5 mt-5"
+                  className="w-full flex flex-col justify-center items-center gap-5 mt-5"
                 >
                   <div
                     id="SellerDetail"
-                    className="flex flex-col md:flex-row justify-center items-center gap-5 md:gap-15"
+                    className="w-full flex flex-col md:flex-row justify-center items-center gap-5 md:gap-15"
                   >
                     {user && (
                       <div className="flex items-center gap-2">
@@ -347,15 +347,21 @@ const ProductDetail = () => {
                       </div>
                     )}
                     <div className="flex flex-row gap-5 w-full justify-center items-center">
-                      <div>
-                        <Button
-                          textValue={`${user.phone_num}`}
-                          bg_color={"black"}
-                          text_color={"white"}
-                          icons={"/icons/Phone.svg"}
-                        />
+                      <div className="w-full md:w-fit">
+                        <button
+                          className={`w-full p-2.5 flex flex-row justify-center items-center gap-1.5 shadow-md shadow-grey bg-black rounded-sm hover:scale-110 hover:cursor-pointer transition`}
+                        >
+                          <img
+                            className="w-7 h-auto"
+                            src="/icons/Phone.svg"
+                            alt=""
+                          />
+                          <span className={`text-white text-[22px] font-[500]`}>
+                            {user.phone_num}
+                          </span>
+                        </button>
                       </div>
-                      <div>
+                      <div className="w-full md:w-fit">
                         <button
                           onClick={handleChat}
                           className={`w-full p-2.5 flex flex-row justify-center items-center gap-1.5 shadow-md shadow-grey bg-blue rounded-sm hover:scale-110 hover:cursor-pointer transition`}

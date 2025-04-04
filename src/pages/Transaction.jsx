@@ -9,6 +9,7 @@ import Footer from "../components/Footer";
 import { Message } from "../components/Message";
 import MonthlySalesLineChart from "../components/Transaction/MonthlySalesLineChart";
 import MonthlySalesPieChart from "../components/Transaction/MonthlySalesPieChart";
+import LoadingFull from "../components/LoadingFull";
 
 const Transaction = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -191,7 +192,8 @@ const Transaction = () => {
   const hasSellerTransactions = transactions.some(
     (transaction) =>
       transaction.uid_seller === currentUser?.id &&
-      new Date(transaction.created_at).getFullYear() === selectedYear
+      new Date(transaction.created_at).getFullYear() === selectedYear &&
+      transaction.completed
   );
 
   const handleSold = async (id, motoId) => {
@@ -258,7 +260,7 @@ const Transaction = () => {
   console.log(selectedYear);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingFull />;
   }
   return (
     <main className="my-[15px] mx-[25px]">

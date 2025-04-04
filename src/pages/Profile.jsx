@@ -12,6 +12,7 @@ import { ReputationMessage } from "../components/Profile/ReputationMessage";
 import EditProfile from "./../components/Profile/EditProfile";
 import { Message } from "../components/Message";
 import Reputation from "../components/Profile/Reputation";
+import LoadingFull from "./../components/LoadingFull";
 
 Modal.setAppElement("#root");
 
@@ -227,7 +228,7 @@ const Profile = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingFull />;
   }
 
   if (error) {
@@ -249,7 +250,7 @@ const Profile = () => {
             }}
             contentLabel="Edit Profile"
             className="absolute flex items-end justify-center md:hidden w-full bottom-0"
-            overlayClassName="fixed inset-0 bg-[#fff]/75 block md:hidden pointer-events-auto"
+            overlayClassName="z-10 fixed inset-0 bg-[#fff]/75 block md:hidden pointer-events-auto"
             shouldCloseOnOverlayClick={true}
           >
             <div className="relative flex flex-col gap-5 justify-center items-center bg-white border-2 border-black p-5 w-full rounded-t-xl">
@@ -283,7 +284,7 @@ const Profile = () => {
             }}
             contentLabel="Edit Profile"
             className="absolute flex items-end justify-center md:hidden w-full bottom-0"
-            overlayClassName="fixed inset-0 bg-[#fff]/75 block md:hidden pointer-events-auto"
+            overlayClassName="z-10 fixed inset-0 bg-[#fff]/75 block md:hidden pointer-events-auto"
             shouldCloseOnOverlayClick={true}
           >
             <div className="relative flex flex-col gap-5 justify-center items-center bg-white border-2 border-black p-5 w-full rounded-t-xl">
@@ -365,7 +366,7 @@ const Profile = () => {
               )}
             </div>
             <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
-              <div className="flex flex-col gap-2.5 text-nowrap">
+              <div className="flex flex-col justify-center items-center md:justify-start md:items-start gap-2.5 text-nowrap">
                 <h2>{user?.name}</h2>
                 <div className="flex flex-row gap-2 justify-start items-center">
                   <img src="/icons/Location.svg" alt="" className="w-2.5" />
@@ -452,12 +453,11 @@ const Profile = () => {
                 slidesToSlide={1}
                 swipeable
               >
-                {moto.map(
-                  (moto) =>
-                    moto.is_sold === false && (
-                      <ProductCard key={moto.id} moto={moto} />
-                    )
-                )}
+                {moto
+                  .filter((motoItem) => motoItem.is_sold === false)
+                  .map((moto) => (
+                    <ProductCard key={moto.id} moto={moto} />
+                  ))}
               </Carousel>
             </div>
           ) : (

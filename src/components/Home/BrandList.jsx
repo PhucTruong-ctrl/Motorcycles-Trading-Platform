@@ -39,6 +39,7 @@ const BrandList = () => {
         containerClass="carousel-container"
         itemClass="carousel-item"
         minimumTouchDrag={80}
+       
         responsive={{
           desktop1: {
             breakpoint: { max: 3000, min: 1024 },

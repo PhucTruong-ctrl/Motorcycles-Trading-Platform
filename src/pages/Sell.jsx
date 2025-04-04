@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import supabase from "../supabase-client";
+import { useNavigate } from "react-router";
 import Select from "react-select";
+import { NumericFormat } from "react-number-format";
 import { motorcycleData } from "../data/motorcycleData";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Loading from "../components/Loading";
 import { Message } from "../components/Message";
+import LoadingFull from "../components/LoadingFull";
 
 const Sell = () => {
+  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -53,6 +57,7 @@ const Sell = () => {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
+        setLoading(true);
         const {
           data: { session },
         } = await supabase.auth.getSession();
@@ -67,6 +72,8 @@ const Sell = () => {
       } catch (error) {
         console.error("Error fetching current user:", error);
         setCurrentUser(null);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -75,7 +82,11 @@ const Sell = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!currentUser) return;
+      if (!currentUser) {
+        setLoading(false);
+        navigate("/account");
+        return;
+      }
 
       setLoading(true);
       try {
@@ -105,7 +116,6 @@ const Sell = () => {
 
     fetchData();
   }, [currentUser]);
-
   const handleTypeChange = (selectedOptions) => {
     if (selectedOptions.length > 0) {
       const selectedType = selectedOptions[0].value;
@@ -193,8 +203,20 @@ const Sell = () => {
   };
 
   const handleFileSelect = (e) => {
-    const files = Array.from(e.target.files);
-    setSelectedFile((prevFiles) => [...files.toReversed(), ...prevFiles]);
+    const newFiles = Array.from(e.target.files);
+    setSelectedFile((prevFiles) => {
+      const uniqueNewFiles = newFiles.filter(
+        (newFile) =>
+          !prevFiles.some(
+            (prevFile) =>
+              prevFile.name === newFile.name &&
+              prevFile.size === newFile.size &&
+              prevFile.lastModified === newFile.lastModified
+          )
+      );
+      return [...uniqueNewFiles, ...prevFiles];
+    });
+    e.target.value = "";
   };
 
   const removeFile = (index) => {
@@ -229,12 +251,9 @@ const Sell = () => {
     return urls;
   };
 
-  const addButton = () => {
-    setLoadingSubmit(true);
-  };
-
   const addMoto = async (e) => {
     e.preventDefault();
+    setLoadingSubmit(true);
 
     console.log("NewMoto before submission:", NewMoto);
 
@@ -302,23 +321,23 @@ const Sell = () => {
       });
       setSelectedFile([]);
       setLoadingSubmit(false);
+      setLoadingSubmit(false);
     } catch (error) {
       console.error("Error adding motorcycle:", error);
+      setLoadingSubmit(false);
       setLoadingSubmit(false);
       alert("Error adding motorcycle. Please try again.");
     }
   };
 
   if (loading) {
-    return <div>Loading</div>;
-  }
-  if (!currentUser) {
-    return <div>Please log in to sell a motorcycle</div>;
+    return <LoadingFull />;
   }
 
   if (!user) {
-    return <Loading />;
+    return <LoadingFull />;
   }
+
   return (
     <div>
       <main className="my-[15px] mx-[25px]">
@@ -344,7 +363,7 @@ const Sell = () => {
           user.city != null && (
             <div className="flex flex-row justify-evenly items-center">
               <form
-                className="flex flex-col gap-3 items-center justify-center w-200 bg-white shadow-md shadow-grey p-10 rounded-[6px]"
+                className="flex flex-col gap-6 md:gap-3 items-center justify-center w-full bg-white shadow-md shadow-grey p-10 rounded-[6px]"
                 onSubmit={addMoto}
               >
                 <div className="self-start flex flex-col gap-1 pb-5 border-b-1 border-grey">
@@ -474,7 +493,7 @@ const Sell = () => {
                         name="mile"
                         className="border-2 border-grey rounded-[4px] p-2 w-full"
                         placeholder="Enter Current Mileage"
-                        value={NewMoto.mile}
+                        value={NewMoto.condition !== "New" ? NewMoto.mile : 0}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -580,19 +599,22 @@ const Sell = () => {
                   />
                 </div>
 
-                <div className="flex flex-row gap-3 justify-center items-center w-full">
+                <div className="flex flex-row gap-3 justify-center items-start w-full">
                   <div className="flex flex-col gap-3 justify-center items-center w-full">
                     <div className="font-bold text-xl p-2 text-center">
                       Price
                     </div>
-                    <input
-                      type="number"
-                      name="price"
+                    <NumericFormat
                       className="border-2 border-grey rounded-[4px] p-2 w-full"
-                      placeholder="Enter Price"
+                      thousandSeparator={true}
+                      prefix="$"
+                      onValueChange={(values) => {
+                        setNewMoto({
+                          ...NewMoto,
+                          price: values.value,
+                        });
+                      }}
                       value={NewMoto.price}
-                      onChange={handleInputChange}
-                      required
                     />
                   </div>
                   <div className="flex flex-col gap-3 justify-center items-center w-full">
@@ -610,12 +632,13 @@ const Sell = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-col">
+                <div className="w-full flex flex-col">
                   <label
                     htmlFor="img_input"
-                    className="block mb-2 font-bold text-xl p-2 text-center"
+                    className="flex flex-row justify-center items-center gap-1 font-bold text-xl p-2 text-center text-black rounded-sm border-1 border-black cursor-pointer"
                   >
-                    Upload Images:
+                    <img src="/icons/Upload.svg" alt="" className="w-10" />
+                    <span>Upload Image</span>
                   </label>
                   <input
                     id="img_input"
@@ -624,10 +647,10 @@ const Sell = () => {
                     multiple
                     placeholder=""
                     onChange={handleFileSelect}
-                    className="p-5 text-sm text-gray-900 border-2 border-gray rounded-[6px] cursor-pointer bg-gray-50 hover:scale-105 transition"
+                    className="hidden"
                     required
                   />
-                  <div className="grid grid-cols-2 md:grid-cols-4 w-full gap-2 mt-5 rounded-[6px] max-h-100 overflow-y-scroll">
+                  <div className="border-1 border-black grid grid-cols-2 md:grid-cols-4 w-full gap-2 mt-5 rounded-[6px] max-h-100 overflow-y-scroll">
                     {selectedFile.map((file, index) => (
                       <div key={index} className="relative">
                         <img
@@ -649,7 +672,6 @@ const Sell = () => {
                 <button
                   type="submit"
                   className="w-full rounded-[6px] bg-black text-white text-2xl font-bold p-3 hover:scale-105 transition"
-                  onClick={addButton}
                 >
                   {loadingSubmit === false && <div>Sell My Motorcycle</div>}
                   {loadingSubmit === true && <Loading />}

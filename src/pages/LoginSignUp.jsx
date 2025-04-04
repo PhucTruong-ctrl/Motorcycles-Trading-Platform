@@ -199,8 +199,8 @@ const LoginSignUp = () => {
           <Header />
         </div>
         <div className="flex flex-row justify-evenly items-center mb-5">
-          <div className="p-15 relative flex justify-center items-center gap-6 bg-white shadow-md rounded-xl">
-            <div className="w-[450px] h-full flex flex-col justify-start items-center gap-[30px] border-1 border-black rounded-md p-[40px]">
+          <div className="md:p-15 relative flex justify-center items-center gap-6 bg-white shadow-md rounded-xl">
+            <div className="w-full md:w-[450px] h-full flex flex-col justify-start items-center gap-[30px] border-1 border-black rounded-md p-[40px]">
               <div
                 id="login-signupHeader"
                 className="flex flex-row justify-between items-center gap-[30px] self-stretch border-b-1 border-black"
@@ -241,11 +241,11 @@ const LoginSignUp = () => {
 
                 <div
                   id="login-signupMethod"
-                  className="flex items-center gap-[30px]"
+                  className="flex items-center gap-[30px] w-full"
                 >
                   <button
                     onClick={signUp}
-                    className="flex justify-center items-center gap-[10px] px-[30px] py-[10px] rounded-sm border-1 border-grey"
+                    className="flex justify-center items-center gap-[10px] px-[30px] py-[10px] rounded-sm border-1 border-grey w-full"
                   >
                     <img
                       src="/icons/Google.png"
@@ -253,13 +253,13 @@ const LoginSignUp = () => {
                       className="w-[30px] h-[30px]"
                     />
                   </button>
-                  <button className="flex justify-center items-center gap-[10px] px-[30px] py-[10px] rounded-sm border-1 border-grey">
+                  {/* <button className="flex justify-center items-center gap-[10px] px-[30px] py-[10px] rounded-sm border-1 border-grey">
                     <img
                       src="/icons/Facebook.png"
                       alt=""
                       className="w-[30px] h-[30px]"
                     />
-                  </button>
+                  </button> */}
                 </div>
               </div>
 
@@ -440,9 +440,9 @@ const LoginSignUp = () => {
                       Show Password
                     </label>
                   </div>
-                  <button className="text-[14px] font-semibold">
+                  {/* <button className="text-[14px] font-semibold">
                     Forgot Password
-                  </button>
+                  </button> */}
                 </div>
                 <button
                   type="submit"
@@ -455,7 +455,7 @@ const LoginSignUp = () => {
             <img
               src="/img/loginPic.jpg"
               alt=""
-              className={`w-[450px] ${atLogin ? "h-[647px]" : "h-[1003px]"} object-cover rounded-md border-1 border-black`}
+              className={`hidden md:block w-[450px] ${atLogin ? "h-[647px]" : "h-[1003px]"} object-cover rounded-md border-1 border-black`}
             />
           </div>
         </div>

@@ -7,6 +7,7 @@ import Select from "react-select";
 import { motorcycleData } from "../data/motorcycleData";
 import { Message } from "../components/Message";
 import Loading from "../components/Loading";
+import LoadingFull from "../components/LoadingFull";
 
 const EditProduct = () => {
   const navigate = useNavigate();
@@ -263,7 +264,7 @@ const EditProduct = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingFull />;
   if (error) return <div>Error: {error.message}</div>;
   if (!moto) return <div>Product not found</div>;
 

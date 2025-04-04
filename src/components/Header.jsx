@@ -29,17 +29,7 @@ const Header = () => {
             <span className="hidden md:block">Sell Your Motorcycle</span>
           </div>
         </Link>
-
-        <Link to={"/about"}>
-          <button className="text-[18px] md:text-2xl text-nowrap">
-            <img
-              src="/icons/About.svg"
-              className="w-[39px] h-[42px] block md:hidden"
-            ></img>
-            <span className="hidden md:block">About Me</span>
-          </button>
-        </Link>
-
+        
         <SignInButton />
       </div>
     </div>

@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import { Message } from "../components/Message";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { formatDate } from "../components/FormatDate";
+import LoadingFull from "../components/LoadingFull";
 
 const Listing = () => {
   const { uid } = useParams();
@@ -113,7 +114,7 @@ const Listing = () => {
     }));
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingFull />;
   if (error) return <div>Error: {error.message}</div>;
 
   return (

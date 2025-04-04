@@ -43,7 +43,7 @@ const Product = ({ moto, user }) => {
       />
       <div
         id="Detail"
-        className="flex flex-col items-start justify-center gap-3.5 w-[75%] md:min-w-[250px] max-h-[200px] pr-3.5 lg:border-r-1 border-grey"
+        className="flex flex-col items-start justify-start gap-3.5 w-full md:min-w-[250px] h-fit md:max-h-[200px] pr-3.5 lg:border-r-1 border-grey"
       >
         <div id="Top" className="flex flex-col justify-end items-start gap-1">
           <div id="Name" className="font-extrabold text-2xl text-black">
