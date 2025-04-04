@@ -4,6 +4,7 @@ import supabase from "../supabase-client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Select from "react-select";
+import { NumericFormat } from "react-number-format";
 import { motorcycleData } from "../data/motorcycleData";
 import { Message } from "../components/Message";
 import Loading from "../components/Loading";
@@ -364,29 +365,40 @@ const EditProduct = () => {
 
               <div className="flex flex-col gap-3 justify-center items-center w-full">
                 <div className="font-bold text-xl p-2 text-center">Year</div>
-                <input
-                  type="number"
-                  name="year"
+                <NumericFormat
                   className="border-2 border-grey rounded-[4px] p-2 w-full"
                   placeholder="Enter Manufacture Year"
+                  onValueChange={(values) => {
+                    setMoto({
+                      ...moto,
+                      year: values.value,
+                    });
+                  }}
                   value={moto.year}
-                  onChange={handleInputChange}
                   required
                 />
               </div>
 
-              <div className="flex flex-col gap-3 justify-center items-center w-full">
-                <div className="font-bold text-xl p-2 text-center">Mileage</div>
-                <input
-                  type="number"
-                  name="mile"
-                  className="border-2 border-grey rounded-[4px] p-2 w-full"
-                  placeholder="Enter Current Mileage"
-                  value={moto.mile}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
+              {moto.condition !== "New" && (
+                <div className="flex flex-col gap-3 justify-center items-center w-full">
+                  <div className="font-bold text-xl p-2 text-center">
+                    Mileage
+                  </div>
+                  <NumericFormat
+                    className="border-2 border-grey rounded-[4px] p-2 w-full"
+                    thousandSeparator={true}
+                    placeholder="Enter Current Mileages"
+                    onValueChange={(values) => {
+                      setMoto({
+                        ...moto,
+                        mile: values.value,
+                      });
+                    }}
+                    required
+                    value={moto.condition !== "New" ? moto.mile : 0}
+                  />
+                </div>
+              )}
 
               <div className="flex flex-col gap-3 justify-center items-center w-full">
                 <div className="font-bold text-xl p-2 text-center">
@@ -434,14 +446,18 @@ const EditProduct = () => {
             <div className="flex flex-row gap-3 justify-center items-center w-full">
               <div className="flex flex-col gap-3 justify-center items-center w-full">
                 <div className="font-bold text-xl p-2 text-center">Price</div>
-                <input
-                  type="number"
-                  name="price"
+                <NumericFormat
                   className="border-2 border-grey rounded-[4px] p-2 w-full"
+                  thousandSeparator={true}
                   placeholder="Enter Price"
+                  prefix="$"
+                  onValueChange={(values) => {
+                    setMoto({
+                      ...moto,
+                      price: values.value,
+                    });
+                  }}
                   value={moto.price}
-                  onChange={handleInputChange}
-                  required
                 />
               </div>
               <div className="flex flex-col gap-3 justify-center items-center w-full">
@@ -489,9 +505,10 @@ const EditProduct = () => {
             <div className="flex flex-col w-full">
               <label
                 htmlFor="new_images"
-                className="block mb-2 font-bold text-xl p-2 text-center"
+                className="flex flex-row justify-center items-center gap-1 font-bold text-xl p-2 text-center text-black rounded-sm border-1 border-black cursor-pointer"
               >
-                Add New Images:
+                <img src="/icons/Upload.svg" alt="" className="w-10" />
+                <span>Add New Images</span>
               </label>
               <input
                 id="new_images"
@@ -499,7 +516,7 @@ const EditProduct = () => {
                 accept="image/*"
                 multiple
                 onChange={handleFileSelect}
-                className="p-5 text-sm text-gray-900 border-2 border-gray rounded-[6px] cursor-pointer bg-gray-50 hover:scale-105 transition"
+                className="hidden"
               />
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
                 {selectedFiles.map((file, index) => (

@@ -9,6 +9,7 @@ import Footer from "../components/Footer";
 import Button from "../components/Button";
 import ProductCard from "../components/ProductCard";
 import { Message } from "./../components/Message";
+import LoadingFull from "../components/LoadingFull";
 
 const formatNumber = (number) => {
   return new Intl.NumberFormat("en-US", {

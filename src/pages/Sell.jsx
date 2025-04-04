@@ -84,7 +84,6 @@ const Sell = () => {
     const fetchData = async () => {
       if (!currentUser) {
         setLoading(false);
-        navigate("/account");
         return;
       }
 
@@ -338,6 +337,10 @@ const Sell = () => {
     return <LoadingFull />;
   }
 
+  if (!currentUser) {
+    navigate("/account");
+  }
+
   return (
     <div>
       <main className="my-[15px] mx-[25px]">
@@ -473,13 +476,16 @@ const Sell = () => {
                     <div className="font-bold text-xl p-2 text-center">
                       Year
                     </div>
-                    <input
-                      type="number"
-                      name="year"
+                    <NumericFormat
                       className="border-2 border-grey rounded-[4px] p-2 w-full"
                       placeholder="Enter Manufacture Year"
+                      onValueChange={(values) => {
+                        setNewMoto({
+                          ...NewMoto,
+                          year: values.value,
+                        });
+                      }}
                       value={NewMoto.year}
-                      onChange={handleInputChange}
                       required
                     />
                   </div>
@@ -488,13 +494,18 @@ const Sell = () => {
                       <div className="font-bold text-xl p-2 text-center">
                         Mileage
                       </div>
-                      <input
-                        type="number"
-                        name="mile"
+                      <NumericFormat
                         className="border-2 border-grey rounded-[4px] p-2 w-full"
-                        placeholder="Enter Current Mileage"
+                        thousandSeparator={true}
+                        placeholder="Enter Current Mileages"
+                        onValueChange={(values) => {
+                          setNewMoto({
+                            ...NewMoto,
+                            mile: values.value,
+                          });
+                        }}
+                        required
                         value={NewMoto.condition !== "New" ? NewMoto.mile : 0}
-                        onChange={handleInputChange}
                       />
                     </div>
                   )}
@@ -607,6 +618,7 @@ const Sell = () => {
                     <NumericFormat
                       className="border-2 border-grey rounded-[4px] p-2 w-full"
                       thousandSeparator={true}
+                      placeholder="Enter Price"
                       prefix="$"
                       onValueChange={(values) => {
                         setNewMoto({
