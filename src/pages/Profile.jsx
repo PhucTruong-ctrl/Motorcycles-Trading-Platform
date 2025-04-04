@@ -11,6 +11,7 @@ import ProductCard from "../components/ProductCard";
 import { ReputationMessage } from "../components/Profile/ReputationMessage";
 import EditProfile from "./../components/Profile/EditProfile";
 import { Message } from "../components/Message";
+import Reputation from "../components/Profile/Reputation";
 
 Modal.setAppElement("#root");
 
@@ -19,11 +20,11 @@ const Profile = () => {
   const [user, setUser] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [moto, setMoto] = useState(null);
-  const [rep, setRep] = useState([]);
+  const [reps, setReps] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [atListing, setAtListing] = useState(true);
-  const [repType, setRepType] = useState(null);
+  const [repType, setRepType] = useState(true);
   const [alreadyRep, setAlreadyRep] = useState(false);
   const [repMessage, setRepMessage] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -72,7 +73,7 @@ const Profile = () => {
           .eq("uid_rep", uid);
 
         if (repError) throw repError;
-        setRep(repData || []);
+        setReps(repData || []);
 
         const { data: existingRep, error: checkError } = await supabase
           .from("REPUTATION")
@@ -113,11 +114,6 @@ const Profile = () => {
     if (!currentUser) {
       alert("Please login to send reputation");
     }
-
-    if (!repType || repMessage.trim() === "") {
-      alert("You need to select rep type and enter rep message");
-    }
-
     try {
       const { rep_data, rep_error } = await supabase.from("REPUTATION").insert([
         {
@@ -131,34 +127,6 @@ const Profile = () => {
       console.log("Reputation Data: ", rep_data);
 
       if (rep_error) throw rep_error;
-
-      if (repType) {
-        const { user_data, user_error } = await supabase
-          .from("USER")
-          .update({ reputation: user.reputation + 1 })
-          .eq("uid", uid)
-          .select();
-
-        console.log("User Data: ", user_data);
-
-        if (user_error) {
-          console.error("Error updating rep:", error);
-          return;
-        }
-      } else {
-        const { user_data, user_error } = await supabase
-          .from("USER")
-          .update({ bad_rep: user.bad_rep + 1 })
-          .eq("uid", uid)
-          .select();
-
-        console.log("User Data: ", user_data);
-
-        if (user_error) {
-          console.error("Error updating rep:", error);
-          return;
-        }
-      }
       alert("Rep sended");
     } catch (error) {
       console.error("Rep send error", error);
@@ -407,9 +375,7 @@ const Profile = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-2.5">
-                <div className="text-2xl font-light text-grey">
-                  +{user?.reputation} Reputation
-                </div>
+                <Reputation reps={reps} />
                 <div className="text-[16px] font-light text-grey">
                   {user?.badge}
                 </div>
@@ -501,39 +467,46 @@ const Profile = () => {
                   onSubmit={sendRep}
                   className="flex flex-col gap-3 items-center justify-center bg-white shadow-md p-10 rounded-[6px]"
                 >
-                  <Select
-                    options={[
-                      { value: true, label: "+1 Positive" },
-                      { value: false, label: "Report" },
-                    ]}
-                    placeholder="Send a reputation"
-                    onChange={(selected) => setRepType(selected?.value)}
-                    isSearchable={false}
-                    className="w-full"
-                    styles={{
-                      control: (base) => ({
-                        ...base,
-                        borderColor: "#ccc",
-                        boxShadow: "none",
-                        "&:hover": { borderColor: "#888" },
-                      }),
-                    }}
-                  />
-                  <input
+                  <div className="flex flex-row justify-start items-center gap-2 w-full">
+                    <span className="font-bold text-xl">Write:</span>
+                    <Select
+                      options={[
+                        { value: true, label: "+1 Positive" },
+                        { value: false, label: "Report" },
+                      ]}
+                      placeholder="Send a reputation"
+                      defaultValue={[{ value: true, label: "+1 Positive" }]}
+                      onChange={(selected) => setRepType(selected?.value)}
+                      isSearchable={false}
+                      className="w-full"
+                      styles={{
+                        control: (base) => ({
+                          ...base,
+                          borderColor: "#ccc",
+                          boxShadow: "none",
+                          "&:hover": { borderColor: "#888" },
+                        }),
+                      }}
+                    />
+                  </div>
+                  <textarea
                     type="text"
-                    className="border-2"
+                    className="w-full min-h-25 rounded-md border-1 border-grey p-2.5"
                     value={repMessage || ""}
                     onChange={(e) => setRepMessage(e.target.value)}
                     placeholder="Enter your reputation message"
                   />
-                  <button type="submit" className="border-2">
-                    Submit
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 rounded-md bg-blue "
+                  >
+                    <span className="text-white font-medium">Submit</span>
                   </button>
                 </form>
               )}
               <div className="flex flex-col gap-5 w-full mt-2">
-                {rep && rep.length > 0 ? (
-                  rep.map((repItem) => (
+                {reps && reps.length > 0 ? (
+                  reps.map((repItem) => (
                     <div key={repItem.id}>
                       <ReputationMessage
                         uid_send={repItem.uid_send_rep}
