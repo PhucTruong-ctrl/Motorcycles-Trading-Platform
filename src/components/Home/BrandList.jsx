@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import HomeBrand from "./HomeBrand";
-import supabase from "../supabase-client";
+import Brand from "./Brand";
+import supabase from "../../supabase-client";
 
-const HomeBrandList = () => {
+const BrandList = () => {
   const [brands, setBrands] = useState([]);
   const carouselRef = useRef(null);
 
@@ -58,11 +58,11 @@ const HomeBrandList = () => {
         swipeable
       >
         {brands.map((brd) => (
-          <HomeBrand key={brd.id} brand={brd} />
+          <Brand key={brd.id} brand={brd} />
         ))}
       </Carousel>
     </div>
   );
 };
 
-export default HomeBrandList;
+export default BrandList;

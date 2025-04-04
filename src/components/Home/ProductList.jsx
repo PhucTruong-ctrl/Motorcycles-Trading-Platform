@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import ProductCard from "./ProductCard";
-import supabase from "../supabase-client";
+import ProductCard from "../ProductCard";
+import supabase from "../../supabase-client";
 
-const HomeProductList = ({ condition }) => {
+const ProductList = ({ condition }) => {
   const [motorcycles, setMotorcycles] = useState([]);
   const carouselRef = useRef(null);
 
@@ -84,4 +84,4 @@ const HomeProductList = ({ condition }) => {
   );
 };
 
-export default HomeProductList;
+export default ProductList;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router";
-import supabase from "../supabase-client";
-import { format } from "date-fns";
+import supabase from "../../supabase-client";
+import { formatDate } from "./../FormatDate";
 
 export const ReputationMessage = ({ uid_send, created_at, message, type }) => {
   const [user, setUser] = useState(null);
@@ -26,10 +26,6 @@ export const ReputationMessage = ({ uid_send, created_at, message, type }) => {
     };
     fetchData();
   }, [uid_send, user]);
-
-  const formatDate = (dateString) => {
-    return format(new Date(dateString), " HH:mm MM-dd-yyyy");
-  };
 
   if (loading) {
     return <div>Loading...</div>;

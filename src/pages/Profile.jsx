@@ -8,8 +8,8 @@ import "react-multi-carousel/lib/styles.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
-import { ReputationMessage } from "../components/ReputationMessage";
-import EditProfile from "./../components/EditProfile";
+import { ReputationMessage } from "../components/Profile/ReputationMessage";
+import EditProfile from "./../components/Profile/EditProfile";
 import { Message } from "../components/Message";
 
 Modal.setAppElement("#root");

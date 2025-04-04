@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router";
 
-const HomeBrand = ({ brand }) => {
+const Brand = ({ brand }) => {
   const navigate = useNavigate();
   const handleBrandClick = () => {
     navigate(`/browse?brand=${encodeURIComponent(brand.name)}&page=1`, {
@@ -18,4 +18,4 @@ const HomeBrand = ({ brand }) => {
   );
 };
 
-export default HomeBrand;
+export default Brand;

@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from "react-router";
 import queryString from "query-string";
 import ReactPaginate from "react-paginate";
 import Select from "react-select";
-import supabase from "../supabase-client";
-import BrowseProduct from "./BrowseProduct";
+import supabase from "../../supabase-client";
+import Product from "./Product";
 
 const BrowseProductList = () => {
   const [moto, setMoto] = useState([]);
@@ -212,7 +212,7 @@ const BrowseProductList = () => {
             {moto.map(
               (moto) =>
                 moto.is_sold === false && (
-                  <BrowseProduct key={moto.id} moto={moto} user={moto.USER} />
+                  <Product key={moto.id} moto={moto} user={moto.USER} />
                 )
             )}
           </div>

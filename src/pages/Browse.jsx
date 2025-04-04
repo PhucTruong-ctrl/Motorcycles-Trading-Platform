@@ -1,8 +1,8 @@
 import React from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import FilterBar from "../components/FilterBar";
-import BrowseProductList from "../components/BrowseProductList";
+import FilterBar from "../components/Browse/FilterBar";
+import ProductList from "../components/Browse/ProductList";
 import { Message } from "../components/Message";
 
 const BrowsingPage = () => {
@@ -18,7 +18,7 @@ const BrowsingPage = () => {
             {/* Filter bar */}
             <FilterBar />
 
-            <BrowseProductList />
+            <ProductList />
           </div>
         </div>
 

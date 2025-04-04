@@ -1,10 +1,10 @@
 import React from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import HomeBanner from "../components/HomeBanner";
-import HomeBrandList from "../components/HomeBrandList";
-import HomeProductList from "../components/HomeProductList";
-import HomeSell from "../components/HomeSell";
+import Banner from "../components/Home/Banner";
+import BrandList from "../components/Home/BrandList";
+import ProductList from "../components/Home/ProductList";
+import Sell from "../components/Home/Sell";
 import { Message } from "../components/Message";
 
 const HomePage = () => {
@@ -16,19 +16,19 @@ const HomePage = () => {
           <Header />
         </div>
         <div className="mb-5">
-          <HomeBanner />
+          <Banner />
         </div>
         <div className="mb-5">
-          <HomeBrandList />
+          <BrandList />
         </div>
         <div className="mb-5">
-          <HomeProductList condition={"New"} />
+          <ProductList condition={"New"} />
         </div>
         <div className="mb-5">
-          <HomeProductList condition={"Used"} />
+          <ProductList condition={"Used"} />
         </div>
         <div className="mb-5">
-          <HomeSell />
+          <Sell />
         </div>
         <div>
           <Footer />

@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { motorcycleData } from "../data/motorcycleData";
+import { motorcycleData } from "../../data/motorcycleData";
 import queryString from "query-string";
 import FilterRangeSlider from "./FilterRangeSlider";
 import FilterSelect from "./FilterSelect";
-
-const CapitalizeFirst = (str) => {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-};
 
 const FilterBar = () => {
   const navigate = useNavigate();

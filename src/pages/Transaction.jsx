@@ -2,15 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import Select from "react-select";
-import { format } from "date-fns";
+import { formatDate } from "../components/FormatDate";
 import supabase from "../supabase-client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Message } from "../components/Message";
-
-const formatDate = (dateString) => {
-  return format(new Date(dateString), " HH:mm MM-dd-yyyy");
-};
 
 const Transaction = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -254,6 +250,7 @@ const Transaction = () => {
         <Header />
       </header>
       <Message newChatReceiver={messageReceiver} />
+
       <div
         id="title"
         className="flex flex-col justify-center items-center w-full gap-2.5 mb-5"
@@ -385,11 +382,8 @@ const Transaction = () => {
             <div className="text-center py-10">No transactions found</div>
           ) : (
             filteredTransactions.map((transaction) => (
-              <div>
-                <div
-                  key={transaction.id}
-                  className="hidden md:grid grid-cols-7 gap-2.5 p-2.5 w-full bg-white border-1 border-border-white rounded-md"
-                >
+              <div key={transaction.id}>
+                <div className="hidden md:grid grid-cols-7 gap-2.5 p-2.5 w-full bg-white border-1 border-border-white rounded-md">
                   <div className="flex justify-start items-center p-1 gap-[10px]">
                     <img
                       src={
@@ -539,10 +533,7 @@ const Transaction = () => {
                     </Menu>
                   </div>
                 </div>
-                <div
-                  key={transaction.id}
-                  className="flex md:hidden justify-center items-start gap-2.5 p-1 w-full bg-white border-1 border-border-white rounded-md"
-                >
+                <div className="flex md:hidden justify-center items-start gap-2.5 p-1 w-full bg-white border-1 border-border-white rounded-md">
                   <div className="flex flex-col p-2.5 gap-3 w-full">
                     <div className="flex flex-col w-full">
                       <div className="flex gap-5">

@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import supabase from "../supabase-client";
-import { format } from "date-fns";
 import Modal from "react-modal";
-
-const formatDate = (dateString) => {
-  return format(new Date(dateString), " HH:mm MM-dd-yyyy");
-};
+import { formatDate } from './FormatDate';
 
 Modal.setAppElement("#root");
 

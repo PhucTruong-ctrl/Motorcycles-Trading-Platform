@@ -1,8 +1,7 @@
 import React from "react";
-import { Link } from "react-router";
-import Button from "./Button";
+import Button from "../Button";
 
-const HomeSell = () => {
+const Sell = () => {
   return (
     <div className=" flex flex-col md:flex-row px-4 pb-5 justify-center items-center self-stretch gap-6">
       <img
@@ -20,15 +19,15 @@ const HomeSell = () => {
           <div>Safe – Secure and hassle-free selling.</div>
           <div>Affordable – Budget-friendly listing options.</div>
         </div>
-          <Button
-            textValue={"Sell My Motorcycles"}
-            bg_color={"blue"}
-            text_color={"white"}
-            icons={"icons/WhiteSell.svg"}
-            link={"sell"}
-          />
+        <Button
+          textValue={"Sell My Motorcycles"}
+          bg_color={"blue"}
+          text_color={"white"}
+          icons={"icons/WhiteSell.svg"}
+          link={"sell"}
+        />
       </div>
     </div>
   );
 };
-export default HomeSell;
+export default Sell;

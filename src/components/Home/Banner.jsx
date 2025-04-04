@@ -1,7 +1,7 @@
 import React from "react";
-import Button from "./Button";
+import Button from "../Button";
 
-const HomePageBanner = () => {
+const Banner = () => {
   return (
     <div
       id="BannerGroup"
@@ -33,7 +33,13 @@ const HomePageBanner = () => {
             make it yours.
           </p>
         </div>
-        <Button textValue={"Browse"} bg_color={"blue"} text_color={"white"} icons={"icons/Search.svg"} link={"browse"}/>
+        <Button
+          textValue={"Browse"}
+          bg_color={"blue"}
+          text_color={"white"}
+          icons={"icons/Search.svg"}
+          link={"browse"}
+        />
       </div>
 
       {/* Right Section */}
@@ -46,4 +52,4 @@ const HomePageBanner = () => {
   );
 };
 
-export default HomePageBanner;
+export default Banner;

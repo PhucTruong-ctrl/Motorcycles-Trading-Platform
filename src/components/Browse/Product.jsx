@@ -1,12 +1,9 @@
 import React from "react";
-import { format } from "date-fns";
 import { useNavigate } from "react-router";
+import { formatDate } from "../FormatDate";
 
-const BrowseProduct = ({ moto, user }) => {
+const Product = ({ moto, user }) => {
   const navigate = useNavigate();
-  const formatDate = (dateString) => {
-    return format(new Date(dateString), " HH:mm MM-dd-yyyy");
-  };
 
   const formatNumber = (number) => {
     return new Intl.NumberFormat("en-US", {
@@ -32,7 +29,7 @@ const BrowseProduct = ({ moto, user }) => {
   return (
     <div
       onClick={updateURL}
-      id="BrowseProduct"
+      id="Product"
       className="flex flex-col md:flex-row justify-start items-center content-center gap-3.5 bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-md shadow-grey cursor-pointer"
     >
       <img
@@ -97,4 +94,4 @@ const BrowseProduct = ({ moto, user }) => {
   );
 };
 
-export default BrowseProduct;
+export default Product;
