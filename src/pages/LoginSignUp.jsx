@@ -48,7 +48,7 @@ const LoginSignUp = () => {
   }, []);
 
   const handleUserCreation = useCallback(
-    async (user) => {
+    async (user, isEmailSignup = false) => {
       try {
         const { data: existingUser, error: selectError } = await supabase
           .from("USER")
@@ -66,6 +66,9 @@ const LoginSignUp = () => {
           if (avatarUrl) {
             avatarUrl = await uploadAvatarToSupabase(avatarUrl, user.id);
           }
+          const userName = isEmailSignup
+            ? newUser.name
+            : user.user_metadata?.full_name || user.email.split("@")[0];
 
           const { error: insertError } = await supabase
             .from("USER")
@@ -73,13 +76,14 @@ const LoginSignUp = () => {
               {
                 uid: user.id,
                 email: user.email,
-                name: user.user_metadata.full_name,
+                name: userName,
                 avatar_url: avatarUrl,
-                phone_num: null,
-                citizen_id: null,
-                birthdate: null,
-                is_man: null,
-                password: null,
+                phone_num: isEmailSignup ? newUser.phone_num : null,
+                citizen_id: isEmailSignup ? newUser.citizen_id : null,
+                birthdate: isEmailSignup ? newUser.birthdate : null,
+                is_man: isEmailSignup ? newUser.is_man : null,
+                password: isEmailSignup ? newUser.password : null,
+                badge: "New to the market!",
               },
             ])
             .single();
@@ -91,7 +95,7 @@ const LoginSignUp = () => {
         throw error;
       }
     },
-    [uploadAvatarToSupabase]
+    [uploadAvatarToSupabase, newUser]
   );
 
   useEffect(() => {
@@ -155,16 +159,21 @@ const LoginSignUp = () => {
           {
             email: newUser.email,
             password: newUser.password,
+            options: {
+              data: {
+                name: newUser.name,
+              },
+            },
           }
         );
 
         if (authError) throw authError;
 
-        await handleUserCreation(authData.user, false);
+        await handleUserCreation(authData.user, true);
         alert("Sign up successful! Please check email to verify your account.");
       } catch (error) {
         console.error("Sign up error: ", error);
-        alert("Sign up error: ", error);
+        alert("Sign up error: " + error.message);
       }
     } else {
       try {
