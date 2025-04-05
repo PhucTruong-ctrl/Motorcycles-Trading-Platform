@@ -51,91 +51,6 @@ const Transaction = () => {
     ],
   };
 
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setCurrentUser(session?.user || null);
-    };
-
-    fetchCurrentUser();
-  }, []);
-
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      if (!currentUser) return;
-
-      setLoading(true);
-      try {
-        const { data, error } = await supabase
-          .from("TRANSACTION")
-          .select("*")
-          .or(`uid_buyer.eq.${currentUser.id},uid_seller.eq.${currentUser.id}`);
-
-        if (error) throw error;
-
-        const transactionsWithDetails = await Promise.all(
-          (data || []).map(async (transaction) => {
-            const { data: motoData } = await supabase
-              .from("MOTORCYCLE")
-              .select("*")
-              .eq("id", transaction.id_moto)
-              .single();
-
-            const { data: buyerData } = await supabase
-              .from("USER")
-              .select("*")
-              .eq("uid", transaction.uid_buyer)
-              .single();
-
-            const { data: sellerData } = await supabase
-              .from("USER")
-              .select("*")
-              .eq("uid", transaction.uid_seller)
-              .single();
-
-            return {
-              ...transaction,
-              motorcycle: motoData,
-              buyer: buyerData,
-              seller: sellerData,
-              type:
-                transaction.uid_buyer === currentUser.id ? "Buying" : "Selling",
-            };
-          })
-        );
-
-        setTransactions(transactionsWithDetails);
-      } catch (error) {
-        console.error("Error fetching transactions:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTransactions();
-
-    const channel = supabase
-      .channel("transaction-updates")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "TRANSACTION",
-        },
-        () => {
-          fetchTransactions();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [currentUser]);
-
   const filteredTransactions = transactions
     .filter((transaction) => {
       if (searchTerm) {
@@ -257,7 +172,94 @@ const Transaction = () => {
     }
   };
 
-  console.log(selectedYear);
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setCurrentUser(session?.user || null);
+    };
+
+    fetchCurrentUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      if (!currentUser) return;
+
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from("TRANSACTION")
+          .select("*")
+          .or(`uid_buyer.eq.${currentUser.id},uid_seller.eq.${currentUser.id}`);
+
+        if (error) throw error;
+
+        const transactionsWithDetails = await Promise.all(
+          (data || []).map(async (transaction) => {
+            const { data: motoData } = await supabase
+              .from("MOTORCYCLE")
+              .select("*")
+              .eq("id", transaction.id_moto)
+              .single();
+
+            const { data: buyerData } = await supabase
+              .from("USER")
+              .select("*")
+              .eq("uid", transaction.uid_buyer)
+              .single();
+
+            const { data: sellerData } = await supabase
+              .from("USER")
+              .select("*")
+              .eq("uid", transaction.uid_seller)
+              .single();
+
+            return {
+              ...transaction,
+              motorcycle: motoData,
+              buyer: buyerData,
+              seller: sellerData,
+              type:
+                transaction.uid_buyer === currentUser.id ? "Buying" : "Selling",
+            };
+          })
+        );
+
+        setTransactions(transactionsWithDetails);
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTransactions();
+
+    const channel = supabase
+      .channel("transaction-updates")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "TRANSACTION",
+        },
+        () => {
+          fetchTransactions();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [currentUser]);
+
+  useEffect(() => {
+    document.title = "Transaction";
+  }, []);
 
   if (loading) {
     return <LoadingFull />;

@@ -34,75 +34,6 @@ const Profile = () => {
 
   const carouselRef = useRef(null);
 
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (session?.user) {
-        setCurrentUser(session.user);
-      }
-    };
-    fetchCurrentUser();
-  }, []);
-
-  useEffect(() => {
-    if (!uid || !currentUser) return;
-
-    const fetchData = async () => {
-      try {
-        const { data: userData, error: userError } = await supabase
-          .from("USER")
-          .select("*")
-          .eq("uid", uid)
-          .single();
-
-        if (userError) throw userError;
-        setUser(userData);
-
-        const { data: motoData, error: motoError } = await supabase
-          .from("MOTORCYCLE")
-          .select("*")
-          .eq("uid", uid);
-
-        if (motoError) throw motoError;
-        setMoto(motoData);
-
-        const { data: repData, error: repError } = await supabase
-          .from("REPUTATION")
-          .select("*")
-          .eq("uid_rep", uid);
-
-        if (repError) throw repError;
-        setReps(repData || []);
-
-        const { data: existingRep, error: checkError } = await supabase
-          .from("REPUTATION")
-          .select("*")
-          .eq("uid_rep", uid)
-          .eq("uid_send_rep", currentUser.id)
-          .maybeSingle();
-
-        if (checkError && checkError.code !== "PGRST116") {
-          throw checkError;
-        }
-
-        if (existingRep) {
-          setAlreadyRep(true);
-        } else {
-          setAlreadyRep(false);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [uid, currentUser]);
-
   const ListingButton = () => {
     setAtListing(true);
   };
@@ -226,6 +157,81 @@ const Profile = () => {
       alert("Failed to update Banner.");
     }
   };
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session?.user) {
+        setCurrentUser(session.user);
+      }
+    };
+    fetchCurrentUser();
+  }, []);
+
+  useEffect(() => {
+    if (!uid || !currentUser) return;
+
+    const fetchData = async () => {
+      try {
+        const { data: userData, error: userError } = await supabase
+          .from("USER")
+          .select("*")
+          .eq("uid", uid)
+          .single();
+
+        if (userError) throw userError;
+        setUser(userData);
+
+        const { data: motoData, error: motoError } = await supabase
+          .from("MOTORCYCLE")
+          .select("*")
+          .eq("uid", uid);
+
+        if (motoError) throw motoError;
+        setMoto(motoData);
+
+        const { data: repData, error: repError } = await supabase
+          .from("REPUTATION")
+          .select("*")
+          .eq("uid_rep", uid);
+
+        if (repError) throw repError;
+        setReps(repData || []);
+
+        const { data: existingRep, error: checkError } = await supabase
+          .from("REPUTATION")
+          .select("*")
+          .eq("uid_rep", uid)
+          .eq("uid_send_rep", currentUser.id)
+          .maybeSingle();
+
+        if (checkError && checkError.code !== "PGRST116") {
+          throw checkError;
+        }
+
+        if (existingRep) {
+          setAlreadyRep(true);
+        } else {
+          setAlreadyRep(false);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [uid, currentUser]);
+
+  useEffect(() => {
+    if (user) {
+      document.title = `${user.name}`;
+    }
+  }, [user]);
 
   if (loading) {
     return <LoadingFull />;

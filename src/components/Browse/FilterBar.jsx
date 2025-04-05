@@ -34,6 +34,79 @@ const FilterBar = () => {
     value: brand,
   }));
 
+  const updateURL = () => {
+    const queryParams = new Map([
+      ["page", 1],
+      ["brand", selectedBrand || undefined],
+      ["type", selectedType || undefined],
+      ["model", selectedModel || undefined],
+      ["trim", selectedTrim || undefined],
+      ["condition", condition || undefined],
+      ["price_min", price[0] > 0 ? price[0] : undefined],
+      ["price_max", price[1] < 100000 ? price[1] : undefined],
+      ["mileage_min", mileage[0] > 0 ? mileage[0] : undefined],
+      ["mileage_max", mileage[1] < 999999 ? mileage[1] : undefined],
+      ["year_min", year[0] > 1895 ? year[0] : undefined],
+      ["year_max", year[1] < new Date().getFullYear() ? year[1] : undefined],
+      ["engine_size_min", engineSize[0] > 50 ? engineSize[0] : undefined],
+      ["engine_size_max", engineSize[1] < 3000 ? engineSize[1] : undefined],
+    ]);
+
+    for (let [key, value] of queryParams) {
+      if (value === undefined) {
+        queryParams.delete(key);
+      }
+    }
+
+    const query = new URLSearchParams(queryParams).toString();
+    navigate(`/browse?${query}`);
+  };
+
+  const handleBrandChange = (selectedOptions) => {
+    const newBrand = selectedOptions.length > 0 ? selectedOptions[0].value : "";
+    setSelectedBrand(newBrand);
+
+    if (!newBrand) {
+      setSelectedType("");
+      setSelectedModel("");
+      setSelectedTrim("");
+    }
+    updateURL();
+  };
+
+  const handleTypeChange = (selectedOptions) => {
+    const newType = selectedOptions.length > 0 ? selectedOptions[0].value : "";
+    setSelectedType(newType);
+
+    if (!newType) {
+      setSelectedModel("");
+      setSelectedTrim("");
+    }
+    updateURL();
+  };
+
+  const handleModelChange = (selectedOptions) => {
+    const newModel = selectedOptions.length > 0 ? selectedOptions[0].value : "";
+    setSelectedModel(newModel);
+
+    if (!newModel) {
+      setSelectedTrim("");
+    }
+    updateURL();
+  };
+
+  const handleTrimChange = (selectedOptions) => {
+    const newTrim = selectedOptions.length > 0 ? selectedOptions[0].value : "";
+    setSelectedTrim(newTrim);
+    updateURL();
+  };
+
+  const handleConditionChange = (e) => {
+    const selectedCondition = e.target.value;
+    setCondition(selectedCondition);
+    updateURL();
+  };
+
   useEffect(() => {
     const params = queryString.parse(window.location.search);
     if (params.brand) {
@@ -149,81 +222,6 @@ const FilterBar = () => {
     }, 500);
     return () => clearTimeout(handler);
   }, [engineSize]);
-
-  const updateURL = () => {
-    const queryParams = new Map([
-      ["page", 1],
-      ["brand", selectedBrand || undefined],
-      ["type", selectedType || undefined],
-      ["model", selectedModel || undefined],
-      ["trim", selectedTrim || undefined],
-      ["condition", condition || undefined],
-      ["price_min", price[0] > 0 ? price[0] : undefined],
-      ["price_max", price[1] < 100000 ? price[1] : undefined],
-      ["mileage_min", mileage[0] > 0 ? mileage[0] : undefined],
-      ["mileage_max", mileage[1] < 999999 ? mileage[1] : undefined],
-      ["year_min", year[0] > 1895 ? year[0] : undefined],
-      ["year_max", year[1] < new Date().getFullYear() ? year[1] : undefined],
-      ["engine_size_min", engineSize[0] > 50 ? engineSize[0] : undefined],
-      ["engine_size_max", engineSize[1] < 3000 ? engineSize[1] : undefined],
-    ]);
-
-    // Xóa các giá trị undefined khỏi Map
-    for (let [key, value] of queryParams) {
-      if (value === undefined) {
-        queryParams.delete(key);
-      }
-    }
-
-    // Tạo query string từ Map
-    const query = new URLSearchParams(queryParams).toString();
-    navigate(`/browse?${query}`);
-  };
-
-  const handleBrandChange = (selectedOptions) => {
-    const newBrand = selectedOptions.length > 0 ? selectedOptions[0].value : "";
-    setSelectedBrand(newBrand);
-
-    if (!newBrand) {
-      setSelectedType("");
-      setSelectedModel("");
-      setSelectedTrim("");
-    }
-    updateURL();
-  };
-
-  const handleTypeChange = (selectedOptions) => {
-    const newType = selectedOptions.length > 0 ? selectedOptions[0].value : "";
-    setSelectedType(newType);
-
-    if (!newType) {
-      setSelectedModel("");
-      setSelectedTrim("");
-    }
-    updateURL();
-  };
-
-  const handleModelChange = (selectedOptions) => {
-    const newModel = selectedOptions.length > 0 ? selectedOptions[0].value : "";
-    setSelectedModel(newModel);
-
-    if (!newModel) {
-      setSelectedTrim("");
-    }
-    updateURL();
-  };
-
-  const handleTrimChange = (selectedOptions) => {
-    const newTrim = selectedOptions.length > 0 ? selectedOptions[0].value : "";
-    setSelectedTrim(newTrim);
-    updateURL();
-  };
-
-  const handleConditionChange = (e) => {
-    const selectedCondition = e.target.value;
-    setCondition(selectedCondition);
-    updateURL();
-  };
 
   return (
     <div className="w-full md:w-fit h-fit flex flex-col justify-start items-center gap-3.5 p-6 bg-white rounded-xl shadow-md shadow-grey">

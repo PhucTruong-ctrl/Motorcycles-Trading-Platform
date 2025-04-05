@@ -21,30 +21,6 @@ const EditProfile = ({ user, onClose }) => {
     city: user?.city || "",
   });
 
-  useEffect(() => {
-    const stateList = Object.keys(geodata).map((state) => ({
-      value: state,
-      label: state,
-    }));
-    setStates(stateList);
-  }, []);
-
-  useEffect(() => {
-    if (user?.state) {
-      setSelectedState(user.state);
-      if (geodata[user.state]) {
-        const cityList = geodata[user.state].map((city) => ({
-          value: city,
-          label: city,
-        }));
-        setCities(cityList);
-      }
-    }
-    if (user?.city) {
-      setSelectedCity(user.city);
-    }
-  }, [user]);
-
   const handleStateChange = (selected) => {
     if (selected.length === 0) {
       setSelectedState(null);
@@ -116,6 +92,29 @@ const EditProfile = ({ user, onClose }) => {
     }
   };
 
+  useEffect(() => {
+    const stateList = Object.keys(geodata).map((state) => ({
+      value: state,
+      label: state,
+    }));
+    setStates(stateList);
+  }, []);
+
+  useEffect(() => {
+    if (user?.state) {
+      setSelectedState(user.state);
+      if (geodata[user.state]) {
+        const cityList = geodata[user.state].map((city) => ({
+          value: city,
+          label: city,
+        }));
+        setCities(cityList);
+      }
+    }
+    if (user?.city) {
+      setSelectedCity(user.city);
+    }
+  }, [user]);
   return (
     <div className="m-5 p-5 flex flex-col gap-5 border-2 w-150 h-fit rounded-xl bg-white">
       <div className="flex flex-row justify-between pb-2.5 border-b-1 border-grey">

@@ -181,6 +181,12 @@ const ProductDetail = () => {
     fetchData();
   }, [queryParams.uid, queryParams.id]);
 
+  useEffect(() => {
+    if (moto) {
+      document.title = `${moto.brand} ${moto.model} ${moto.trim}`;
+    }
+  }, [moto]);
+
   if (loading) {
     return <LoadingFull />;
   }

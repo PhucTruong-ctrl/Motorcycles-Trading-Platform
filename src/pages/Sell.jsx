@@ -54,67 +54,6 @@ const Sell = () => {
   const [filteredModels, setFilteredModels] = useState([]);
   const [filteredTrims, setFilteredTrims] = useState([]);
 
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        setLoading(true);
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        const user = session?.user || null;
-        setCurrentUser(user);
-        if (user) {
-          setNewMoto((prevState) => ({
-            ...prevState,
-            uid: user.id,
-          }));
-        }
-      } catch (error) {
-        console.error("Error fetching current user:", error);
-        setCurrentUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCurrentUser();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!currentUser) {
-        setLoading(false);
-        return;
-      }
-
-      setLoading(true);
-      try {
-        const { data: userData, error: userError } = await supabase
-          .from("USER")
-          .select("*")
-          .eq("uid", currentUser.id)
-          .single();
-
-        if (userError) throw userError;
-
-        setUser(userData);
-
-        const { data: brandData, error: brandError } = await supabase
-          .from("BRAND")
-          .select("*");
-
-        if (brandError) throw brandError;
-
-        setBrands(brandData || []);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [currentUser]);
   const handleTypeChange = (selectedOptions) => {
     if (selectedOptions.length > 0) {
       const selectedType = selectedOptions[0].value;
@@ -329,6 +268,72 @@ const Sell = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        setLoading(true);
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        const user = session?.user || null;
+        setCurrentUser(user);
+        if (user) {
+          setNewMoto((prevState) => ({
+            ...prevState,
+            uid: user.id,
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+        setCurrentUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!currentUser) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const { data: userData, error: userError } = await supabase
+          .from("USER")
+          .select("*")
+          .eq("uid", currentUser.id)
+          .single();
+
+        if (userError) throw userError;
+
+        setUser(userData);
+
+        const { data: brandData, error: brandError } = await supabase
+          .from("BRAND")
+          .select("*");
+
+        if (brandError) throw brandError;
+
+        setBrands(brandData || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [currentUser]);
+
+  useEffect(() => {
+    document.title = "Sell";
+  }, []);
+
   if (loading) {
     return <LoadingFull />;
   }
@@ -366,7 +371,7 @@ const Sell = () => {
           user.city != null && (
             <div className="flex flex-row justify-evenly items-center">
               <form
-                className="flex flex-col gap-6 md:gap-3 items-center justify-center w-full bg-white shadow-md shadow-grey p-10 rounded-[6px]"
+                className="flex flex-col gap-6 md:gap-3 items-center justify-center w-full md:w-200 bg-white shadow-md shadow-grey p-10 rounded-[6px]"
                 onSubmit={addMoto}
               >
                 <div className="self-start flex flex-col gap-1 pb-5 border-b-1 border-grey">

@@ -36,32 +36,6 @@ const EditProduct = () => {
     { value: "underbones", label: "Underbones" },
   ];
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data: motoData, error: motoError } = await supabase
-          .from("MOTORCYCLE")
-          .select("*")
-          .eq("id", id)
-          .single();
-
-        if (motoError) throw motoError;
-
-        initializeDropdowns(motoData);
-        setMoto({
-          ...motoData,
-          image_url: motoData.image_url || [],
-        });
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [id]);
-
   const initializeDropdowns = (motoData) => {
     const type = motoData.type;
     const brands = Object.keys(motorcycleData).filter((brand) =>
@@ -264,6 +238,38 @@ const EditProduct = () => {
       setSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    if (moto) {
+      document.title = `Edit ${moto.brand} ${moto.model} ${moto.trim}`;
+    }
+  }, [moto]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data: motoData, error: motoError } = await supabase
+          .from("MOTORCYCLE")
+          .select("*")
+          .eq("id", id)
+          .single();
+
+        if (motoError) throw motoError;
+
+        initializeDropdowns(motoData);
+        setMoto({
+          ...motoData,
+          image_url: motoData.image_url || [],
+        });
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
 
   if (loading) return <LoadingFull />;
   if (error) return <div>Error: {error.message}</div>;

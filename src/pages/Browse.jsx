@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import FilterBar from "../components/Browse/FilterBar";
@@ -6,6 +6,9 @@ import ProductList from "../components/Browse/ProductList";
 import { Message } from "../components/Message";
 
 const BrowsingPage = () => {
+  useEffect(() => {
+    document.title = "Browse";
+  }, []);
   return (
     <div>
       <main className="my-[15px] mx-[25px]">

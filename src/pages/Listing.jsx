@@ -30,35 +30,6 @@ const Listing = () => {
     ],
   };
 
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setCurrentUser(session?.user || null);
-    };
-
-    const fetchMotoData = async () => {
-      try {
-        const { data: motoData, error: motoError } = await supabase
-          .from("MOTORCYCLE")
-          .select("*")
-          .eq("uid", uid)
-          .order("created_at", { ascending: false });
-
-        if (motoError) throw motoError;
-        setMoto(motoData || []);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCurrentUser();
-    fetchMotoData();
-  }, [uid]);
-
   const handleDelete = async (motoId) => {
     try {
       const { error } = await supabase
@@ -113,6 +84,39 @@ const Listing = () => {
       [filterName]: value,
     }));
   };
+
+  useEffect(() => {
+    document.title = "Listing";
+  }, []);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setCurrentUser(session?.user || null);
+    };
+
+    const fetchMotoData = async () => {
+      try {
+        const { data: motoData, error: motoError } = await supabase
+          .from("MOTORCYCLE")
+          .select("*")
+          .eq("uid", uid)
+          .order("created_at", { ascending: false });
+
+        if (motoError) throw motoError;
+        setMoto(motoData || []);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCurrentUser();
+    fetchMotoData();
+  }, [uid]);
 
   if (loading) return <LoadingFull />;
   if (error) return <div>Error: {error.message}</div>;

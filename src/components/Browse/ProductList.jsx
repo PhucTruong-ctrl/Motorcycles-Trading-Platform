@@ -30,6 +30,37 @@ const BrowseProductList = () => {
     { value: "mile_desc", label: "Sort By Highest Mileages" },
   ];
 
+  const handleSortChange = (selectedOption) => {
+    const selectedValue = selectedOption ? selectedOption.value : "";
+    setSortOption(selectedValue);
+
+    const currentQuery = queryString.parse(location.search);
+    const updatedQuery = {
+      ...currentQuery,
+      sort: selectedValue || undefined,
+      page: 1,
+    };
+
+    navigate(
+      `/browse?${queryString.stringify(updatedQuery, { skipNull: true })}`,
+      {
+        replace: true,
+      }
+    );
+  };
+
+  const handlePageChange = ({ selected }) => {
+    const currentQuery = queryString.parse(location.search);
+    const updatedQuery = {
+      ...currentQuery,
+      page: selected + 1,
+    };
+
+    navigate(`/browse?${queryString.stringify(updatedQuery)}`, {
+      replace: true,
+    });
+  };
+
   useEffect(() => {
     const fetchMoto = async () => {
       setLoading(true);
@@ -159,37 +190,6 @@ const BrowseProductList = () => {
     queryParams.sort,
     currentPage,
   ]);
-
-  const handleSortChange = (selectedOption) => {
-    const selectedValue = selectedOption ? selectedOption.value : "";
-    setSortOption(selectedValue);
-
-    const currentQuery = queryString.parse(location.search);
-    const updatedQuery = {
-      ...currentQuery,
-      sort: selectedValue || undefined,
-      page: 1,
-    };
-
-    navigate(
-      `/browse?${queryString.stringify(updatedQuery, { skipNull: true })}`,
-      {
-        replace: true,
-      }
-    );
-  };
-
-  const handlePageChange = ({ selected }) => {
-    const currentQuery = queryString.parse(location.search);
-    const updatedQuery = {
-      ...currentQuery,
-      page: selected + 1,
-    };
-
-    navigate(`/browse?${queryString.stringify(updatedQuery)}`, {
-      replace: true,
-    });
-  };
 
   return (
     <div className="w-full flex flex-col gap-5 justify-start items-center">

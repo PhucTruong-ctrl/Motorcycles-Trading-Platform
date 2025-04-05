@@ -116,6 +116,14 @@ const LoginSignUp = () => {
     return () => subscription.unsubscribe();
   }, [handleUserCreation]);
 
+  useEffect(() => {
+    if (atLogin) {
+      document.title = "Login";
+    } else {
+      document.title = "Sign Up";
+    }
+  }, [atLogin]);
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
