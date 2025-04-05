@@ -6,10 +6,10 @@ import "react-multi-carousel/lib/styles.css";
 import supabase from "../supabase-client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import Button from "../components/Button";
 import ProductCard from "../components/ProductCard";
 import { Message } from "./../components/Message";
 import LoadingFull from "../components/LoadingFull";
+import DOMPurify from "dompurify";
 
 const formatNumber = (number) => {
   return new Intl.NumberFormat("en-US", {
@@ -455,9 +455,14 @@ const ProductDetail = () => {
           </div>
 
           <div>
-            <div className="flex flex-col gap-5 items-start justify-start mb-5">
+            <div className="flex flex-col items-start justify-start mb-5">
               <div className="font-semibold text-2xl">Description</div>
-              <div className="text-[16px]">{moto.desc}</div>
+              <div
+                className="w-full ql-editor"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(moto.desc),
+                }}
+              />
             </div>
             <div className="flex flex-col justify-start items-start gap-5">
               <div className="font-light text-xl underline">

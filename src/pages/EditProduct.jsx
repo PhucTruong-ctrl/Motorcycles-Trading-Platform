@@ -10,6 +10,7 @@ import { Message } from "../components/Message";
 import Loading from "../components/Loading";
 import LoadingFull from "../components/LoadingFull";
 import { compressImage } from "../components/imageCompresser";
+import QuillEditor from "../components/QuillEditor";
 
 const EditProduct = () => {
   const navigate = useNavigate();
@@ -458,16 +459,16 @@ const EditProduct = () => {
               </div>
             </div>
 
-            <div className="w-full flex flex-col gap-3 justify-center items-center">
-              <div className="font-bold text-xl">Description</div>
-              <textarea
-                name="desc"
-                className="border-2 border-grey rounded-[4px] p-2 w-full min-h-50"
-                placeholder="Enter Description"
-                value={moto.desc}
-                onChange={handleInputChange}
-                required
-              />
+            <div className="flex flex-col gap-3 justify-start items-center w-full">
+              <div className="font-bold text-xl p-2 text-center">
+                Description *
+              </div>
+              <div className="h-98 sm:h-70 md:h-62">
+                <QuillEditor
+                  value={moto.desc}
+                  onChange={(html) => setMoto({ ...moto, desc: html })}
+                />
+              </div>
             </div>
 
             <div className="flex flex-row gap-3 justify-center items-center w-full">

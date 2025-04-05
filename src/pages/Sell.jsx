@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import supabase from "../supabase-client";
 import { useNavigate } from "react-router";
 import Select from "react-select";
@@ -10,6 +10,7 @@ import Loading from "../components/Loading";
 import { Message } from "../components/Message";
 import LoadingFull from "../components/LoadingFull";
 import { compressImage } from "../components/imageCompresser";
+import QuillEditor from "../components/QuillEditor";
 
 const Sell = () => {
   const navigate = useNavigate();
@@ -23,15 +24,15 @@ const Sell = () => {
     type: "",
     model: "",
     trim: "",
-    mile: "",
-    year: "",
+    mile: 0,
+    year: 0,
     engine_size: "",
     engine_num: "",
     chassis_num: "",
     registration: false,
     condition: "",
     desc: "",
-    price: "",
+    price: 0,
     image_url: [],
   });
   const [selectedFile, setSelectedFile] = useState([]);
@@ -141,6 +142,10 @@ const Sell = () => {
     });
   };
 
+  const handleDescChange = useCallback((html) => {
+    setNewMoto((prev) => ({ ...prev, desc: html }));
+  }, []);
+
   const handleFileSelect = async (e) => {
     const newFiles = Array.from(e.target.files);
     const compressedFiles = await Promise.all(
@@ -240,7 +245,7 @@ const Sell = () => {
       let imageUrls = NewMoto.image_url;
 
       if (selectedFile && selectedFile.length > 0) {
-        imageUrls = await uploadFiles(selectedFile);
+        imageUrls = await uploadFiles(selectedFile.reverse());
         if (imageUrls.length === 0) {
           alert("Error uploading images. Please try again.");
           return;
@@ -282,15 +287,15 @@ const Sell = () => {
         type: "",
         model: "",
         trim: "",
-        mile: "",
-        year: "",
+        mile: 0,
+        year: 0,
         engine_size: "",
         engine_num: "",
         chassis_num: "",
         registration: false,
         condition: "",
         desc: "",
-        price: "",
+        price: 0,
         image_url: [],
       });
       setSelectedFile([]);
@@ -520,10 +525,10 @@ const Sell = () => {
                       className="border-2 border-grey rounded-[4px] p-2 w-full"
                       placeholder="Enter Manufacture Year"
                       onValueChange={(values) => {
-                        setNewMoto({
-                          ...NewMoto,
+                        setNewMoto((prev) => ({
+                          ...prev,
                           year: values.value,
-                        });
+                        }));
                       }}
                       value={NewMoto.year}
                       required
@@ -539,10 +544,10 @@ const Sell = () => {
                         thousandSeparator={true}
                         placeholder="Enter Current Mileages"
                         onValueChange={(values) => {
-                          setNewMoto({
-                            ...NewMoto,
+                          setNewMoto((prev) => ({
+                            ...prev,
                             mile: values.value,
-                          });
+                          }));
                         }}
                         required={NewMoto.condition !== "New"}
                         value={NewMoto.condition !== "New" ? NewMoto.mile : 0}
@@ -591,7 +596,6 @@ const Sell = () => {
                         value="Used"
                         checked={NewMoto.condition === "Used"}
                         onChange={handleInputChange}
-                        required
                       />
                       <label
                         htmlFor="used"
@@ -616,7 +620,6 @@ const Sell = () => {
                         value="New"
                         checked={NewMoto.condition === "New"}
                         onChange={handleInputChange}
-                        required
                       />
                       <label
                         htmlFor="new"
@@ -635,19 +638,17 @@ const Sell = () => {
                   </ul>
                 </div>
 
-                <div className="flex flex-col gap-3 justify-center items-center w-full">
+                <div className="flex flex-col gap-3 justify-start items-center w-full">
                   <div className="font-bold text-xl p-2 text-center">
                     Description *
                   </div>
-                  <textarea
-                    type="text"
-                    name="desc"
-                    className="border-2 border-grey rounded-[4px] p-2 w-full min-h-50"
-                    placeholder="Enter Description"
-                    value={NewMoto.desc}
-                    onChange={handleInputChange}
-                    required
-                  />
+                  <div className="h-98 sm:h-70 md:h-52">
+                    <QuillEditor
+                      value={NewMoto.desc}
+                      onChange={handleDescChange}
+                      key="quill-editor"
+                    />
+                  </div>
                 </div>
 
                 <div className="flex flex-row gap-3 justify-center items-start w-full">
@@ -662,10 +663,10 @@ const Sell = () => {
                       placeholder="Enter Price"
                       prefix="$"
                       onValueChange={(values) => {
-                        setNewMoto({
-                          ...NewMoto,
+                        setNewMoto((prev) => ({
+                          ...prev,
                           price: values.value,
-                        });
+                        }));
                       }}
                       value={NewMoto.price}
                     />
@@ -701,9 +702,9 @@ const Sell = () => {
                     onChange={handleFileSelect}
                     className="hidden"
                   />
-                  <div className="border-1 border-black grid grid-cols-2 md:grid-cols-4 w-full gap-2 mt-5 rounded-[6px] max-h-100 overflow-y-scroll">
+                  <div className="border-1 border-black grid grid-cols-2 md:grid-cols-5 w-full gap-2 mt-5 rounded-[6px] max-h-100 overflow-y-scroll">
                     {selectedFile.map((file, index) => (
-                      <div key={index} className="relative">
+                      <div key={index} className="relative w-30">
                         <img
                           src={URL.createObjectURL(file)}
                           alt="Selected"
