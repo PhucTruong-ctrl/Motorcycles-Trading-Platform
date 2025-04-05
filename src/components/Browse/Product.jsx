@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router";
 import { formatDate } from "../FormatDate";
+import DOMPurify from "dompurify";
 
 const Product = ({ moto, user }) => {
   const navigate = useNavigate();
@@ -81,14 +82,19 @@ const Product = ({ moto, user }) => {
 
       <div
         id="Desc"
-        className="hidden md:block text-black text-[13px] w-full line-clamp-4 overflow-hidden"
-        style={{
-          display: "-webkit-box",
-          WebkitBoxOrient: "vertical",
-          WebkitLineClamp: 4,
-        }}
+        className="hidden md:block text-black w-full line-clamp-4 overflow-hidden"
       >
-        {moto.desc}
+        <div
+          className="w-full ql-editor"
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(moto.desc),
+          }}
+          style={{
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 4,
+          }}
+        />
       </div>
     </div>
   );

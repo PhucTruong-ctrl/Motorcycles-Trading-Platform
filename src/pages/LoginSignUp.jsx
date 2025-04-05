@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import supabase from "../supabase-client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { handleUserCreation } from "../components/authUtils";
 
 const LoginSignUp = () => {
   const [atLogin, setAtLogin] = useState(true);
@@ -16,88 +17,6 @@ const LoginSignUp = () => {
     citizen_id: "",
   });
 
-  const uploadAvatarToSupabase = useCallback(async (imageUrl, userId) => {
-    try {
-      const response = await fetch(imageUrl);
-      if (!response.ok) throw new Error("Failed to fetch image");
-
-      const contentType = response.headers.get("Content-Type");
-      const fileExt = contentType?.split("/")[1] || "jpg";
-      const fileName = `${userId}-${Date.now()}.${fileExt}`;
-      const blob = await response.blob();
-
-      const folderPath = `${userId}/${fileName}`;
-      const { data, error } = await supabase.storage
-        .from("user-media")
-        .upload(folderPath, blob, {
-          cacheControl: "3600",
-          upsert: false,
-        });
-
-      if (error) throw error;
-
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("user-media").getPublicUrl(data.path);
-
-      return publicUrl;
-    } catch (error) {
-      console.error("Error uploading avatar:", error);
-      return null;
-    }
-  }, []);
-
-  const handleUserCreation = useCallback(
-    async (user, isEmailSignup = false) => {
-      try {
-        const { data: existingUser, error: selectError } = await supabase
-          .from("USER")
-          .select("*")
-          .eq("email", user.email)
-          .maybeSingle();
-
-        if (selectError) throw selectError;
-
-        if (!existingUser) {
-          let avatarUrl =
-            user.user_metadata?.avatar_url ||
-            user.user_metadata?.picture?.data?.url;
-
-          if (avatarUrl) {
-            avatarUrl = await uploadAvatarToSupabase(avatarUrl, user.id);
-          }
-          const userName = isEmailSignup
-            ? newUser.name
-            : user.user_metadata?.full_name || user.email.split("@")[0];
-
-          const { error: insertError } = await supabase
-            .from("USER")
-            .insert([
-              {
-                uid: user.id,
-                email: user.email,
-                name: userName,
-                avatar_url: avatarUrl,
-                phone_num: isEmailSignup ? newUser.phone_num : null,
-                citizen_id: isEmailSignup ? newUser.citizen_id : null,
-                birthdate: isEmailSignup ? newUser.birthdate : null,
-                is_man: isEmailSignup ? newUser.is_man : null,
-                password: isEmailSignup ? newUser.password : null,
-                badge: "New to the market!",
-              },
-            ])
-            .single();
-
-          if (insertError) throw insertError;
-        }
-      } catch (error) {
-        console.error("Error in handleUserCreation:", error);
-        throw error;
-      }
-    },
-    [uploadAvatarToSupabase, newUser]
-  );
-
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
@@ -108,7 +27,9 @@ const LoginSignUp = () => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("Auth state changed:", _event, session);
       if (session) {
+        console.log("User from session:", session.user);
         handleUserCreation(session.user);
       }
     });
@@ -145,16 +66,17 @@ const LoginSignUp = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
+          redirectTo: `${window.location.origin}/auth-callback`,
           queryParams: {
             prompt: "select_account",
+            access_type: "offline",
           },
-          redirectTo: window.location.origin,
         },
       });
 
       if (error) throw error;
     } catch (err) {
-      console.error("Google login error:", err);
+      alert("Error signing in with Google: " + err.message);
     }
   };
 
@@ -163,25 +85,24 @@ const LoginSignUp = () => {
 
     if (!atLogin) {
       try {
-        const { data: authData, error: authError } = await supabase.auth.signUp(
-          {
-            email: newUser.email,
-            password: newUser.password,
-            options: {
-              data: {
-                name: newUser.name,
-              },
-            },
-          }
-        );
+        const {
+          data: { user },
+          error,
+        } = await supabase.auth.signUp({
+          email: newUser.email,
+          password: newUser.password,
+          options: {
+            data: { name: newUser.name },
+            emailRedirectTo: `${window.location.origin}/auth-callback`,
+          },
+        });
 
-        if (authError) throw authError;
+        if (error) throw error;
 
-        await handleUserCreation(authData.user, true);
-        alert("Sign up successful! Please check email to verify your account.");
+        await handleUserCreation(user, true, newUser);
+        alert("Sign up successful! Please verify your email.");
       } catch (error) {
-        console.error("Sign up error: ", error);
-        alert("Sign up error: " + error.message);
+        alert("Error signing up: " + error.message);
       }
     } else {
       try {

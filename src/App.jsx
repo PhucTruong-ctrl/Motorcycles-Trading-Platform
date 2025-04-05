@@ -10,6 +10,7 @@ import Listing from "./pages/Listing";
 import Transaction from "./pages/Transaction";
 import WorkArea from "./pages/WorkArea";
 import LoginSignUp from "./pages/LoginSignUp";
+import AuthCallback from "./components/AuthCallback";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
       <div>
         <Routes>
           <Route path="/" element={<Home />}></Route>
+          <Route path="/auth-callback" element={<AuthCallback />} />
           <Route path="/browse" element={<Browse />}></Route>
           <Route path="/sell" element={<Sell />}></Route>
           <Route path="/motorcycle-detail" element={<ProductDetail />} />
