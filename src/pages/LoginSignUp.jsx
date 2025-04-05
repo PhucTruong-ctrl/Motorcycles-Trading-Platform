@@ -384,7 +384,7 @@ const LoginSignUp = () => {
             <img
               src="/img/loginPic.jpg"
               alt=""
-              className={`hidden md:block w-[450px] ${atLogin ? "h-[647px]" : "h-[1003px]"} object-cover rounded-md border-1 border-black`}
+              className={`hidden md:block w-[450px] ${atLogin ? "h-[647px]" : "h-[1093px]"} object-cover rounded-md border-1 border-black`}
             />
           </div>
         </div>

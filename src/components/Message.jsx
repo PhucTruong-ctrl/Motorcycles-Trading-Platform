@@ -538,7 +538,7 @@ export const Message = ({ newChatReceiver }) => {
                             }`}
                           >
                             <div
-                              className={`flex flex-col max-w-[70%] p-2 rounded-md ${
+                              className={`break-all flex flex-col max-w-[70%] p-2 rounded-md ${
                                 msg.uid_send === currentUser.id
                                   ? "bg-blue-100"
                                   : "bg-gray-100"

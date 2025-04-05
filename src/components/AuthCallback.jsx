@@ -2,39 +2,33 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import supabase from "../supabase-client";
 import { handleUserCreation } from "./authUtils";
+import LoadingFull from "./LoadingFull";
 
 const AuthCallback = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
     const checkSession = async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-
-      if (error) {
-        navigate("/login");
+      const { data: { session }, error } = await supabase.auth.getSession();
+      
+      if (error || !session) {
+        navigate("/account");
         return;
       }
 
-      if (session) {
-        try {
-          await handleUserCreation(session.user);
-          navigate("/");
-        } catch (err) {
-          console.error("User creation failed:", err);
-          navigate("/login");
-        }
-      } else {
-        navigate("/login");
+      try {
+        await handleUserCreation(session.user);
+        navigate("/", { replace: true });
+      } catch (err) {
+        console.error("User handling failed:", err);
+        navigate("/account?error=auth_failed");
       }
     };
 
     checkSession();
   }, [navigate]);
 
-  return <div>Loading...</div>;
+  return <LoadingFull />; 
 };
 
 export default AuthCallback;

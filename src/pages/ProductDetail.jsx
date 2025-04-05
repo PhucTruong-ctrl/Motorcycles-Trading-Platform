@@ -319,7 +319,7 @@ const ProductDetail = () => {
                 </div>
               </div>
 
-              {currentUser.id !== moto.uid && (
+              {currentUser !== null && currentUser.id !== moto.uid && (
                 <div
                   id="ContactSeller"
                   className="w-full flex flex-col justify-center items-center gap-5 mt-5"

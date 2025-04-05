@@ -40,10 +40,12 @@ export const handleUserCreation = async (
     const { data: existingUser, error: selectError } = await supabase
       .from("USER")
       .select("*")
-      .eq("email", user.email)
+      .eq("uid", user.id)
       .maybeSingle();
 
     if (selectError) throw selectError;
+
+    console.log(existingUser);
 
     if (!existingUser) {
       let avatarUrl =
