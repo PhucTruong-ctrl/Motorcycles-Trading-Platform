@@ -9,6 +9,7 @@ import Footer from "../components/Footer";
 import Loading from "../components/Loading";
 import { Message } from "../components/Message";
 import LoadingFull from "../components/LoadingFull";
+import { compressImage } from "../components/imageCompresser";
 
 const Sell = () => {
   const navigate = useNavigate();
@@ -140,10 +141,19 @@ const Sell = () => {
     });
   };
 
-  const handleFileSelect = (e) => {
+  const handleFileSelect = async (e) => {
     const newFiles = Array.from(e.target.files);
+    const compressedFiles = await Promise.all(
+      newFiles.map(async (file) => {
+        if (file.type.startsWith("image/")) {
+          return await compressImage(file);
+        }
+        return file;
+      })
+    );
+
     setSelectedFile((prevFiles) => {
-      const uniqueNewFiles = newFiles.filter(
+      const uniqueNewFiles = compressedFiles.filter(
         (newFile) =>
           !prevFiles.some(
             (prevFile) =>
@@ -169,7 +179,11 @@ const Sell = () => {
     for (const file of files) {
       const fileName = `${currentUser.id}-${Date.now()}-${file.name}`;
       const filePath = `${currentUser.id}/${fileName}`;
+
       try {
+        const formData = new FormData();
+        formData.append("file", file);
+
         const { error } = await supabase.storage
           .from("motorcycle-media")
           .upload(filePath, file);
@@ -188,7 +202,6 @@ const Sell = () => {
 
     return urls;
   };
-
   const addMoto = async (e) => {
     e.preventDefault();
     setLoadingSubmit(true);
@@ -197,6 +210,29 @@ const Sell = () => {
 
     if (!NewMoto.uid) {
       alert("User not found. Please log in again.");
+      return;
+    }
+
+    const requiredFields = [
+      NewMoto.type,
+      NewMoto.brand,
+      NewMoto.model,
+      NewMoto.trim,
+      NewMoto.year,
+      NewMoto.engine_num,
+      NewMoto.chassis_num,
+      NewMoto.condition,
+      NewMoto.desc,
+      NewMoto.price,
+    ];
+
+    if (requiredFields.some((field) => !field)) {
+      alert("Please fill all required fields");
+      return;
+    }
+
+    if (NewMoto.condition !== "New" && !NewMoto.mile) {
+      alert("Please enter mileage");
       return;
     }
 
@@ -259,10 +295,8 @@ const Sell = () => {
       });
       setSelectedFile([]);
       setLoadingSubmit(false);
-      setLoadingSubmit(false);
     } catch (error) {
       console.error("Error adding motorcycle:", error);
-      setLoadingSubmit(false);
       setLoadingSubmit(false);
       alert("Error adding motorcycle. Please try again.");
     }
@@ -385,7 +419,7 @@ const Sell = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-5">
                   <div className="flex flex-col w-full">
                     <div className="font-bold text-xl p-2 text-center">
-                      Type
+                      Type *
                     </div>
                     <Select
                       options={typeOptions}
@@ -396,15 +430,16 @@ const Sell = () => {
                         (option) => option.value === NewMoto.type
                       )}
                       placeholder="Select type"
-                      isSearchable
+                      isSearchable={false}
+                      isDisabled={false}
                       className="text-[18px]"
-                      required
+                      required={!NewMoto.type}
                     />
                   </div>
 
                   <div className="flex flex-col w-full">
                     <div className="font-bold text-xl p-2 text-center">
-                      Brand
+                      Brand *
                     </div>
                     <Select
                       options={filteredBrands.map((brand) => ({
@@ -418,16 +453,16 @@ const Sell = () => {
                         .map((brand) => ({ label: brand, value: brand }))
                         .find((option) => option.value === NewMoto.brand)}
                       placeholder="Select brand"
-                      isSearchable
+                      isSearchable={false}
                       className="text-[18px]"
+                      required={NewMoto.type && !NewMoto.brand}
                       isDisabled={!NewMoto.type}
-                      required
                     />
                   </div>
 
                   <div className="flex flex-col w-full">
                     <div className="font-bold text-xl p-2 text-center">
-                      Model
+                      Model *
                     </div>
                     <Select
                       options={filteredModels.map((model) => ({
@@ -444,16 +479,16 @@ const Sell = () => {
                         }))
                         .find((option) => option.value === NewMoto.model)}
                       placeholder="Select model"
-                      isSearchable
+                      isSearchable={false}
                       className="text-[18px]"
+                      required={NewMoto.brand && !NewMoto.model}
                       isDisabled={!NewMoto.brand}
-                      required
                     />
                   </div>
 
                   <div className="flex flex-col w-full">
                     <div className="font-bold text-xl p-2 text-center">
-                      Trims
+                      Trims *
                     </div>
                     <Select
                       options={filteredTrims.map((trim) => ({
@@ -470,16 +505,16 @@ const Sell = () => {
                         }))
                         .find((option) => option.value === NewMoto.trim)}
                       placeholder="Select trim"
-                      isSearchable
+                      isSearchable={false}
                       className="text-[18px]"
+                      required={NewMoto.model && !NewMoto.trim}
                       isDisabled={!NewMoto.model}
-                      required
                     />
                   </div>
 
                   <div className="flex flex-col gap-3 justify-center items-center w-full">
                     <div className="font-bold text-xl p-2 text-center">
-                      Year
+                      Year *
                     </div>
                     <NumericFormat
                       className="border-2 border-grey rounded-[4px] p-2 w-full"
@@ -497,7 +532,7 @@ const Sell = () => {
                   {NewMoto.condition !== "New" && (
                     <div className="flex flex-col gap-3 justify-center items-center w-full">
                       <div className="font-bold text-xl p-2 text-center">
-                        Mileage
+                        Mileage *
                       </div>
                       <NumericFormat
                         className="border-2 border-grey rounded-[4px] p-2 w-full"
@@ -509,14 +544,14 @@ const Sell = () => {
                             mile: values.value,
                           });
                         }}
-                        required
+                        required={NewMoto.condition !== "New"}
                         value={NewMoto.condition !== "New" ? NewMoto.mile : 0}
                       />
                     </div>
                   )}
                   <div className="flex flex-col gap-3 justify-center items-center w-full">
                     <div className="font-bold text-xl p-2 text-center">
-                      Engine Number
+                      Engine Number *
                     </div>
                     <input
                       type="text"
@@ -530,7 +565,7 @@ const Sell = () => {
                   </div>
                   <div className="flex flex-col gap-3 justify-center items-center w-full">
                     <div className="font-bold text-xl p-2 text-center">
-                      Chassis Number
+                      Chassis Number *
                     </div>
                     <input
                       type="text"
@@ -545,7 +580,7 @@ const Sell = () => {
                 </div>
 
                 <div className="w-full flex flex-col gap-3 justify-center items-center">
-                  <div className="font-bold text-xl">Condition</div>
+                  <div className="font-bold text-xl">Condition *</div>
                   <ul className="grid w-full gap-6 grid-cols-2">
                     <li className="">
                       <input
@@ -602,7 +637,7 @@ const Sell = () => {
 
                 <div className="flex flex-col gap-3 justify-center items-center w-full">
                   <div className="font-bold text-xl p-2 text-center">
-                    Description
+                    Description *
                   </div>
                   <textarea
                     type="text"
@@ -618,11 +653,12 @@ const Sell = () => {
                 <div className="flex flex-row gap-3 justify-center items-start w-full">
                   <div className="flex flex-col gap-3 justify-center items-center w-full">
                     <div className="font-bold text-xl p-2 text-center">
-                      Price
+                      Price *
                     </div>
                     <NumericFormat
                       className="border-2 border-grey rounded-[4px] p-2 w-full"
                       thousandSeparator={true}
+                      required
                       placeholder="Enter Price"
                       prefix="$"
                       onValueChange={(values) => {
@@ -636,7 +672,7 @@ const Sell = () => {
                   </div>
                   <div className="flex flex-col gap-3 justify-center items-center w-full">
                     <div className="font-bold text-xl p-2 text-center">
-                      Registration
+                      Registration *
                     </div>
                     <input
                       type="checkbox"
@@ -644,7 +680,6 @@ const Sell = () => {
                       className="border-2 w-5 h-5"
                       checked={NewMoto.registration}
                       onChange={handleInputChange}
-                      required
                     />
                   </div>
                 </div>
@@ -655,7 +690,7 @@ const Sell = () => {
                     className="flex flex-row justify-center items-center gap-1 font-bold text-xl p-2 text-center text-black rounded-sm border-1 border-black cursor-pointer"
                   >
                     <img src="/icons/Upload.svg" alt="" className="w-10" />
-                    <span>Upload Image</span>
+                    <span>Upload Image *</span>
                   </label>
                   <input
                     id="img_input"
@@ -665,7 +700,6 @@ const Sell = () => {
                     placeholder=""
                     onChange={handleFileSelect}
                     className="hidden"
-                    required
                   />
                   <div className="border-1 border-black grid grid-cols-2 md:grid-cols-4 w-full gap-2 mt-5 rounded-[6px] max-h-100 overflow-y-scroll">
                     {selectedFile.map((file, index) => (

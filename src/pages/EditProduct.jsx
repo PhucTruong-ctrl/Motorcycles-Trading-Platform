@@ -9,6 +9,7 @@ import { motorcycleData } from "../data/motorcycleData";
 import { Message } from "../components/Message";
 import Loading from "../components/Loading";
 import LoadingFull from "../components/LoadingFull";
+import { compressImage } from "../components/imageCompresser";
 
 const EditProduct = () => {
   const navigate = useNavigate();
@@ -127,9 +128,29 @@ const EditProduct = () => {
     }));
   };
 
-  const handleFileSelect = (e) => {
+  const handleFileSelect = async (e) => {
     const files = Array.from(e.target.files);
-    setSelectedFiles((prevFiles) => [...files.toReversed(), ...prevFiles]);
+    const compressedFiles = await Promise.all(
+      files.map(async (file) => {
+        if (file.type.startsWith("image/")) {
+          return await compressImage(file);
+        }
+        return file;
+      })
+    );
+
+    setSelectedFiles((prevFiles) => {
+      const uniqueFiles = compressedFiles.filter(
+        (file) =>
+          !prevFiles.some(
+            (prevFile) =>
+              prevFile.name === file.name &&
+              prevFile.size === file.size &&
+              prevFile.lastModified === file.lastModified
+          )
+      );
+      return [...uniqueFiles, ...prevFiles];
+    });
   };
 
   const removeFile = (index) => {
@@ -303,7 +324,7 @@ const EditProduct = () => {
                   onChange={handleTypeChange}
                   value={typeOptions.find((opt) => opt.value === moto.type)}
                   placeholder="Select type"
-                  isSearchable
+                  isSearchable={false}
                   className="text-[18px]"
                   required
                 />
@@ -320,7 +341,7 @@ const EditProduct = () => {
                   }
                   onChange={handleBrandChange}
                   placeholder="Select brand"
-                  isSearchable
+                  isSearchable={false}
                   className="text-[18px]"
                   isDisabled={!moto.type}
                   required
@@ -341,7 +362,7 @@ const EditProduct = () => {
                   }
                   onChange={handleModelChange}
                   placeholder="Select model"
-                  isSearchable
+                  isSearchable={false}
                   className="text-[18px]"
                   isDisabled={!moto.brand}
                   required
@@ -362,7 +383,7 @@ const EditProduct = () => {
                     .map((trim) => ({ label: trim.name, value: trim.name }))
                     .find((option) => option.value === moto.trim)}
                   placeholder="Select trim"
-                  isSearchable
+                  isSearchable={false}
                   className="text-[18px]"
                   isDisabled={!moto.model}
                   required
