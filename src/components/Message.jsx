@@ -210,7 +210,7 @@ export const Message = ({ newChatReceiver }) => {
   }, [messages]);
   return (
     currentUser !== null && (
-      <div className="fixed z-1001 bottom-1 md:bottom-0 right-1 md:right-0">
+      <div className="fixed z-1001 bottom-3 md:bottom-0 right-3 md:right-0">
         {openMessage === false ? (
           <div>
             <div
@@ -295,7 +295,7 @@ export const Message = ({ newChatReceiver }) => {
                   setCloseMessage(true);
                 }}
                 contentLabel="Edit Profile"
-                className="absolute flex flex-col justify-center items-center md:hidden w-full h-[100vh] bottom-0"
+                className="absolute flex flex-col justify-center items-center md:hidden w-full h-[95vh] bottom-0"
                 overlayClassName="z-1000 fixed inset-0 bg-[#fff]/75 block md:hidden pointer-events-auto"
                 shouldCloseOnOverlayClick={true}
               >
@@ -477,8 +477,8 @@ export const Message = ({ newChatReceiver }) => {
                   setOpenMessage(false);
                 }}
                 contentLabel="Edit Profile"
-                className="absolute flex flex-col justify-center items-center md:hidden w-full h-[100vh] bottom-0"
-                overlayClassName="fixed inset-0 bg-[#fff]/75 block md:hidden pointer-events-auto"
+                className="absolute flex flex-col justify-center items-center md:hidden w-full h-[95vh] bottom-0"
+                overlayClassName="z-1000 fixed inset-0 bg-[#fff]/75 block md:hidden pointer-events-auto"
                 shouldCloseOnOverlayClick={true}
               >
                 <div className=" bg-white outline-1 outline-grey rounded-xl w-[90%] h-[90%] flex flex-col gap-2.5 justify-start items-start p-2.5">

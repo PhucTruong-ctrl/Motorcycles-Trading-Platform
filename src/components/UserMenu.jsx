@@ -59,7 +59,7 @@ const UserMenu = ({ user }) => {
   }
 
   return (
-    <div className="absolute right-0 p-5 flex flex-col gap-5 w-fit shadow-md bg-white rounded-[6px] z-10">
+    <div className="absolute right-0 p-5 flex flex-col gap-5 w-fit shadow-md bg-white rounded-[6px] z-1001">
       <div className="max-w-70 w-fit flex flex-row justify-start items-center gap-2.5">
         <img
           src={currentUser?.avatar_url}
