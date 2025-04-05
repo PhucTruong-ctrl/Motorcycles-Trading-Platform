@@ -130,6 +130,7 @@ const EditProduct = () => {
   };
 
   const handleFileSelect = async (e) => {
+    setSubmitting(true);
     const files = Array.from(e.target.files);
     const compressedFiles = await Promise.all(
       files.map(async (file) => {
@@ -152,6 +153,7 @@ const EditProduct = () => {
       );
       return [...uniqueFiles, ...prevFiles];
     });
+    setSubmitting(false);
   };
 
   const removeFile = (index) => {

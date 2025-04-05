@@ -211,6 +211,11 @@ export const Message = ({ newChatReceiver }) => {
   return (
     currentUser !== null && (
       <div className="fixed z-1001 bottom-3 md:bottom-0 right-3 md:right-0">
+        <audio
+          id="notification-sound"
+          src="/sounds/notificationMessage.mp3"
+          preload="auto"
+        ></audio>
         {openMessage === false ? (
           <div>
             <div
@@ -285,7 +290,7 @@ export const Message = ({ newChatReceiver }) => {
               <button
                 onClick={() => setCloseMessage((prev) => !prev)}
                 id="MobileMessageButton"
-                className=" bg-white outline-1 outline-grey w-12 h-12 rounded-full flex justify-center items-center"
+                className="bg-white outline-1 outline-grey w-12 h-12 rounded-full flex justify-center items-center"
               >
                 <img src="/icons/BlackChat.svg" alt="" />
               </button>
@@ -370,11 +375,6 @@ export const Message = ({ newChatReceiver }) => {
               ) : (
                 <div>
                   {" "}
-                  <audio
-                    id="notification-sound"
-                    src="/sounds/notificationMessage.mp3"
-                    preload="auto"
-                  ></audio>
                   <div
                     id="MessageHeader"
                     className="flex flex-row justify-between items-center border-b-1 border-grey bg-white w-full p-3 rounded-t-md"
@@ -486,11 +486,6 @@ export const Message = ({ newChatReceiver }) => {
                     <LoadingSmall />
                   ) : (
                     <div className="relative w-full h-full">
-                      <audio
-                        id="notification-sound"
-                        src="/sounds/notificationMessage.mp3"
-                        preload="auto"
-                      ></audio>
                       <div
                         id="MobileMessageHeader"
                         className="flex flex-row justify-between items-center border-b-1 border-grey bg-white w-full p-3 rounded-t-md"

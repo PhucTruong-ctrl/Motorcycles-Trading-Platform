@@ -129,10 +129,10 @@ const LoginSignUp = () => {
         </div>
         <div className="flex flex-row justify-evenly items-center mb-5">
           <div className="md:p-15 relative flex justify-center items-center gap-6 bg-white shadow-md rounded-xl">
-            <div className="w-full md:w-[450px] h-full flex flex-col justify-start items-center gap-[30px] border-1 border-black rounded-md p-[40px]">
+            <div className="w-[80vw] md:w-[450px] h-full flex flex-col justify-center items-center gap-[30px] border-1 border-black rounded-md p-[40px]">
               <div
                 id="login-signupHeader"
-                className="flex flex-row justify-between items-center gap-[30px] self-stretch border-b-1 border-black"
+                className="flex flex-row justify-between items-center gap-[30px] w-full border-b-1 border-black"
               >
                 <button
                   onClick={() => {
@@ -154,11 +154,11 @@ const LoginSignUp = () => {
               </div>
               <div
                 id="login-signupBody"
-                className="flex flex-col items-center gap-[15px] self-stretch"
+                className="flex flex-col items-center gap-[15px] w-full"
               >
                 <div
                   id="title"
-                  className="flex flex-col justify-center items-start gap-[5px] self-stretch"
+                  className="flex flex-col justify-center items-start gap-[5px] w-full"
                 >
                   <span className="text-black text-[24px] font-bold">
                     Find Your Passion
@@ -194,7 +194,7 @@ const LoginSignUp = () => {
 
               <div
                 id="or"
-                className="flex justify-center items-center gap-[10px] self-stretch"
+                className="flex justify-center items-center gap-[10px] w-full"
               >
                 <div className="h-[1px] w-full bg-grey"></div>
                 <span className="text-grey">or</span>
@@ -205,7 +205,7 @@ const LoginSignUp = () => {
                 onSubmit={handleSubmit}
                 className="flex flex-col justify-center items-center gap-[15px] w-full"
               >
-                <div className="flex flex-col items-start gap-[5px] self-stretch">
+                <div className="flex flex-col items-start gap-[5px] w-full">
                   <label htmlFor="email" className="text-black font-bold">
                     Email
                   </label>
@@ -222,7 +222,7 @@ const LoginSignUp = () => {
                 </div>
                 {atLogin === false && (
                   <div className="flex flex-col justify-center items-center gap-[15px] w-full">
-                    <div className="flex flex-col items-start gap-[5px] self-stretch">
+                    <div className="flex flex-col items-start gap-[5px] w-full">
                       <label htmlFor="name" className="text-black font-bold">
                         Name
                       </label>
@@ -237,7 +237,7 @@ const LoginSignUp = () => {
                         placeholder="Enter your Name"
                       />
                     </div>
-                    <div className="flex flex-col items-start gap-[5px] self-stretch">
+                    <div className="flex flex-col items-start gap-[5px] w-full">
                       <label
                         htmlFor="phoneNum"
                         className="text-black font-bold"
@@ -255,7 +255,7 @@ const LoginSignUp = () => {
                         placeholder="Enter your Phone Number"
                       />
                     </div>
-                    <div className="flex flex-col items-start gap-[5px] self-stretch">
+                    <div className="flex flex-col items-start gap-[5px] w-full">
                       <label
                         htmlFor="citizenID"
                         className="text-black font-bold"
@@ -273,7 +273,7 @@ const LoginSignUp = () => {
                         placeholder="Enter your Citizen ID"
                       />
                     </div>
-                    <div className="flex flex-col items-start gap-[5px] self-stretch">
+                    <div className="flex flex-col items-start gap-[5px] w-full">
                       <label
                         htmlFor="birthdate"
                         className="text-black font-bold"
@@ -290,7 +290,7 @@ const LoginSignUp = () => {
                         className="rounded-sm border-1 border-grey p-[10px] w-full"
                       />
                     </div>
-                    <div className="flex flex-col items-start gap-[5px] self-stretch">
+                    <div className="flex flex-col items-start gap-[5px] w-full">
                       <div className="text-black font-bold">Gender</div>
                       <ul className="flex justify-center items-center w-full gap-5">
                         <li className="">
@@ -339,7 +339,7 @@ const LoginSignUp = () => {
                     </div>
                   </div>
                 )}
-                <div className="flex flex-col items-start gap-[5px] self-stretch">
+                <div className="flex flex-col items-start gap-[5px] w-full">
                   <label htmlFor="password" className="text-black font-bold">
                     Password
                   </label>
@@ -354,7 +354,7 @@ const LoginSignUp = () => {
                     placeholder="Enter your Password"
                   />
                 </div>
-                <div className="flex justify-between items-start self-stretch">
+                <div className="flex justify-between items-start w-full">
                   <div className="flex justify-start items-center gap-[5px]">
                     <input
                       id="showPass"

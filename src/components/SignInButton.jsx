@@ -9,6 +9,23 @@ const SignInButton = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
+  const signOut = async () => {
+    try {
+      localStorage.removeItem("sb-" + session?.user.id + "-auth-token");
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+
+      setSession(null);
+      setUser(null);
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Sign out error:", error);
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = "/";
+    }
+  };
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -56,24 +73,6 @@ const SignInButton = () => {
 
     fetchUserData();
   }, [session]);
-
-  const signOut = async () => {
-    try {
-      localStorage.removeItem("sb-" + session?.user.id + "-auth-token");
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-
-      setSession(null);
-      setUser(null);
-      window.location.href = "/";
-    } catch (error) {
-      console.error("Sign out error:", error);
-      // Fallback manual
-      localStorage.clear();
-      sessionStorage.clear();
-      window.location.href = "/";
-    }
-  };
 
   if (!session) {
     return (

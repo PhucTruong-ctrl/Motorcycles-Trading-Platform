@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import supabase from "../supabase-client";
-import { useNavigate } from "react-router";
 import Select from "react-select";
 import { NumericFormat } from "react-number-format";
 import { motorcycleData } from "../data/motorcycleData";
@@ -13,11 +12,10 @@ import { compressImage } from "../components/imageCompresser";
 import QuillEditor from "../components/QuillEditor";
 
 const Sell = () => {
-  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [NewMoto, setNewMoto] = useState({
     uid: "",
     brand: "",
@@ -147,6 +145,7 @@ const Sell = () => {
   }, []);
 
   const handleFileSelect = async (e) => {
+    setSubmitting(true);
     const newFiles = Array.from(e.target.files);
     const compressedFiles = await Promise.all(
       newFiles.map(async (file) => {
@@ -170,6 +169,7 @@ const Sell = () => {
       return [...uniqueNewFiles, ...prevFiles];
     });
     e.target.value = "";
+    setSubmitting(false);
   };
 
   const removeFile = (index) => {
@@ -209,7 +209,7 @@ const Sell = () => {
   };
   const addMoto = async (e) => {
     e.preventDefault();
-    setLoadingSubmit(true);
+    setSubmitting(true);
 
     console.log("NewMoto before submission:", NewMoto);
 
@@ -299,10 +299,10 @@ const Sell = () => {
         image_url: [],
       });
       setSelectedFile([]);
-      setLoadingSubmit(false);
+      setSubmitting(false);
     } catch (error) {
       console.error("Error adding motorcycle:", error);
-      setLoadingSubmit(false);
+      setSubmitting(false);
       alert("Error adding motorcycle. Please try again.");
     }
   };
@@ -726,16 +726,19 @@ const Sell = () => {
 
                     <button
                       type="submit"
+                      disabled={submitting}
                       className="w-full rounded-[6px] bg-black text-white text-2xl font-bold p-3 hover:scale-105 transition"
                     >
-                      {loadingSubmit === false && <div>Sell My Motorcycle</div>}
-                      {loadingSubmit === true && <Loading />}
+                      {submitting === false && <div>Sell My Motorcycle</div>}
+                      {submitting === true && <Loading />}
                     </button>
                   </form>
                 </div>
               )}
           </div>
-        ): (<div>Please log in to sell motorcycle</div>)}
+        ) : (
+          <div>Please log in to sell motorcycle</div>
+        )}
         <div className="mt-5">
           <Footer />
         </div>

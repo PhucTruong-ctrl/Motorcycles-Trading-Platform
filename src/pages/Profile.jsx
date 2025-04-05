@@ -13,6 +13,7 @@ import EditProfile from "./../components/Profile/EditProfile";
 import { Message } from "../components/Message";
 import Reputation from "../components/Profile/Reputation";
 import LoadingFull from "./../components/LoadingFull";
+import LoadingSmall from "../components/LoadingSmall";
 
 Modal.setAppElement("#root");
 
@@ -23,6 +24,7 @@ const Profile = () => {
   const [moto, setMoto] = useState(null);
   const [reps, setReps] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const [atListing, setAtListing] = useState(true);
   const [repType, setRepType] = useState(true);
@@ -66,6 +68,7 @@ const Profile = () => {
   };
 
   const handleAvatarUpload = async (e) => {
+    setUploading(true);
     const file = e.target.files[0];
     if (!file) return;
 
@@ -106,13 +109,19 @@ const Profile = () => {
       setUser({ ...user, avatar_url: newAvatarUrl });
 
       alert("Avatar updated successfully!");
+      window.location.reload();
+      setUploading(false);
+      setModalUploadAvtIsOpen(false);
     } catch (error) {
       console.error("Error updating avatar:", error);
+      setUploading(false);
+      setModalUploadAvtIsOpen(false);
       alert("Failed to update avatar.");
     }
   };
 
   const handleBannerUpload = async (e) => {
+    setUploading(true);
     const file = e.target.files[0];
     if (!file) return;
 
@@ -152,9 +161,14 @@ const Profile = () => {
       setUser({ ...user, banner_url: newBannerUrl });
 
       alert("Banner updated successfully!");
+      window.location.reload();
+      setUploading(false);
+      setModalUploadBanIsOpen(false);
     } catch (error) {
       console.error("Error updating Banner:", error);
       alert("Failed to update Banner.");
+      setUploading(false);
+      setModalUploadBanIsOpen(false);
     }
   };
 
@@ -171,7 +185,7 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    if (!uid || !currentUser) return;
+    if (!uid) return;
 
     const fetchData = async () => {
       try {
@@ -200,21 +214,23 @@ const Profile = () => {
         if (repError) throw repError;
         setReps(repData || []);
 
-        const { data: existingRep, error: checkError } = await supabase
-          .from("REPUTATION")
-          .select("*")
-          .eq("uid_rep", uid)
-          .eq("uid_send_rep", currentUser.id)
-          .maybeSingle();
+        if (currentUser) {
+          const { data: existingRep, error: checkError } = await supabase
+            .from("REPUTATION")
+            .select("*")
+            .eq("uid_rep", uid)
+            .eq("uid_send_rep", currentUser.id)
+            .maybeSingle();
 
-        if (checkError && checkError.code !== "PGRST116") {
-          throw checkError;
-        }
+          if (checkError && checkError.code !== "PGRST116") {
+            throw checkError;
+          }
 
-        if (existingRep) {
-          setAlreadyRep(true);
-        } else {
-          setAlreadyRep(false);
+          if (existingRep) {
+            setAlreadyRep(true);
+          } else {
+            setAlreadyRep(false);
+          }
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -261,24 +277,30 @@ const Profile = () => {
           >
             <div className="relative flex flex-col gap-5 justify-center items-center bg-white border-2 border-black p-5 w-full rounded-t-xl">
               <div className="font-semibold text-xl p-2 active:bg-grey active:scale-102 transition rounded-md w-full">
-                <label
-                  htmlFor="banner-upload"
-                  className="flex flex-row gap-1 justify-start items-center cursor-pointer"
-                >
-                  <img
-                    src="/icons/UploadWhite.svg"
-                    alt=""
-                    className="bg-black rounded-full p-2"
-                  />
-                  <div>Choose cover photo</div>
-                </label>
-                <input
-                  id="banner-upload"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleBannerUpload}
-                />
+                {uploading ? (
+                  <LoadingSmall />
+                ) : (
+                  <div>
+                    <label
+                      htmlFor="banner-upload"
+                      className="flex flex-row gap-1 justify-start items-center cursor-pointer"
+                    >
+                      <img
+                        src="/icons/UploadWhite.svg"
+                        alt=""
+                        className="bg-black rounded-full p-2"
+                      />
+                      <div>Choose cover photo</div>
+                    </label>
+                    <input
+                      id="banner-upload"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleBannerUpload}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </Modal>
@@ -295,34 +317,40 @@ const Profile = () => {
           >
             <div className="relative flex flex-col gap-5 justify-center items-center bg-white border-2 border-black p-5 w-full rounded-t-xl">
               <div className="font-semibold text-xl p-2 active:bg-grey active:scale-102 transition rounded-md w-full">
-                <label
-                  htmlFor="avatar-upload"
-                  className="flex flex-row gap-1 justify-start items-center cursor-pointer"
-                >
-                  <img
-                    src="/icons/UploadWhite.svg"
-                    alt=""
-                    className="bg-black rounded-full p-2"
-                  />
-                  <div>Choose avatar photo</div>
-                </label>
-                <input
-                  id="avatar-upload"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleAvatarUpload}
-                />
+                {uploading ? (
+                  <LoadingSmall />
+                ) : (
+                  <div>
+                    <label
+                      htmlFor="avatar-upload"
+                      className="flex flex-row gap-1 justify-start items-center cursor-pointer"
+                    >
+                      <img
+                        src="/icons/UploadWhite.svg"
+                        alt=""
+                        className="bg-black rounded-full p-2"
+                      />
+                      <div>Choose avatar photo</div>
+                    </label>
+                    <input
+                      id="avatar-upload"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleAvatarUpload}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </Modal>
 
-          <div className="relative rounded-xl w-full h-[250px] md:h-[350px] overflow-hidden flex justify-center items-center">
+          <div className="relative rounded-xl w-full max-h-[250px] md:h-[350px] overflow-hidden flex justify-center items-center">
             <img
               onClick={() => setModalUploadBanIsOpen(true)}
               src={user?.banner_url}
               alt=""
-              className="object-cover w-full rounded-xl active:scale-95 md:active:scale-100 transition"
+              className="object-fill w-full rounded-xl active:scale-95 md:active:scale-100 transition"
             />
             {currentUser?.id === uid && (
               <div className="absolute hidden md:block">
@@ -468,48 +496,50 @@ const Profile = () => {
             </div>
           ) : (
             <div className="w-full">
-              {currentUser.id !== uid && alreadyRep === false && (
-                <form
-                  onSubmit={sendRep}
-                  className="flex flex-col gap-3 items-center justify-center bg-white shadow-md p-10 rounded-[6px]"
-                >
-                  <div className="flex flex-row justify-start items-center gap-2 w-full">
-                    <span className="font-bold text-xl">Write:</span>
-                    <Select
-                      options={[
-                        { value: true, label: "+1 Positive" },
-                        { value: false, label: "Report" },
-                      ]}
-                      placeholder="Send a reputation"
-                      defaultValue={[{ value: true, label: "+1 Positive" }]}
-                      onChange={(selected) => setRepType(selected?.value)}
-                      isSearchable={false}
-                      className="w-full"
-                      styles={{
-                        control: (base) => ({
-                          ...base,
-                          borderColor: "#ccc",
-                          boxShadow: "none",
-                          "&:hover": { borderColor: "#888" },
-                        }),
-                      }}
-                    />
-                  </div>
-                  <textarea
-                    type="text"
-                    className="w-full min-h-25 rounded-md border-1 border-grey p-2.5"
-                    value={repMessage || ""}
-                    onChange={(e) => setRepMessage(e.target.value)}
-                    placeholder="Enter your reputation message"
-                  />
-                  <button
-                    type="submit"
-                    className="px-5 py-2.5 rounded-md bg-blue "
+              {currentUser !== null &&
+                currentUser.id !== uid &&
+                alreadyRep === false && (
+                  <form
+                    onSubmit={sendRep}
+                    className="flex flex-col gap-3 items-center justify-center bg-white shadow-md p-10 rounded-[6px]"
                   >
-                    <span className="text-white font-medium">Submit</span>
-                  </button>
-                </form>
-              )}
+                    <div className="flex flex-row justify-start items-center gap-2 w-full">
+                      <span className="font-bold text-xl">Write:</span>
+                      <Select
+                        options={[
+                          { value: true, label: "+1 Positive" },
+                          { value: false, label: "Report" },
+                        ]}
+                        placeholder="Send a reputation"
+                        defaultValue={[{ value: true, label: "+1 Positive" }]}
+                        onChange={(selected) => setRepType(selected?.value)}
+                        isSearchable={false}
+                        className="w-full"
+                        styles={{
+                          control: (base) => ({
+                            ...base,
+                            borderColor: "#ccc",
+                            boxShadow: "none",
+                            "&:hover": { borderColor: "#888" },
+                          }),
+                        }}
+                      />
+                    </div>
+                    <textarea
+                      type="text"
+                      className="w-full min-h-25 rounded-md border-1 border-grey p-2.5"
+                      value={repMessage || ""}
+                      onChange={(e) => setRepMessage(e.target.value)}
+                      placeholder="Enter your reputation message"
+                    />
+                    <button
+                      type="submit"
+                      className="px-5 py-2.5 rounded-md bg-blue "
+                    >
+                      <span className="text-white font-medium">Submit</span>
+                    </button>
+                  </form>
+                )}
               <div className="flex flex-col gap-5 w-full mt-2">
                 {reps && reps.length > 0 ? (
                   reps.map((repItem) => (
