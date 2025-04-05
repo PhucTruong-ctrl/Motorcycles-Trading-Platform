@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { NumericFormat } from "react-number-format";
 import supabase from "../supabase-client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -244,15 +245,15 @@ const LoginSignUp = () => {
                       >
                         Phone Number
                       </label>
-                      <input
+                      <NumericFormat
                         id="phoneNum"
                         name="phone_num"
                         required
-                        type="text"
                         value={newUser.phone_num}
                         onChange={handleInputChange}
                         className="rounded-sm border-1 border-grey p-[10px] w-full"
                         placeholder="Enter your Phone Number"
+                        maxLength={10}
                       />
                     </div>
                     <div className="flex flex-col items-start gap-[5px] w-full">
@@ -262,15 +263,15 @@ const LoginSignUp = () => {
                       >
                         Citizen ID
                       </label>
-                      <input
+                      <NumericFormat
                         id="citizenID"
                         name="citizen_id"
                         required
-                        type="text"
                         value={newUser.citizen_id}
                         onChange={handleInputChange}
                         className="rounded-sm border-1 border-grey p-[10px] w-full"
                         placeholder="Enter your Citizen ID"
+                        maxLength={12}
                       />
                     </div>
                     <div className="flex flex-col items-start gap-[5px] w-full">

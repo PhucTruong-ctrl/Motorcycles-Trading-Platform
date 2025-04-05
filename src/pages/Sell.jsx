@@ -22,15 +22,15 @@ const Sell = () => {
     type: "",
     model: "",
     trim: "",
-    mile: 0,
-    year: 0,
+    mile: "",
+    year: "",
     engine_size: "",
     engine_num: "",
     chassis_num: "",
     registration: false,
     condition: "",
     desc: "",
-    price: 0,
+    price: "",
     image_url: [],
   });
   const [selectedFile, setSelectedFile] = useState([]);
@@ -532,6 +532,7 @@ const Sell = () => {
                             }));
                           }}
                           value={NewMoto.year}
+                          maxLength={4}
                           required
                         />
                       </div>
@@ -554,6 +555,7 @@ const Sell = () => {
                             value={
                               NewMoto.condition !== "New" ? NewMoto.mile : 0
                             }
+                            maxLength={7}
                           />
                         </div>
                       )}
@@ -672,6 +674,7 @@ const Sell = () => {
                             }));
                           }}
                           value={NewMoto.price}
+                          maxLength={8}
                         />
                       </div>
                       <div className="flex flex-col gap-3 justify-center items-center w-full">

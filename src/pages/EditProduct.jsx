@@ -405,6 +405,7 @@ const EditProduct = () => {
                     });
                   }}
                   value={moto.year}
+                  maxLength={4}
                   required
                 />
               </div>
@@ -425,6 +426,7 @@ const EditProduct = () => {
                       });
                     }}
                     required
+                    maxLength={7}
                     value={moto.condition !== "New" ? moto.mile : 0}
                   />
                 </div>
@@ -461,6 +463,56 @@ const EditProduct = () => {
               </div>
             </div>
 
+            <div className="w-full flex flex-col gap-3 justify-center items-center">
+              <div className="font-bold text-xl">Condition *</div>
+              <ul className="grid w-full gap-6 grid-cols-2">
+                <li className="">
+                  <input
+                    type="radio"
+                    id="used"
+                    name="condition"
+                    className="hidden peer"
+                    value="Used"
+                    checked={moto.condition === "Used"}
+                    onChange={handleInputChange}
+                  />
+                  <label
+                    htmlFor="used"
+                    className="inline-flex items-center justify-between w-full h-40 p-5 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition  "
+                  >
+                    <div className="block">
+                      <div className="w-full text-xl font-semibold">Used</div>
+                      <div className="w-full">
+                        Pre-loved motorcycle with stories to tell
+                      </div>
+                    </div>
+                  </label>
+                </li>
+                <li>
+                  <input
+                    type="radio"
+                    id="new"
+                    name="condition"
+                    className="hidden peer"
+                    value="New"
+                    checked={moto.condition === "New"}
+                    onChange={handleInputChange}
+                  />
+                  <label
+                    htmlFor="new"
+                    className="inline-flex items-center justify-between w-full h-40 p-5 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition  "
+                  >
+                    <div className="relative block overflow-hidden">
+                      <div className="w-full text-xl font-semibold">New</div>
+                      <div className="w-full">
+                        Brand new motorcycle without any thought!
+                      </div>
+                    </div>
+                  </label>
+                </li>
+              </ul>
+            </div>
+
             <div className="flex flex-col gap-3 justify-start items-center w-full">
               <div className="font-bold text-xl p-2 text-center">
                 Description *
@@ -488,6 +540,7 @@ const EditProduct = () => {
                     });
                   }}
                   value={moto.price}
+                  maxLength={7}
                 />
               </div>
               <div className="flex flex-col gap-3 justify-center items-center w-full">
