@@ -346,12 +346,23 @@ const Profile = () => {
           </Modal>
 
           <div className="relative rounded-xl w-full max-h-[250px] md:h-[350px] overflow-hidden flex justify-center items-center">
-            <img
-              onClick={() => setModalUploadBanIsOpen(true)}
-              src={user?.banner_url}
-              alt=""
-              className="object-fill w-full rounded-xl active:scale-95 md:active:scale-100 transition"
-            />
+            {user?.banner_url ? (
+              <div>
+                <img
+                  onClick={() => setModalUploadBanIsOpen(true)}
+                  src={user?.banner_url}
+                  alt=""
+                  className="object-fill w-full rounded-xl active:scale-95 md:active:scale-100 transition"
+                />
+              </div>
+            ) : (
+              <button
+                onClick={() => setModalUploadBanIsOpen(true)}
+                className="bg-black text-white rounded-md p-5"
+              >
+                Upload cover photo
+              </button>
+            )}
             {currentUser?.id === uid && (
               <div className="absolute hidden md:block">
                 <label htmlFor="banner-upload">
@@ -374,12 +385,23 @@ const Profile = () => {
 
           <div className="flex flex-col md:flex-row gap-6 w-full bg-white rounded-xl shadow-md relative p-5">
             <div className="relative flex justify-center items-center">
-              <img
-                onClick={() => setModalUploadAvtIsOpen(true)}
-                src={user?.avatar_url}
-                alt=""
-                className="w-[150px] h-[150px] rounded-xl active:scale-95 transition"
-              />
+              {user?.avatar_url ? (
+                <div>
+                  <img
+                    onClick={() => setModalUploadAvtIsOpen(true)}
+                    src={user?.avatar_url}
+                    alt=""
+                    className="w-[150px] h-[150px] rounded-xl active:scale-95 transition"
+                  />
+                </div>
+              ) : (
+                <button
+                  onClick={() => setModalUploadAvtIsOpen(true)}
+                  className="bg-black text-white rounded-md p-5"
+                >
+                  Upload avatar photo
+                </button>
+              )}
               {currentUser?.id === uid && (
                 <div className="absolute hidden md:block">
                   <label htmlFor="avt-upload" className="hidden md:block">
@@ -461,38 +483,44 @@ const Profile = () => {
           </div>
           {atListing ? (
             <div>
-              <Carousel
-                ref={carouselRef}
-                additionalTransfrom={0}
-                arrows
-                className="w-full p-2"
-                containerClass="carousel-container"
-                itemClass="carousel-item"
-                minimumTouchDrag={80}
-                responsive={{
-                  desktop: {
-                    breakpoint: { max: 3000, min: 1024 },
-                    items: 8,
-                  },
-                  tablet: {
-                    breakpoint: { max: 1024, min: 464 },
-                    items: 4,
-                  },
-                  mobile: {
-                    breakpoint: { max: 464, min: 0 },
-                    items: 2,
-                  },
-                }}
-                sliderClass=""
-                slidesToSlide={1}
-                swipeable
-              >
-                {moto
-                  .filter((motoItem) => motoItem.is_sold === false)
-                  .map((moto) => (
-                    <ProductCard key={moto.id} moto={moto} />
-                  ))}
-              </Carousel>
+              {moto !== null ? (
+                <div>
+                  <Carousel
+                    ref={carouselRef}
+                    additionalTransfrom={0}
+                    arrows
+                    className="w-full p-2"
+                    containerClass="carousel-container"
+                    itemClass="carousel-item"
+                    minimumTouchDrag={80}
+                    responsive={{
+                      desktop: {
+                        breakpoint: { max: 3000, min: 1024 },
+                        items: 8,
+                      },
+                      tablet: {
+                        breakpoint: { max: 1024, min: 464 },
+                        items: 4,
+                      },
+                      mobile: {
+                        breakpoint: { max: 464, min: 0 },
+                        items: 2,
+                      },
+                    }}
+                    sliderClass=""
+                    slidesToSlide={1}
+                    swipeable
+                  >
+                    {moto
+                      .filter((motoItem) => motoItem.is_sold === false)
+                      .map((moto) => (
+                        <ProductCard key={moto.id} moto={moto} />
+                      ))}
+                  </Carousel>
+                </div>
+              ) : (
+                <span>No motorcycle listing</span>
+              )}
             </div>
           ) : (
             <div className="w-full">

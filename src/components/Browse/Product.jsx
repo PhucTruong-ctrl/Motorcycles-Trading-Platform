@@ -40,7 +40,7 @@ const Product = ({ moto, user }) => {
             : "/img/R7_Sample.jpg"
         }
         alt={moto.type}
-        className="w-full h-[200px] md:w-[250px] rounded-[6px] object-cover"
+        className="w-full h-[200px] md:max-w-[250px] rounded-[6px] object-cover"
       />
       <div
         id="Detail"

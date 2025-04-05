@@ -26,19 +26,17 @@ const ProductCard = ({ moto }) => {
 
   return (
     <div className="relative home-card">
-      <div onClick={updateURL}>
-        <div id="product">
-          <div id="img">
-            <img
-              className="rounded-t-md h-[145px] object-cover"
-              src={
-                Array.isArray(moto.image_url) && moto.image_url.length > 0
-                  ? moto.image_url[0]
-                  : "/img/R7_Sample.jpg"
-              }
-              alt={moto.type}
-            />
-          </div>
+      <div onClick={updateURL} className="w-full">
+        <div id="product" className="w-full">
+          <img
+            className="rounded-t-md w-full h-[145px] object-cover"
+            src={
+              Array.isArray(moto.image_url) && moto.image_url.length > 0
+                ? moto.image_url[0]
+                : "/img/R7_Sample.jpg"
+            }
+            alt={moto.type}
+          />
           <div
             id="detail"
             className="flex flex-col justify-between gap-0.5 self-stretch p-2 h-full"

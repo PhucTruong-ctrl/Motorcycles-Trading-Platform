@@ -225,20 +225,20 @@ const FilterBar = () => {
 
   return (
     <div className="w-full md:w-fit h-fit flex flex-col justify-start items-center gap-3.5 p-6 bg-white rounded-xl shadow-md shadow-grey">
-      <div className="self-center md:self-start text-2xl font-extrabold text-black">
+      <div className="w-full self-center md:self-start text-2xl font-extrabold text-black">
         Filter
       </div>
 
-      <div className="flex lex-row justify-center items-start md:items-center self-stretch gap-2.5 ">
-        <div className="flex justify-center items-center w-[80px] h-[45px] bg-blue rounded-sm shadow-md shadow-grey">
+      <div className="flex flex-row justify-center items-start md:items-center self-stretch gap-2.5 w-full ">
+        <div className="flex justify-center items-center w-full h-[45px] bg-blue rounded-sm shadow-md shadow-grey">
           <img src="/icons/Tune.svg" alt="" className="w-[35px]" />
         </div>
-        <div className="flex justify-center items-center w-[80px] h-[45px] bg-black rounded-sm shadow-md shadow-grey">
+        {/* <div className="flex justify-center items-center w-[80px] h-[45px] bg-black rounded-sm shadow-md shadow-grey">
           <img src="/icons/Bookmark.svg" alt="" className="w-[35px]" />
         </div>
         <div className="flex justify-center items-center w-[80px] h-[45px] bg-black rounded-sm shadow-md shadow-grey">
           <img src="/icons/History.svg" alt="" className="w-[35px]" />
-        </div>
+        </div> */}
       </div>
 
       <FilterSelect
@@ -282,7 +282,7 @@ const FilterBar = () => {
 
       <div className="w-full flex flex-col gap-3 justify-center items-center">
         <div className="font-bold text-xl">Condition</div>
-        <ul className="grid w-full gap-6 grid-cols-3">
+        <ul className="w-full flex flex-row gap-3 justify-center items-center">
           <li>
             <input
               type="radio"
@@ -295,9 +295,9 @@ const FilterBar = () => {
             />
             <label
               htmlFor="all-condition"
-              className="inline-flex items-center justify-between text-center w-full p-3 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition"
+              className="inline-flex items-center justify-between text-center w-full px-5 py-2.5 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition"
             >
-              <div className="w-full text-[16px] font-semibold">All</div>
+              <span className="w-full text-[16px] font-semibold">All</span>
             </label>
           </li>
           <li className="">
@@ -312,9 +312,9 @@ const FilterBar = () => {
             />
             <label
               htmlFor="used-condition"
-              className="inline-flex items-center justify-between text-center w-full p-3 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition"
+              className="inline-flex items-center justify-between text-center w-full px-5 py-2.5 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition"
             >
-              <div className="w-full text-[16px] font-semibold">Used</div>
+              <span className="w-full text-[16px] font-semibold">Used</span>
             </label>
           </li>
           <li>
@@ -329,9 +329,9 @@ const FilterBar = () => {
             />
             <label
               htmlFor="new-condition"
-              className="inline-flex items-center justify-between text-center w-full p-3 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition"
+              className="inline-flex items-center justify-between text-center w-full px-5 py-2.5 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition"
             >
-              <div className="w-full text-[16px] font-semibold">New</div>
+              <span className="w-full text-[16px] font-semibold">New</span>
             </label>
           </li>
         </ul>
