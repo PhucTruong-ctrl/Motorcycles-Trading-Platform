@@ -329,7 +329,7 @@ const ProductDetail = () => {
                     className="w-full flex flex-col md:flex-row justify-center items-center gap-5 md:gap-15"
                   >
                     {user && (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 w-full">
                         <Link to={`/profile/${user?.uid}`}>
                           <img
                             src={user.avatar_url}
@@ -337,7 +337,7 @@ const ProductDetail = () => {
                             className="w-[60px] h-[60px] sm:min-w-[80px] sm:min-h-[80px] md:min-w-[95px] md:min-h-[95px] border-1 rounded-full shrink-0"
                           />
                         </Link>
-                        <div className="flex flex-col items-start gap-1">
+                        <div className="flex flex-col items-start gap-1 w-full">
                           <Link to={`/profile/${user?.uid}`}>
                             <div className="font-light text-grey text-[15px]">
                               {user.badge}
@@ -393,7 +393,7 @@ const ProductDetail = () => {
                     Buy now
                   </button>
 
-                  <div
+                  {/* <div
                     id="or"
                     className="flex justify-center items-center gap-[10px] self-stretch"
                   >
@@ -441,7 +441,7 @@ const ProductDetail = () => {
                       width={"full"}
                       icons={"/icons/Chat.svg"}
                     />
-                  </div>
+                  </div> */}
 
                   <div className="bg-black w-full h-[1px]"></div>
                 </div>
