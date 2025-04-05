@@ -32,16 +32,38 @@ const Listing = () => {
 
   const handleDelete = async (motoId) => {
     try {
-      const { error } = await supabase
+      const { data: motoToDelete, error: fetchError } = await supabase
+        .from("MOTORCYCLE")
+        .select("image_url")
+        .eq("id", motoId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      if (motoToDelete.image_url && motoToDelete.image_url.length > 0) {
+        const filesToDelete = motoToDelete.image_url.map((url) => {
+          const parts = url.split("/");
+          return `${parts[parts.length - 2]}/${parts[parts.length - 1]}`;
+        });
+
+        const { error: deleteFilesError } = await supabase.storage
+          .from("motorcycle-media")
+          .remove(filesToDelete);
+
+        if (deleteFilesError) throw deleteFilesError;
+      }
+
+      const { error: deleteRecordError } = await supabase
         .from("MOTORCYCLE")
         .delete()
         .eq("id", motoId);
 
-      if (!error) {
-        setMoto(moto.filter((item) => item.id !== motoId));
-      }
+      if (deleteRecordError) throw deleteRecordError;
+
+      setMoto(moto.filter((item) => item.id !== motoId));
     } catch (error) {
       console.error("Delete error:", error);
+      alert("Error deleting motorcycle. Please try again.");
     }
   };
 
