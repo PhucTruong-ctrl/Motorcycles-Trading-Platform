@@ -8,6 +8,7 @@ Modal.setAppElement("#root");
 
 export const Message = ({ newChatReceiver }) => {
   const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [openMessage, setOpenMessage] = useState(false);
   const [closeMessage, setCloseMessage] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
@@ -208,6 +209,40 @@ export const Message = ({ newChatReceiver }) => {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
+
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkIfMobile();
+
+    window.addEventListener("resize", checkIfMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkIfMobile);
+    };
+  }, []);
+
+  useEffect(() => {
+    if ((!closeMessage && isMobile) || (openMessage && isMobile)) {
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+    }
+
+    console.log(isMobile);
+
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+    };
+  }, [closeMessage, openMessage, isMobile]);
   return (
     currentUser !== null && (
       <div className="fixed z-1001 bottom-3 md:bottom-0 right-3 md:right-0">
