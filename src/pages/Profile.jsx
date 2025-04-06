@@ -13,7 +13,7 @@ import EditProfile from "./../components/Profile/EditProfile";
 import { Message } from "../components/Message";
 import Reputation from "../components/Profile/Reputation";
 import LoadingFull from "./../components/LoadingFull";
-import LoadingSmall from "../components/LoadingSmall";
+import Loading from "../components/Loading";
 
 Modal.setAppElement("#root");
 
@@ -278,7 +278,7 @@ const Profile = () => {
             <div className="relative flex flex-col gap-5 justify-center items-center bg-white border-2 border-black p-5 w-full rounded-t-xl">
               <div className="font-semibold text-xl p-2 active:bg-grey active:scale-102 transition rounded-md w-full">
                 {uploading ? (
-                  <LoadingSmall />
+                  <Loading />
                 ) : (
                   <div>
                     <label
@@ -318,7 +318,7 @@ const Profile = () => {
             <div className="relative flex flex-col gap-5 justify-center items-center bg-white border-2 border-black p-5 w-full rounded-t-xl">
               <div className="font-semibold text-xl p-2 active:bg-grey active:scale-102 transition rounded-md w-full">
                 {uploading ? (
-                  <LoadingSmall />
+                  <Loading />
                 ) : (
                   <div>
                     <label

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import supabase from "../supabase-client";
 import { Link, useNavigate } from "react-router";
-import LoadingSmall from "./LoadingSmall";
+import Loading from "./Loading";
 
 const UserMenu = ({ user }) => {
   const [loading, setLoading] = useState(true);
@@ -53,7 +53,7 @@ const UserMenu = ({ user }) => {
     return (
       <div className="absolute right-0 p-5 flex flex-col gap-5 w-20 h-20 shadow-md bg-white rounded-[6px] z-10">
         {" "}
-        <LoadingSmall />
+        <Loading />
       </div>
     );
   }

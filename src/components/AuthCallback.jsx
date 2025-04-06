@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import supabase from "../supabase-client";
-import { handleUserCreation } from "./authUtils";
+import { handleUserCreation } from "./utils/authUtils";
 import LoadingFull from "./LoadingFull";
 
 const AuthCallback = () => {

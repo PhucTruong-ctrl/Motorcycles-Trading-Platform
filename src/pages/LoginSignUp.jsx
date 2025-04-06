@@ -3,7 +3,7 @@ import { NumericFormat } from "react-number-format";
 import supabase from "../supabase-client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { handleUserCreation } from "../components/authUtils";
+import { handleUserCreation } from "../components/utils/authUtils";
 
 const LoginSignUp = () => {
   const [atLogin, setAtLogin] = useState(true);

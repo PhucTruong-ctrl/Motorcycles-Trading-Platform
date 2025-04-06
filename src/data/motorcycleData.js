@@ -191,6 +191,7 @@ export const motorcycleData = {
       {
         model: "Panigale",
         trims: [
+          { name: "959", engine_size: "959" },
           { name: "V2", engine_size: "890" },
           { name: "V2 S", engine_size: "890" },
           { name: "V2 Superquadro Final Edition", engine_size: "955" },
@@ -299,8 +300,9 @@ export const motorcycleData = {
         trims: [
           { name: "125", engine_size: "125" },
           { name: "300", engine_size: "296" },
-          { name: "500", engine_size: "296" },
-          { name: "650", engine_size: "296" },
+          { name: "500", engine_size: "500" },
+          { name: "650", engine_size: "650" },
+          { name: "1000", engine_size: "999" },
           { name: "ZX-25R", engine_size: "249" },
           { name: "ZX-4R", engine_size: "399" },
           { name: "ZX-4RR", engine_size: "399" },
@@ -631,7 +633,6 @@ export const motorcycleData = {
           { name: "R15", engine_size: "155" },
           { name: "R3", engine_size: "321" },
           { name: "R6", engine_size: "599" },
-          { name: "R7", engine_size: "689" },
           { name: "R7", engine_size: "689" },
           { name: "R9", engine_size: "890" },
           { name: "R1", engine_size: "998" },

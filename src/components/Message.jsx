@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import supabase from "../supabase-client";
 import Modal from "react-modal";
 import { formatDate } from "./FormatDate";
-import LoadingSmall from "./LoadingSmall";
+import Loading from "./Loading";
 
 Modal.setAppElement("#root");
 
@@ -406,7 +406,7 @@ export const Message = ({ newChatReceiver }) => {
               className={`bg-white w-[402px] ${closeMessage ? "h-[55px]" : "h-[428px]"} border-2 border-grey rounded-t-xl hidden md:block`}
             >
               {loading ? (
-                <LoadingSmall />
+                <Loading />
               ) : (
                 <div>
                   {" "}
@@ -518,7 +518,7 @@ export const Message = ({ newChatReceiver }) => {
               >
                 <div className=" bg-white outline-1 outline-grey rounded-xl w-[90%] h-[90%] flex flex-col gap-2.5 justify-start items-start p-2.5">
                   {loading ? (
-                    <LoadingSmall />
+                    <Loading />
                   ) : (
                     <div className="relative w-full h-full">
                       <div

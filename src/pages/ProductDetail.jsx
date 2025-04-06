@@ -53,6 +53,7 @@ const ProductDetail = () => {
   const handleMainImageChange = (previousSlide, { currentSlide }) => {
     setCurrentMainIndex(currentSlide);
     thumbCarouselRef.current.goToSlide(currentSlide);
+    console.log(currentSlide);
   };
 
   const handleThumbnailClick = (index) => {
@@ -233,7 +234,6 @@ const ProductDetail = () => {
                   className="w-full"
                   containerClass="carousel-container"
                   itemClass=""
-                  infinite
                   responsive={{
                     desktop: {
                       breakpoint: { max: 3000, min: 1024 },
