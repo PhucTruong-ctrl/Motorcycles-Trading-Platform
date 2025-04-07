@@ -235,8 +235,6 @@ export const Message = ({ newChatReceiver }) => {
       document.body.style.width = "";
     }
 
-    console.log(isMobile);
-
     return () => {
       document.body.style.overflow = "";
       document.body.style.position = "";
@@ -406,7 +404,9 @@ export const Message = ({ newChatReceiver }) => {
               className={`bg-white w-[402px] ${closeMessage ? "h-[55px]" : "h-[428px]"} border-2 border-grey rounded-t-xl hidden md:block`}
             >
               {loading ? (
-                <Loading />
+                <div className="w-full h-full flex justify-center items-center">
+                  <Loading />
+                </div>
               ) : (
                 <div>
                   {" "}

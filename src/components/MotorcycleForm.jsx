@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
 import { NumericFormat } from "react-number-format";
 import { motorcycleData } from "../data/motorcycleData";
-import Loading from "./Loading";
+import LoadingWhite from "./LoadingWhite";
 import QuillEditor from "./QuillEditor";
 import { compressImage } from "../components/imageCompresser";
+import Loading from "./Loading";
 
 const MotorcycleForm = ({
   initialData,
@@ -17,7 +18,7 @@ const MotorcycleForm = ({
   initialTrims = [],
 }) => {
   const [formData, setFormData] = useState(initialData);
-  const [submitting, setSubmitting] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [filteredBrands, setFilteredBrands] = useState(initialBrands);
   const [filteredModels, setFilteredModels] = useState(initialModels);
@@ -128,7 +129,7 @@ const MotorcycleForm = ({
   }, []);
 
   const handleFileSelect = async (e) => {
-    setSubmitting(true);
+    setImageLoading(true);
     const newFiles = Array.from(e.target.files);
     const compressedFiles = await Promise.all(
       newFiles.map(async (file) => {
@@ -152,7 +153,7 @@ const MotorcycleForm = ({
       return [...uniqueNewFiles, ...prevFiles];
     });
     e.target.value = "";
-    setSubmitting(false);
+    setImageLoading(false);
   };
 
   const removeFile = (index) => {
@@ -161,12 +162,26 @@ const MotorcycleForm = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!formData.condition) {
+      alert("Please select a condition (Used or New)");
+      return;
+    }
+
     console.log("Submitting:", { formData, selectedFiles });
     onSubmit({
       formData: formData,
       selectedFiles: selectedFiles,
     });
   };
+
+  useEffect(() => {
+    if (formData.mile > 0) {
+      setFormData((prev) => ({ ...prev, condition: "Used" }));
+    } else if (formData.mile === "" || formData.mile === 0) {
+      setFormData((prev) => ({ ...prev, condition: "New" }));
+    }
+  }, [formData.mile]);
 
   return (
     <div className="flex flex-row justify-evenly items-center">
@@ -186,6 +201,7 @@ const MotorcycleForm = ({
           <div className="flex flex-col w-full">
             <div className="font-bold text-xl p-2 text-center">Type *</div>
             <Select
+              name="typeSelect"
               options={typeOptions}
               onChange={(selectedOption) => handleTypeChange([selectedOption])}
               value={typeOptions.find(
@@ -202,6 +218,7 @@ const MotorcycleForm = ({
           <div className="flex flex-col w-full">
             <div className="font-bold text-xl p-2 text-center">Brand *</div>
             <Select
+              name="brandSelect"
               options={filteredBrands.map((brand) => ({
                 label: brand,
                 value: brand,
@@ -221,6 +238,7 @@ const MotorcycleForm = ({
           <div className="flex flex-col w-full">
             <div className="font-bold text-xl p-2 text-center">Model *</div>
             <Select
+              name="modelSelect"
               options={filteredModels.map((model) => ({
                 label: model.model,
                 value: model.model,
@@ -243,6 +261,7 @@ const MotorcycleForm = ({
           <div className="flex flex-col w-full">
             <div className="font-bold text-xl p-2 text-center">Trims *</div>
             <Select
+              name="trimSelect"
               options={filteredTrims.map((trim) => ({
                 label: trim.name,
                 value: trim.name,
@@ -294,6 +313,8 @@ const MotorcycleForm = ({
           <div className="flex flex-col gap-3 justify-center items-center w-full">
             <div className="font-bold text-xl p-2 text-center">Year *</div>
             <NumericFormat
+              allowNegative={false}
+              name="yearInput"
               className="border-2 border-grey rounded-[4px] p-2 w-full"
               placeholder="Enter Manufacture Year"
               onValueChange={(values) => {
@@ -307,25 +328,25 @@ const MotorcycleForm = ({
               required
             />
           </div>
-          {formData.condition !== "New" && (
-            <div className="flex flex-col gap-3 justify-center items-center w-full">
-              <div className="font-bold text-xl p-2 text-center">Mileage *</div>
-              <NumericFormat
-                className="border-2 border-grey rounded-[4px] p-2 w-full"
-                thousandSeparator={true}
-                placeholder="Enter Current Mileages"
-                onValueChange={(values) => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    mile: values.value,
-                  }));
-                }}
-                required={formData.condition !== "New"}
-                value={formData.condition !== "New" ? formData.mile : 0}
-                maxLength={7}
-              />
-            </div>
-          )}
+          <div className="flex flex-col gap-3 justify-center items-center w-full">
+            <div className="font-bold text-xl p-2 text-center">Mileage *</div>
+            <NumericFormat
+              allowNegative={false}
+              name="mileInput"
+              className="border-2 border-grey rounded-[4px] p-2 w-full"
+              thousandSeparator={true}
+              placeholder="Enter Current Mileages"
+              onValueChange={(values) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  mile: values.value,
+                }));
+              }}
+              required={formData.condition !== "New"}
+              value={formData.condition !== "New" ? formData.mile : ""}
+              maxLength={7}
+            />
+          </div>
         </div>
 
         <div className="w-full flex flex-col gap-3 justify-center items-center">
@@ -393,6 +414,7 @@ const MotorcycleForm = ({
           <div className="flex flex-col gap-3 justify-center items-center w-full">
             <div className="font-bold text-xl p-2 text-center">Price *</div>
             <NumericFormat
+              allowNegative={false}
               className="border-2 border-grey rounded-[4px] p-2 w-full"
               thousandSeparator={true}
               required
@@ -425,10 +447,16 @@ const MotorcycleForm = ({
         <div className="w-full flex flex-col">
           <label
             htmlFor="img_input"
-            className="flex flex-row justify-center items-center gap-1 font-bold text-xl p-2 text-center text-black rounded-sm border-1 border-black cursor-pointer"
+            className="flex flex-row justify-center items-center gap-1 font-bold text-xl p-2 text-center text-black rounded-sm border-1 border-black cursor-pointer disabled:opacity-75"
           >
-            <img src="/icons/Upload.svg" alt="" className="w-10" />
-            <span>Upload Image *</span>
+            {imageLoading ? (
+              <Loading></Loading>
+            ) : (
+              <div className="flex justify-center items-center gap-1">
+                <img src="/icons/Upload.svg" alt="" className="w-10" />{" "}
+                <span>Upload Image *</span>
+              </div>
+            )}
           </label>
           <input
             id="img_input"
@@ -438,6 +466,7 @@ const MotorcycleForm = ({
             placeholder=""
             onChange={handleFileSelect}
             className="hidden"
+            disabled={imageLoading}
           />
           <div className="border-1 border-black grid grid-cols-2 md:grid-cols-5 w-full gap-2 mt-5 rounded-[6px] max-h-100 overflow-y-scroll">
             {mode === "edit" &&
@@ -478,11 +507,11 @@ const MotorcycleForm = ({
 
         <button
           type="submit"
-          disabled={isSubmitting && submitting}
-          className="w-full rounded-[6px] bg-black text-white text-2xl font-bold p-3 hover:scale-105 transition"
+          disabled={isSubmitting}
+          className="w-full rounded-[6px] bg-black text-white text-2xl font-bold p-3 hover:scale-105 transition disabled:opacity-75"
         >
-          {isSubmitting && submitting ? (
-            <Loading />
+          {isSubmitting ? (
+            <LoadingWhite />
           ) : mode === "create" ? (
             "Sell My Motorcycle"
           ) : (
