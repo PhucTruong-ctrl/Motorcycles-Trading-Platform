@@ -11,6 +11,7 @@ import ProductCard from "../components/ProductCard";
 import { Message } from "./../components/Message";
 import LoadingFull from "../components/LoadingFull";
 import DOMPurify from "dompurify";
+import Loading from "./../components/Loading";
 
 const formatNumber = (number) => {
   return new Intl.NumberFormat("en-US", {
@@ -32,6 +33,8 @@ const ProductDetail = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [messageReceiver, setMessageReceiver] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isPurchasing, setIsPurchasing] = useState(false);
+  const [inTransaction, setInTransaction] = useState(false);
   const [error, setError] = useState(null);
   const [currentMainIndex, setCurrentMainIndex] = useState(0);
   const [viewsIncreased, setViewsIncreased] = useState(false);
@@ -62,12 +65,21 @@ const ProductDetail = () => {
   };
 
   const handleBuy = async () => {
+    if (isPurchasing) return;
+
     if (!currentUser) {
       alert("You must login to buy this motorcycle");
       return;
     }
 
+    if (currentUser.id === user.uid) {
+      alert("You cannot buy from your self");
+      return;
+    }
+
     try {
+      setIsPurchasing(true);
+
       const { data, error } = await supabase
         .from("TRANSACTION")
         .insert([
@@ -79,13 +91,21 @@ const ProductDetail = () => {
         ])
         .select();
 
-      if (error) throw error;
+      if (error) {
+        if (error.code === "23505") {
+          alert("You've already purchased this item!");
+        } else {
+          throw error;
+        }
+        return;
+      }
 
-      console.log("You just bought:", data);
       alert("Purchase successful!");
     } catch (error) {
       console.error("Error buying product:", error);
       alert("Purchase failed: " + error.message);
+    } finally {
+      setIsPurchasing(false);
     }
   };
 
@@ -146,6 +166,17 @@ const ProductDetail = () => {
       try {
         setLoading(true);
         setCurrentMainIndex(0);
+
+        const { data: existingTransactions, error: checkError } = await supabase
+          .from("TRANSACTION")
+          .select("*")
+          .eq("id_moto", queryParams.id);
+
+        if (checkError) throw checkError;
+
+        if (existingTransactions && existingTransactions.length > 0) {
+          setInTransaction(true);
+        }
 
         if (!queryParams.uid || !queryParams.id) {
           throw new Error("Missing UID or ID in URL");
@@ -393,12 +424,23 @@ const ProductDetail = () => {
 
                 <button
                   onClick={handleBuy}
-                  className="bg-yellow text-black rounded-sm shadow-md shadow-grey p-2.5 w-full text-[22px] font-bold flex flex-col justify-center items-center"
+                  disabled={isPurchasing || inTransaction}
+                  className={`bg-yellow text-black rounded-sm shadow-md shadow-grey p-2.5 w-full text-[22px] font-bold flex flex-col justify-center items-center ${
+                    isPurchasing || inTransaction
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
                 >
-                  Buy now
+                  {isPurchasing ? (
+                    <Loading />
+                  ) : inTransaction ? (
+                    "In Transaction..."
+                  ) : (
+                    "Buy now"
+                  )}
                 </button>
 
-                <div
+                {/* <div
                   id="or"
                   className="flex justify-center items-center gap-[10px] self-stretch"
                 >
@@ -446,7 +488,7 @@ const ProductDetail = () => {
                     width={"full"}
                     icons={"/icons/Chat.svg"}
                   />
-                </div>
+                </div> */}
 
                 <div className="bg-black w-full h-[1px]"></div>
               </div>
