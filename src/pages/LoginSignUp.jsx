@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NumericFormat } from "react-number-format";
 import supabase from "../supabase-client";
+import bcrypt from "bcryptjs";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { handleUserCreation } from "../components/utils/authUtils";
@@ -86,6 +87,9 @@ const LoginSignUp = () => {
 
     if (!atLogin) {
       try {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newUser.password, salt);
+
         const {
           data: { user },
           error,
@@ -100,13 +104,35 @@ const LoginSignUp = () => {
 
         if (error) throw error;
 
-        await handleUserCreation(user, true, newUser);
-        alert("Sign up successful! Please verify your email.");
+        await handleUserCreation(user, true, {
+          ...newUser,
+          password: hashedPassword,
+        });
+
+        alert("Sign up successful!");
+        window.location.href = "/";
       } catch (error) {
         alert("Error signing up: " + error.message);
       }
     } else {
       try {
+        const { data: userData, error: userError } = await supabase
+          .from("USER")
+          .select("*")
+          .eq("email", newUser.email)
+          .single();
+
+        if (userError) throw userError;
+        if (!userData) throw new Error("User not found");
+
+        const isMatch = await bcrypt.compare(
+          newUser.password,
+          userData.password
+        );
+        if (!isMatch) throw new Error("Invalid password");
+
+        console.log(isMatch);
+
         const { error } = await supabase.auth.signInWithPassword({
           email: newUser.email,
           password: newUser.password,
@@ -117,7 +143,7 @@ const LoginSignUp = () => {
         window.location.href = "/";
       } catch (error) {
         console.error("Login error:", error);
-        alert("Login error:", error);
+        alert("Login error: " + error.message);
       }
     }
   };
