@@ -5,8 +5,11 @@ import Footer from "../components/Footer";
 import LoadingFull from "../components/LoadingFull";
 import { Message } from "../components/Message";
 import MotorcycleForm from "../components/MotorcycleForm";
+import { useNavigate } from "react-router";
+import normalizeFileName from "../components/utils/normalizeFileName";
 
 const Sell = () => {
+  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -37,7 +40,8 @@ const Sell = () => {
     const urls = [];
 
     for (const file of files) {
-      const fileName = `${userId}-${Date.now()}-${file.name}`;
+      const safeFileName = normalizeFileName(file.name);
+      const fileName = `${userId}-${Date.now()}-${safeFileName}`;
       const filePath = `${userId}/${fileName}`;
 
       try {
@@ -195,6 +199,10 @@ const Sell = () => {
     return <LoadingFull />;
   }
 
+  if (!user) {
+    navigate("/account");
+  }
+
   return (
     <div>
       <main className="my-[15px] mx-[25px]">
@@ -233,7 +241,9 @@ const Sell = () => {
               )}
           </div>
         ) : (
-          <div>Please log in to sell motorcycle</div>
+          <div className="w-full flex justify-center items-center font-bold text-2xl">
+            Please log in to sell motorcycle
+          </div>
         )}
         <div className="mt-5">
           <Footer />

@@ -14,6 +14,7 @@ import { Message } from "../components/Message";
 import Reputation from "../components/Profile/Reputation";
 import LoadingFull from "./../components/LoadingFull";
 import Loading from "../components/Loading";
+import normalizeFileName from "../components/utils/normalizeFileName";
 
 Modal.setAppElement("#root");
 
@@ -73,7 +74,8 @@ const Profile = () => {
     if (!file) return;
 
     try {
-      const fileName = `avatar_${Date.now()}_${file.name}`;
+      const safeFileName = normalizeFileName(file.name);
+      const fileName = `avatar_${Date.now()}_${safeFileName}`;
 
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from("user-media")
@@ -126,7 +128,8 @@ const Profile = () => {
     if (!file) return;
 
     try {
-      const fileName = `banner_${Date.now()}_${file.name}`;
+      const safeFileName = normalizeFileName(file.name);
+      const fileName = `banner_${Date.now()}_${safeFileName}`;
 
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from("user-media")

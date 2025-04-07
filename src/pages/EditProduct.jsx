@@ -7,6 +7,7 @@ import { Message } from "../components/Message";
 import LoadingFull from "../components/LoadingFull";
 import MotorcycleForm from "../components/MotorcycleForm";
 import { motorcycleData } from "../data/motorcycleData";
+import normalizeFileName from "../components/utils/normalizeFileName";
 
 const EditProduct = () => {
   const navigate = useNavigate();
@@ -69,11 +70,11 @@ const EditProduct = () => {
     setSubmitting(true);
 
     try {
-      // Upload ảnh mới nếu có
       let newImageUrls = [];
       if (selectedFiles && selectedFiles.length > 0) {
         for (const file of selectedFiles.reverse()) {
-          const fileName = `${moto.uid}-${Date.now()}-${file.name}`;
+          const safeFileName = normalizeFileName(file.name);
+          const fileName = `${moto.uid}-${Date.now()}-${safeFileName}`;
           const filePath = `${moto.uid}/${fileName}`;
 
           const { error } = await supabase.storage
