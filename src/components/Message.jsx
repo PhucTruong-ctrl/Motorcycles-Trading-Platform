@@ -258,12 +258,9 @@ export const Message = ({ newChatReceiver }) => {
               <div
                 id="MessageListHeader"
                 className="flex flex-row justify-between items-center border-b-1 border-grey bg-white w-full p-3 rounded-t-md"
-                onClick={() => closeMessage && setCloseMessage(false)}
+                onClick={() => setCloseMessage((prev) => !prev)}
               >
                 <span>Message List</span>
-                <button onClick={() => !closeMessage && setCloseMessage(true)}>
-                  <img src="/icons/Close.svg" alt="Close" />
-                </button>
               </div>
 
               {!currentUser ? (
@@ -271,7 +268,7 @@ export const Message = ({ newChatReceiver }) => {
               ) : (
                 <div
                   id="MessageListBody"
-                  className="w-full overflow-y-scroll p-3 flex flex-col gap-2"
+                  className="w-full overflow-y-scroll p-3 flex flex-col gap-2 "
                 >
                   {contacts.length === 0 ? (
                     <div>No conversations yet</div>
