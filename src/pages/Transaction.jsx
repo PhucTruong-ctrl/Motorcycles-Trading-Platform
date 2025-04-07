@@ -7,7 +7,7 @@ import supabase from "../supabase-client";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Message } from "../components/Message";
-import MonthlySalesLineChart from "../components/Transaction/MonthlySalesLineChart";
+import MonthlySalesBarChart from "../components/Transaction/MonthlySalesBarChart";
 import MonthlySalesPieChart from "../components/Transaction/MonthlySalesPieChart";
 import LoadingFull from "../components/LoadingFull";
 
@@ -292,7 +292,7 @@ const Transaction = () => {
       {hasSellerTransactions ? (
         <div className="relative flex flex-col md:flex-row justify-center items-center md:h-100 mb-5">
           <div className="w-full md:w-[50vw] md:h-full flex justify-center items-center">
-            <MonthlySalesLineChart
+            <MonthlySalesBarChart
               transactions={transactions}
               currentUser={currentUser}
               selectedYear={selectedYear}

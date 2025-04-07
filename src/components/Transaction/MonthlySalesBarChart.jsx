@@ -1,11 +1,10 @@
 import React from "react";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -14,14 +13,13 @@ import {
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
 );
 
-const MonthlySalesLineChart = ({ transactions, currentUser, selectedYear }) => {
+const MonthlySalesBarChart = ({ transactions, currentUser, selectedYear }) => {
   const processData = () => {
     const monthlyData = {
       old: Array(12).fill(0),
@@ -50,23 +48,34 @@ const MonthlySalesLineChart = ({ transactions, currentUser, selectedYear }) => {
   const monthlyStats = processData();
 
   const data = {
-    labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
     datasets: [
       {
         label: "Used",
         data: monthlyStats.old,
+        backgroundColor: "#FF6384",
         borderColor: "#FF6384",
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        tension: 0.3,
-        fill: false,
+        borderWidth: 1,
       },
       {
         label: "New",
         data: monthlyStats.new,
+        backgroundColor: "#36A2EB",
         borderColor: "#36A2EB",
-        backgroundColor: "rgba(54, 162, 235, 0.2)",
-        tension: 0.3,
-        fill: false,
+        borderWidth: 1,
       },
     ],
   };
@@ -87,11 +96,6 @@ const MonthlySalesLineChart = ({ transactions, currentUser, selectedYear }) => {
         intersect: false,
       },
     },
-    animation: {
-      delay: (context) => {
-        return context.dataIndex * 100;
-      },
-    },
     scales: {
       y: {
         beginAtZero: true,
@@ -108,7 +112,7 @@ const MonthlySalesLineChart = ({ transactions, currentUser, selectedYear }) => {
     },
   };
 
-  return <Line data={data} options={options} />;
+  return <Bar data={data} options={options} />;
 };
 
-export default MonthlySalesLineChart;
+export default MonthlySalesBarChart;
