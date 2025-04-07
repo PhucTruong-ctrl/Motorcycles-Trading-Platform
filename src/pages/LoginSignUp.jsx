@@ -119,19 +119,21 @@ const LoginSignUp = () => {
         const { data: userData, error: userError } = await supabase
           .from("USER")
           .select("*")
-          .eq("email", newUser.email)
-          .single();
+          .eq("email", newUser.email);
 
         if (userError) throw userError;
-        if (!userData) throw new Error("User not found");
+        if (!userData || userData.length === 0)
+          throw new Error("User not found");
+        if (userData.length > 1)
+          throw new Error("Multiple users found with this email");
 
-        const isMatch = await bcrypt.compare(
-          newUser.password,
-          userData.password
-        );
-        if (!isMatch) throw new Error("Invalid password");
+        const user = userData[0];
+        const isMatch = await bcrypt.compare(newUser.password, user.password);
 
         console.log(isMatch);
+        console.log(newUser.password, user.password);
+
+        if (!isMatch) throw new Error("Invalid password");
 
         const { error } = await supabase.auth.signInWithPassword({
           email: newUser.email,
