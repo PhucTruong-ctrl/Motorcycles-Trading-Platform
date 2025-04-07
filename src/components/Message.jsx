@@ -253,7 +253,7 @@ export const Message = ({ newChatReceiver }) => {
           <div>
             <div
               id="MessageList"
-              className={`bg-white w-[402px] ${closeMessage ? "h-[55px]" : "h-[428px]"} border-2 border-grey rounded-t-xl hidden md:block`}
+              className={`bg-white w-[402px] ${closeMessage ? "h-[50px]" : "min-h-[428px]"} border-2 border-grey rounded-t-xl hidden md:block`}
             >
               <div
                 id="MessageListHeader"
@@ -271,7 +271,7 @@ export const Message = ({ newChatReceiver }) => {
               ) : (
                 <div
                   id="MessageListBody"
-                  className="w-full h-[428px] overflow-y-scroll p-3 flex flex-col gap-2"
+                  className="w-full overflow-y-scroll p-3 flex flex-col gap-2"
                 >
                   {contacts.length === 0 ? (
                     <div>No conversations yet</div>
