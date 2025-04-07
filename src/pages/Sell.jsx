@@ -199,7 +199,7 @@ const Sell = () => {
     return <LoadingFull />;
   }
 
-  if (!user) {
+  if (!user && !currentUser) {
     navigate("/account");
   }
 
