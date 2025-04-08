@@ -176,7 +176,7 @@ const MotorcycleForm = ({
   };
 
   useEffect(() => {
-    if (formData.mile > 0) {
+    if (formData.mile > 5) {
       setFormData((prev) => ({ ...prev, condition: "Used" }));
     } else if (formData.mile === "" || formData.mile === 0) {
       setFormData((prev) => ({ ...prev, condition: "New" }));
@@ -191,7 +191,7 @@ const MotorcycleForm = ({
       >
         <div className="self-start flex flex-col gap-1 pb-5 border-b-1 border-grey">
           <div className="font-bold text-4xl">Sell Your Motorcycle</div>
-          <div className="">
+          <div>
             List with confidence. With fraud protection and first class customer
             service, you'll be protected every step of the way.
           </div>
@@ -283,7 +283,7 @@ const MotorcycleForm = ({
 
           <div className="flex flex-col gap-3 justify-center items-center w-full">
             <div className="font-bold text-xl p-2 text-center">
-              Engine Number *
+              Stock Number *
             </div>
             <input
               type="text"
@@ -297,7 +297,7 @@ const MotorcycleForm = ({
           </div>
           <div className="flex flex-col gap-3 justify-center items-center w-full">
             <div className="font-bold text-xl p-2 text-center">
-              Chassis Number *
+              VIN *
             </div>
             <input
               type="text"

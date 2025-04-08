@@ -28,6 +28,14 @@ export const motorcycleData = {
         ],
       },
       {
+        model: "S1000XR",
+        trims: [
+          { name: "Standard", engine_size: "999" },
+          { name: "Sport", engine_size: "999" },
+          { name: "Pro Package", engine_size: "999" },
+        ],
+      },
+      {
         model: "F900R",
         trims: [
           { name: "Base", engine_size: "895" },

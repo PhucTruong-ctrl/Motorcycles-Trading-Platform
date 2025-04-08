@@ -344,7 +344,7 @@ const Profile = () => {
 
         <div className="relative rounded-xl w-full max-h-[250px] md:h-[350px] overflow-hidden flex justify-center items-center">
           {user?.banner_url ? (
-            <div>
+            <div className="w-full">
               <img
                 onClick={() => setModalUploadBanIsOpen(true)}
                 src={user?.banner_url}
