@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import supabase from "../supabase-client";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import LoadingFull from "../components/LoadingFull";
-import { Message } from "../components/Message";
 import MotorcycleForm from "../components/MotorcycleForm";
 import { useNavigate } from "react-router";
 import normalizeFileName from "../components/utils/normalizeFileName";
+import { Message } from "../components/Message";
 
 const Sell = () => {
   const navigate = useNavigate();
@@ -205,50 +203,41 @@ const Sell = () => {
 
   return (
     <div>
-      <main className="my-[15px] mx-[25px]">
-        <Message />
-        <header className="mb-5">
-          <Header />
-        </header>
+      <Message />
+      {user ? (
+        <div>
+          {user.citizen_id === null && (
+            <div>Please update your citizen id!</div>
+          )}
 
-        {user ? (
-          <div>
-            {user.citizen_id === null && (
-              <div>Please update your citizen id!</div>
+          {user.phone_num === null && (
+            <div>Please update your phone number!</div>
+          )}
+
+          {user.email === null && <div>Please update your email!</div>}
+
+          {user.state === null && <div>Please update your state!</div>}
+
+          {user.city === null && <div>Please update your city!</div>}
+
+          {user.citizen_id != null &&
+            user.phone_num != null &&
+            user.email != null &&
+            user.state != null &&
+            user.city != null && (
+              <MotorcycleForm
+                initialData={{ ...initialFormData, uid: currentUser?.id }}
+                onSubmit={handleSubmit}
+                isSubmitting={submitting}
+                mode="create"
+              />
             )}
-
-            {user.phone_num === null && (
-              <div>Please update your phone number!</div>
-            )}
-
-            {user.email === null && <div>Please update your email!</div>}
-
-            {user.state === null && <div>Please update your state!</div>}
-
-            {user.city === null && <div>Please update your city!</div>}
-
-            {user.citizen_id != null &&
-              user.phone_num != null &&
-              user.email != null &&
-              user.state != null &&
-              user.city != null && (
-                <MotorcycleForm
-                  initialData={{ ...initialFormData, uid: currentUser?.id }}
-                  onSubmit={handleSubmit}
-                  isSubmitting={submitting}
-                  mode="create"
-                />
-              )}
-          </div>
-        ) : (
-          <div className="w-full flex justify-center items-center font-bold text-2xl">
-            Please log in to sell motorcycle
-          </div>
-        )}
-        <div className="mt-5">
-          <Footer />
         </div>
-      </main>
+      ) : (
+        <div className="w-full flex justify-center items-center font-bold text-2xl">
+          Please log in to sell motorcycle
+        </div>
+      )}
     </div>
   );
 };

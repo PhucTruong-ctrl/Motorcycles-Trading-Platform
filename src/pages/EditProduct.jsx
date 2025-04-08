@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import supabase from "../supabase-client";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import { Message } from "../components/Message";
 import LoadingFull from "../components/LoadingFull";
 import MotorcycleForm from "../components/MotorcycleForm";
@@ -160,29 +158,19 @@ const EditProduct = () => {
 
   return (
     <div>
-      <main className="my-[15px] mx-[25px]">
-        <Message />
-        <header className="mb-5">
-          <Header />
-        </header>
-
-        {moto && (
-          <MotorcycleForm
-            initialData={moto}
-            onSubmit={handleSubmit}
-            isSubmitting={submitting}
-            mode="edit"
-            onDeleteImage={handleDeleteImage}
-            initialBrands={filteredBrands}
-            initialModels={filteredModels}
-            initialTrims={filteredTrims}
-          />
-        )}
-
-        <div className="mt-5">
-          <Footer />
-        </div>
-      </main>
+      <Message />
+      {moto && (
+        <MotorcycleForm
+          initialData={moto}
+          onSubmit={handleSubmit}
+          isSubmitting={submitting}
+          mode="edit"
+          onDeleteImage={handleDeleteImage}
+          initialBrands={filteredBrands}
+          initialModels={filteredModels}
+          initialTrims={filteredTrims}
+        />
+      )}
     </div>
   );
 };

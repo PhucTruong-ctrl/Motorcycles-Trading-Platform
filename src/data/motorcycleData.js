@@ -79,6 +79,13 @@ export const motorcycleData = {
     ],
     adventure: [
       {
+        model: "R1200GS",
+        trims: [
+          { name: "Standard", engine_size: "1200" },
+          { name: "Adventure", engine_size: "1200" },
+        ],
+      },
+      {
         model: "R1250GS",
         trims: [
           { name: "Standard", engine_size: "1249" },

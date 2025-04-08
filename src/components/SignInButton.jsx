@@ -77,7 +77,7 @@ const SignInButton = () => {
   if (!session) {
     return (
       <Link to="/account">
-        <button className="text-[18px] md:text-2xl text-nowrap">
+        <button className="text-[18px] md:text-2xl text-nowrap hover:underline hover:scale-105 hover:font-semibold transition">
           <img
             src="/icons/User.svg"
             className="w-[39px] h-[42px] block md:hidden"
@@ -96,7 +96,10 @@ const SignInButton = () => {
         >
           <span>
             {user?.avatar_url ? (
-              <img src={user.avatar_url} className="w-10 h-10 rounded-full" />
+              <img
+                src={user.avatar_url}
+                className="w-10 h-10 rounded-full hover:outline-1 hover:scale-105 transition"
+              />
             ) : (
               <span>{session.user?.email}</span>
             )}

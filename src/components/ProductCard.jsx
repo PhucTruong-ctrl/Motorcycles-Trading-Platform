@@ -39,7 +39,7 @@ const ProductCard = ({ moto }) => {
           />
           <div
             id="detail"
-            className="flex flex-col justify-between gap-0.5 self-stretch p-2 h-full"
+            className="flex flex-col justify-between gap-0.5 self-stretch p-2"
           >
             <div
               id="price-status"

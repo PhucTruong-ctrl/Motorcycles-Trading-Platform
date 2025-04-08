@@ -4,8 +4,6 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import Select from "react-select";
 import { formatDate } from "../components/FormatDate";
 import supabase from "../supabase-client";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import { Message } from "../components/Message";
 import MonthlySalesBarChart from "../components/Transaction/MonthlySalesBarChart";
 import MonthlySalesPieChart from "../components/Transaction/MonthlySalesPieChart";
@@ -265,12 +263,9 @@ const Transaction = () => {
     return <LoadingFull />;
   }
   return (
-    <main className="my-[15px] mx-[25px]">
-      <header className="mb-5">
-        <Header />
-      </header>
+    <div>
+      {" "}
       <Message newChatReceiver={messageReceiver} />
-
       <div
         id="title"
         className="flex flex-col justify-center items-center w-full gap-2.5 mb-5"
@@ -278,7 +273,6 @@ const Transaction = () => {
         <span className="text-black font-bold text-4xl">Transactions</span>
         <span className="text-grey font-light text-xl">Track your orders</span>
       </div>
-
       <div className="flex justify-center items-center mb-2.5">
         <div>
           <Select
@@ -288,7 +282,6 @@ const Transaction = () => {
           ></Select>
         </div>
       </div>
-
       {hasSellerTransactions ? (
         <div className="relative flex flex-col md:flex-row justify-center items-center md:h-100 mb-5">
           <div className="w-full md:w-[50vw] md:h-full flex justify-center items-center">
@@ -312,7 +305,6 @@ const Transaction = () => {
           <span className="font-light">No data to show</span>
         </div>
       )}
-
       <div className="flex flex-col items-center gap-2.5 p-2.5 w-full bg-white rounded-xl">
         <div
           id="actionBar-transaction"
@@ -379,7 +371,6 @@ const Transaction = () => {
           </div>
         </div>
       </div>
-
       <div className="flex flex-col items-center w-full py-[15px] gap-[5px]">
         <div
           id="rowType"
@@ -716,11 +707,7 @@ const Transaction = () => {
           )}
         </div>
       </div>
-
-      <footer>
-        <Footer />
-      </footer>
-    </main>
+    </div>
   );
 };
 
