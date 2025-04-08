@@ -13,7 +13,9 @@ const Footer = () => {
         </div>
       </div>
       <div className="flex justify-center items-center gap-5 mt-5">
-        <img className="icon" src="/icons/Github.svg" alt="" />
+        <a href="https://github.com/PhucTruong-ctrl/NienLuan2">
+          <img className="icon" src="/icons/Github.svg" alt="" />
+        </a>
       </div>
     </div>
   );

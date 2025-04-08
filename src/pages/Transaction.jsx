@@ -421,7 +421,7 @@ const Transaction = () => {
         </div>
         <div
           id="itemsList-transaction"
-          className="flex flex-col gap-2.5 w-full"
+          className="flex flex-col gap-2.5 w-full mb-5"
         >
           {transactions.length === 0 ? (
             <div className="text-center py-10">No transactions found</div>

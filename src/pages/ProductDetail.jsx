@@ -485,12 +485,15 @@ const ProductDetail = () => {
               <div className="bg-black w-full h-[1px]"></div>
             </div>
 
-            <div className="pt-5">
+            <div className="flex flex-col justify-start items-start gap-2 pt-5">
               <div className="font-semibold">Popularity Stats</div>
               {moto.views === 0 ? (
                 <span>You're the first to view this motorcycle</span>
               ) : (
-                <span>Seen {moto.views} times</span>
+                <div className="flex gap-1">
+                  <img src="/icons/Views.svg" alt="" />
+                  <span>Seen {moto.views} times</span>
+                </div>
               )}
             </div>
           </div>
@@ -514,7 +517,7 @@ const ProductDetail = () => {
               ref={dealerCarouselRef}
               additionalTransfrom={0}
               arrows
-              className="w-full p-2"
+              className="w-full p-2 mb-5"
               containerClass="carousel-container"
               itemClass="carousel-item"
               minimumTouchDrag={80}

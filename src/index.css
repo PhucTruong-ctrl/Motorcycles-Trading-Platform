@@ -46,10 +46,10 @@
 
 @layer components {
   .brand {
-    @apply p-5 rounded-md flex flex-col justify-center items-center bg-white px-3  w-[160px] md:w-[200px] h-[110px] md:h-[90px] shadow-md shadow-grey cursor-pointer hover:border-2 transition;
+    @apply p-5 rounded-md flex flex-col justify-center items-center bg-white px-3  w-[160px] md:w-[200px] h-[110px] md:h-[90px] shadow-md shadow-grey cursor-pointer hover:border-1 transition;
   }
   .home-card {
-    @apply rounded-md bg-white flex flex-col items-start w-[160px] md:w-[170px] h-[250px] shadow-md shadow-grey cursor-pointer hover:outline-2 transition;
+    @apply rounded-md bg-white flex flex-col items-start w-[160px] md:w-[170px] h-[250px] shadow-md shadow-grey cursor-pointer hover:outline-1 transition;
   }
   .icon {
     @apply w-[25px] h-[25px] opacity-60;

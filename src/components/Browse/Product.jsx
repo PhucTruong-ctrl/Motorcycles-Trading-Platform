@@ -31,7 +31,7 @@ const Product = ({ moto, user }) => {
     <div
       onClick={updateURL}
       id="Product"
-      className="flex flex-col md:flex-row justify-start items-center content-center gap-3.5 bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-md shadow-grey cursor-pointer"
+      className="flex flex-col md:flex-row justify-start items-center content-center gap-3.5 bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-md shadow-grey cursor-pointer hover:outline-1 transition"
     >
       <img
         src={

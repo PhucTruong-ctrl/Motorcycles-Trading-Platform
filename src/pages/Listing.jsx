@@ -230,7 +230,7 @@ const Listing = () => {
         </div>
       </div>
 
-      <div id="itemsList-transaction" className="flex flex-col gap-2.5 w-full">
+      <div id="itemsList-transaction" className="flex flex-col gap-2.5 w-full mb-5">
         {filteredMotos.length === 0 ? (
           <div className="text-center py-10">No listings found</div>
         ) : (
