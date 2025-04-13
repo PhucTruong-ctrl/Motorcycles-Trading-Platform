@@ -170,6 +170,31 @@ const Transaction = () => {
     }
   };
 
+  const handleCancel = async (transaction) => {
+    if (!transaction || !currentUser) return;
+
+    try {
+      const shouldCancel = window.confirm(
+        "Are you sure you want to cancel this transaction?"
+      );
+      if (!shouldCancel) return;
+
+      const { error: transactionError } = await supabase
+        .from("TRANSACTION")
+        .delete()
+        .eq("id", transaction.id);
+
+      if (transactionError) throw transactionError;
+
+      setTransactions((prev) => prev.filter((t) => t.id !== transaction.id));
+
+      alert("Transaction cancelled successfully");
+    } catch (error) {
+      console.error("Error cancelling transaction:", error);
+      alert("Failed to cancel transaction");
+    }
+  };
+
   useEffect(() => {
     const fetchCurrentUser = async () => {
       const {
@@ -573,6 +598,25 @@ const Transaction = () => {
                               </button>
                             )}
                           </MenuItem>
+
+                          {!transaction.completed && (
+                            <MenuItem>
+                              {({ active }) => (
+                                <button
+                                  type="button"
+                                  onClick={() => handleCancel(transaction)}
+                                  className={`${
+                                    active
+                                      ? "bg-gray-100 text-gray-900"
+                                      : "text-gray-700"
+                                  } w-full px-4 py-2 text-left text-md flex flex-row gap-2`}
+                                >
+                                  <img src="/icons/Close.svg" alt="" />
+                                  Cancel
+                                </button>
+                              )}
+                            </MenuItem>
+                          )}
                         </div>
                       </MenuItems>
                     </Menu>
@@ -699,6 +743,15 @@ const Transaction = () => {
                           </span>
                         </button>
                       )}
+                    {!transaction.completed && (
+                      <button
+                        onClick={() => handleCancel(transaction)}
+                        className="bg-red flex flex-row gap-1 justify-center items-start p-2.5 rounded-sm "
+                      >
+                        <img src="/icons/Close.svg" alt="" />
+                        <span className="text-md font-bold">Cancel</span>
+                      </button>
+                    )}
                     <div className="flex items-center p-2.5 gap-[5px] w-full"></div>
                   </div>
                 </div>
