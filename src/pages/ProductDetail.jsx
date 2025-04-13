@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import queryString from "query-string";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -23,6 +23,7 @@ const CapitalizeFirst = (str) => {
 
 const ProductDetail = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const queryParams = queryString.parse(location.search);
   const [moto, setMoto] = useState(null);
   const [motoMore, setMotoMore] = useState([]);
@@ -77,7 +78,7 @@ const ProductDetail = () => {
     try {
       setIsPurchasing(true);
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("TRANSACTION")
         .insert([
           {
@@ -98,6 +99,7 @@ const ProductDetail = () => {
       }
 
       alert("Purchase successful!");
+      navigate(`/transaction/${currentUser.id}`)
     } catch (error) {
       console.error("Error buying product:", error);
       alert("Purchase failed: " + error.message);
