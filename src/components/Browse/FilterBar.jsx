@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { motorcycleData } from "../../data/motorcycleData";
+import  motorcycleData from "../../data/motorcycleData.json";
 import queryString from "query-string";
 import FilterRangeSlider from "./FilterRangeSlider";
 import FilterSelect from "./FilterSelect";

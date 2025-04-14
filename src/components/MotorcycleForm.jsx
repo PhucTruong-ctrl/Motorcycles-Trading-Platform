@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
 import { NumericFormat } from "react-number-format";
-import { motorcycleData } from "../data/motorcycleData";
+import motorcycleData from "../data/motorcycleData.json";
 import LoadingWhite from "./LoadingWhite";
 import QuillEditor from "./QuillEditor";
 import { compressImage } from "../components/imageCompresser";

@@ -4,7 +4,7 @@ import supabase from "../supabase-client";
 import { Message } from "../components/Message";
 import LoadingFull from "../components/LoadingFull";
 import MotorcycleForm from "../components/MotorcycleForm";
-import { motorcycleData } from "../data/motorcycleData";
+import motorcycleData from "../data/motorcycleData.json";
 import normalizeFileName from "../components/utils/normalizeFileName";
 
 const EditProduct = () => {

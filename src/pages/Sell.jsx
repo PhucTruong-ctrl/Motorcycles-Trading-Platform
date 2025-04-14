@@ -202,7 +202,7 @@ const Sell = () => {
   }
 
   return (
-    <div>
+    <div className="mb-5">
       <Message />
       {user ? (
         <div>

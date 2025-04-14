@@ -15,8 +15,7 @@ const QuillEditor = ({ value, onChange, placeholder }) => {
           toolbar: [
             [{ font: ["serif", "sans", "monospace"] }],
             [{ header: 1 }, { header: 2 }],
-            ["bold", "italic", "underline", "strike"],
-            [{ color: [] }, { background: [] }],
+            ["bold", "italic", "underline"],
             [{ size: ["small", false, "large", "huge"] }],
             ["blockquote"],
             [{ list: "ordered" }, { list: "bullet" }],

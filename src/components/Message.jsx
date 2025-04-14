@@ -190,12 +190,12 @@ export const Message = ({ newChatReceiver }) => {
         (payload) => {
           if (payload.eventType === "INSERT") {
             setMessages((prev) => [...prev, payload.new]);
-            const audio = document.getElementById("notification-sound");
-            if (audio) {
-              audio
-                .play()
-                .catch((error) => console.error("Audio play failed:", error));
-            }
+            // const audio = document.getElementById("notification-sound");
+            // if (audio) {
+            //   audio
+            //     .play()
+            //     .catch((error) => console.error("Audio play failed:", error));
+            // }
           }
         }
       )
@@ -244,11 +244,11 @@ export const Message = ({ newChatReceiver }) => {
   return (
     currentUser !== null && (
       <div className="fixed z-1001 bottom-3 md:bottom-0 right-3 md:right-0">
-        <audio
+        {/* <audio
           id="notification-sound"
           src="/sounds/notificationMessage.mp3"
           preload="auto"
-        ></audio>
+        ></audio> */}
         {openMessage === false ? (
           <div>
             <div
@@ -410,7 +410,7 @@ export const Message = ({ newChatReceiver }) => {
                   <div
                     id="MessageHeader"
                     className="flex flex-row justify-between items-center border-b-1 border-grey bg-white w-full p-3 rounded-t-md"
-                    onClick={() => closeMessage && setCloseMessage(false)}
+                    onClick={() => setCloseMessage((prev) => !prev)}
                   >
                     <div className="flex flex-row justify-start items-center gap-2">
                       <button onClick={() => setOpenMessage(false)}>
@@ -427,11 +427,6 @@ export const Message = ({ newChatReceiver }) => {
                       )}
                       <span>{selectedContact?.name}</span>
                     </div>
-                    <button
-                      onClick={() => !closeMessage && setCloseMessage(true)}
-                    >
-                      <img src="/icons/Close.svg" alt="Close" />
-                    </button>
                   </div>
                   <div
                     id="MessageBody"
