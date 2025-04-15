@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import Select from "react-select";
-import { formatDate } from "../components/FormatDate";
+import { formatDate } from "../components/utils/FormatDate";
 import supabase from "../supabase-client";
 import { Message } from "../components/Message";
 import MonthlySalesBarChart from "../components/Transaction/MonthlySalesBarChart";

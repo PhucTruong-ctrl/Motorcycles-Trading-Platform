@@ -36,7 +36,7 @@ const LoginSignUp = () => {
     });
 
     return () => subscription.unsubscribe();
-  }, [handleUserCreation]);
+  }, []);
 
   useEffect(() => {
     if (atLogin) {
@@ -101,11 +101,13 @@ const LoginSignUp = () => {
           },
         });
 
+        const encryptedPassword = user?.user_metadata?.encrypted_password || hashedPassword;
+        
         if (error) throw error;
 
         await handleUserCreation(user, true, {
           ...newUser,
-          password: hashedPassword,
+          password: encryptedPassword,
         });
 
         alert("Sign up successful!");

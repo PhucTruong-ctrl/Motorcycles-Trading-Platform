@@ -3,8 +3,8 @@ import Select from "react-select";
 import { NumericFormat } from "react-number-format";
 import motorcycleData from "../data/motorcycleData.json";
 import LoadingWhite from "./LoadingWhite";
-import QuillEditor from "./QuillEditor";
-import { compressImage } from "../components/imageCompresser";
+import QuillEditor from "./utils/QuillEditor";
+import { compressImage } from "../components/utils/imageCompresser";
 import Loading from "./Loading";
 
 const MotorcycleForm = ({

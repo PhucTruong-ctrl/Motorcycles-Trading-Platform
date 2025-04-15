@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router";
 import Select from "react-select";
 import supabase from "../supabase-client";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { formatDate } from "../components/FormatDate";
+import { formatDate } from "../components/utils/FormatDate";
 import LoadingFull from "../components/LoadingFull";
 import { Message } from "../components/Message";
 
