@@ -66,7 +66,7 @@ const ProductDetail = () => {
     if (isPurchasing) return;
 
     if (!currentUser) {
-      alert("You must login to buy this motorcycle");
+      navigate("/account");
       return;
     }
 
@@ -414,7 +414,6 @@ const ProductDetail = () => {
                 </div>
               </div>
 
-              {currentUser && currentUser.id !== user.uid && (
                 <button
                   onClick={handleBuy}
                   disabled={isPurchasing || inTransaction}
@@ -432,7 +431,6 @@ const ProductDetail = () => {
                     "Buy now"
                   )}
                 </button>
-              )}
 
               {/* <div
                   id="or"
