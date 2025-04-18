@@ -100,14 +100,12 @@ const LoginSignUp = () => {
             emailRedirectTo: `${window.location.origin}/auth-callback`,
           },
         });
-
-        const encryptedPassword = user?.user_metadata?.encrypted_password || hashedPassword;
         
         if (error) throw error;
 
         await handleUserCreation(user, true, {
           ...newUser,
-          password: encryptedPassword,
+          password: hashedPassword,
         });
 
         alert("Sign up successful!");

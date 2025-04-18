@@ -189,6 +189,7 @@ export const Message = ({ newChatReceiver }) => {
         },
         (payload) => {
           if (payload.eventType === "INSERT") {
+            console.log(payload)
             setMessages((prev) => [...prev, payload.new]);
             // const audio = document.getElementById("notification-sound");
             // if (audio) {

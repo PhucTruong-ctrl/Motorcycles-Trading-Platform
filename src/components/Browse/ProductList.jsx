@@ -76,8 +76,8 @@ const BrowseProductList = () => {
           .from("MOTORCYCLE")
           .select("*", { count: "exact", head: true })
           .match(filter)
-          .gte("price", queryParams.price_min || 0)
-          .lte("price", queryParams.price_max || 100000)
+          .gte("price", queryParams.price_min || 0) // Greater than or equal
+          .lte("price", queryParams.price_max || 100000) // Less than or equal
           .gte("year", queryParams.year_min || 1895)
           .lte("year", queryParams.year_max || 2025)
           .gte("mile", queryParams.mileage_min || 0)
