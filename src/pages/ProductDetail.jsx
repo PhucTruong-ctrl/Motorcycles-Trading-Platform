@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
-import { formatNumber } from "../utils/FormatNumber";
+import { formatNumber } from "../components/utils/FormatNumber";
+import { CapitalizeFirst } from "../components/utils/CapitalizeFirst";
 import queryString from "query-string";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -10,10 +11,6 @@ import { Message } from "./../components/Message";
 import LoadingFull from "../components/LoadingFull";
 import DOMPurify from "dompurify";
 import Loading from "./../components/Loading";
-
-const CapitalizeFirst = (str) => {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-};
 
 const ProductDetail = () => {
   const location = useLocation();
@@ -305,9 +302,7 @@ const ProductDetail = () => {
                     src={img}
                     alt={`Thumbnail ${index + 1}`}
                     className={`w-[96%] rounded-sm object-contain cursor-pointer hover:outline-2 ${
-                      index === currentMainIndex
-                        ? "outline-1"
-                        : "outline-0"
+                      index === currentMainIndex ? "outline-1" : "outline-0"
                     }`}
                     onClick={() => handleThumbnailClick(index)}
                   />
