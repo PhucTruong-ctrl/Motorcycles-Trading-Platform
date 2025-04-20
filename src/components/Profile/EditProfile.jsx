@@ -153,10 +153,11 @@ const EditProfile = ({ user, onClose }) => {
             name="email"
             type="text"
             required
+            disabled
             placeholder="Enter your email"
             value={formData.email}
             onChange={handleInputChange}
-            className="p-2.5 border-1 border-grey rounded-sm w-full h-10 bg-bg-white"
+            className="p-2.5 border-1 border-grey rounded-sm w-full h-10 bg-bg-white disabled:opacity-50"
           />
         </div>
         <div id="phoneNumber" className="flex flex-col gap-1">

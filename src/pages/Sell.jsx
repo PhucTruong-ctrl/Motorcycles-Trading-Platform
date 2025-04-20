@@ -12,7 +12,6 @@ const Sell = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [brands, setBrands] = useState([]);
 
   const initialFormData = {
     uid: "",
@@ -63,7 +62,6 @@ const Sell = () => {
   };
 
   const handleSubmit = async ({ formData, selectedFiles }) => {
-    setSubmitting(true);
 
     if (!formData.uid) {
       alert("User not found. Please log in again.");
@@ -81,6 +79,7 @@ const Sell = () => {
       formData.condition,
       formData.desc,
       formData.price,
+      formData.registration,
     ];
 
     if (requiredFields.some((field) => !field)) {
@@ -88,10 +87,14 @@ const Sell = () => {
       return;
     }
 
-    if (formData.condition !== "New" && !formData.mile) {
-      alert("Please enter mileage");
+    const hasNoImages = formData.image_url.length === 0 && (!selectedFiles || selectedFiles.length === 0);
+  
+    if (hasNoImages) {
+      alert("Please upload at least one image");
       return;
     }
+
+    setSubmitting(true);
 
     try {
       let imageUrls = formData.image_url;
@@ -104,19 +107,9 @@ const Sell = () => {
         }
       }
 
-      const selectedBrand = brands.find(
-        (brand) => brand.name === formData.brand
-      );
-
-      if (!selectedBrand) {
-        alert("Invalid brand selected. Please try again.");
-        return;
-      }
-
       const { error } = await supabase.from("MOTORCYCLE").insert([
         {
           ...formData,
-          brand: selectedBrand.name,
           image_url: imageUrls,
         },
       ]);
@@ -171,14 +164,6 @@ const Sell = () => {
         if (userError) throw userError;
 
         setUser(userData);
-
-        const { data: brandData, error: brandError } = await supabase
-          .from("BRAND")
-          .select("*");
-
-        if (brandError) throw brandError;
-
-        setBrands(brandData || []);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {

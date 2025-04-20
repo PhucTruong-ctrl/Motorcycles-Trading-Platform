@@ -13,16 +13,13 @@ const MotorcycleForm = ({
   isSubmitting,
   mode = "create",
   onDeleteImage,
-  initialBrands = [],
-  initialModels = [],
-  initialTrims = [],
 }) => {
   const [formData, setFormData] = useState(initialData);
   const [imageLoading, setImageLoading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [filteredBrands, setFilteredBrands] = useState(initialBrands);
-  const [filteredModels, setFilteredModels] = useState(initialModels);
-  const [filteredTrims, setFilteredTrims] = useState(initialTrims);
+  const [filteredBrands, setFilteredBrands] = useState([]);
+  const [filteredModels, setFilteredModels] = useState([]);
+  const [filteredTrims, setFilteredTrims] = useState([]);
 
   const typeOptions = [
     { value: "naked", label: "Naked" },
@@ -296,9 +293,7 @@ const MotorcycleForm = ({
             />
           </div>
           <div className="flex flex-col gap-3 justify-center items-center w-full">
-            <div className="font-bold text-xl p-2 text-center">
-              VIN *
-            </div>
+            <div className="font-bold text-xl p-2 text-center">VIN *</div>
             <input
               type="text"
               name="chassis_num"
@@ -343,7 +338,7 @@ const MotorcycleForm = ({
                 }));
               }}
               required={formData.condition !== "New"}
-              value={formData.condition !== "New" ? formData.mile : ""}
+              value={formData.condition !== "New" ? formData.mile : 0}
               maxLength={7}
             />
           </div>
@@ -495,8 +490,12 @@ const MotorcycleForm = ({
                   className="w-30 h-30 object-cover rounded-[6px]"
                 />
                 <button
+                  type="button"
                   className="absolute top-0 right-0 bg-black text-white rounded-[6px] p-1"
-                  onClick={() => removeFile(index)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFile(index);
+                  }}
                 >
                   ✕
                 </button>

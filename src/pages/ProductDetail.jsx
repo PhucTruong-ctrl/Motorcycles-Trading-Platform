@@ -99,7 +99,7 @@ const ProductDetail = () => {
       }
 
       alert("Purchase successful!");
-      navigate(`/transaction/${currentUser.id}`)
+      navigate(`/transaction/${currentUser.id}`);
     } catch (error) {
       console.error("Error buying product:", error);
       alert("Purchase failed: " + error.message);
@@ -287,7 +287,7 @@ const ProductDetail = () => {
               <Carousel
                 ref={thumbCarouselRef}
                 arrows
-                className="w-full"
+                className="w-full p-2"
                 containerClass="carousel-container"
                 responsive={{
                   desktop: {
@@ -310,10 +310,10 @@ const ProductDetail = () => {
                     key={index}
                     src={img}
                     alt={`Thumbnail ${index + 1}`}
-                    className={`w-[130px] h-[100px] rounded-sm object-contain cursor-pointer hover:border-2 ${
+                    className={`w-[96%] rounded-sm object-contain cursor-pointer hover:outline-2 ${
                       index === currentMainIndex
-                        ? "border-2 border-black"
-                        : "border-0"
+                        ? "outline-1"
+                        : "outline-0"
                     }`}
                     onClick={() => handleThumbnailClick(index)}
                   />
@@ -414,23 +414,23 @@ const ProductDetail = () => {
                 </div>
               </div>
 
-                <button
-                  onClick={handleBuy}
-                  disabled={isPurchasing || inTransaction}
-                  className={`bg-yellow text-black rounded-sm shadow-md shadow-grey p-2.5 w-full text-[22px] font-bold flex flex-col justify-center items-center ${
-                    isPurchasing || inTransaction
-                      ? "opacity-50 cursor-not-allowed"
-                      : ""
-                  }`}
-                >
-                  {isPurchasing ? (
-                    <Loading />
-                  ) : inTransaction ? (
-                    "In Transaction..."
-                  ) : (
-                    "Buy now"
-                  )}
-                </button>
+              <button
+                onClick={handleBuy}
+                disabled={isPurchasing || inTransaction}
+                className={`bg-yellow text-black rounded-sm shadow-md shadow-grey p-2.5 w-full text-[22px] font-bold flex flex-col justify-center items-center ${
+                  isPurchasing || inTransaction
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+              >
+                {isPurchasing ? (
+                  <Loading />
+                ) : inTransaction ? (
+                  "In Transaction..."
+                ) : (
+                  "Buy now"
+                )}
+              </button>
 
               {/* <div
                   id="or"
