@@ -1,17 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router";
 import { formatDate } from "../utils/FormatDate";
+import { formatNumber } from "../utils/FormatNumber";
 import DOMPurify from "dompurify";
 
 const Product = ({ moto, user }) => {
   const navigate = useNavigate();
-
-  const formatNumber = (number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "decimal",
-      minimumFractionDigits: 0,
-    }).format(number);
-  };
 
   const updateURL = () => {
     const queryParams = new Map([

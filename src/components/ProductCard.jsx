@@ -1,15 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router";
+import { formatNumber } from "./utils/FormatNumber";
 
 const ProductCard = ({ moto }) => {
   const navigate = useNavigate();
-
-  const formatNumber = (number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "decimal",
-      minimumFractionDigits: 0,
-    }).format(number);
-  };
   const updateURL = () => {
     const queryParams = new Map([
       ["uid", moto.uid || undefined],

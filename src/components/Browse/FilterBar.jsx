@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { formatNumber } from "../utils/FormatNumber";
 import  motorcycleData from "../../data/motorcycleData.json";
 import queryString from "query-string";
 import FilterRangeSlider from "./FilterRangeSlider";
@@ -169,13 +170,6 @@ const FilterBar = () => {
 
     setSelectedTrim("");
   }, [selectedModel, selectedBrand, selectedType]);
-
-  const formatNumber = (number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "decimal",
-      minimumFractionDigits: 0,
-    }).format(number);
-  };
 
   useEffect(() => {
     if (isInitialMount) {

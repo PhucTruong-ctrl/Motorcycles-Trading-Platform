@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
+import { formatNumber } from "../utils/FormatNumber";
 import queryString from "query-string";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -9,13 +10,6 @@ import { Message } from "./../components/Message";
 import LoadingFull from "../components/LoadingFull";
 import DOMPurify from "dompurify";
 import Loading from "./../components/Loading";
-
-const formatNumber = (number) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "decimal",
-    minimumFractionDigits: 0,
-  }).format(number);
-};
 
 const CapitalizeFirst = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
