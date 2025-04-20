@@ -75,9 +75,11 @@ const Listing = () => {
         const matchesModel = motoItem.model
           ?.toLowerCase()
           .includes(searchLower);
+        const matchesTrim = motoItem.trim?.toLowerCase().includes(searchLower);
+
         const matchesId = motoItem.id?.toString().includes(searchTerm);
 
-        if (!matchesBrand && !matchesModel && !matchesId) {
+        if (!matchesBrand && !matchesModel && !matchesId && !matchesTrim) {
           return false;
         }
       }
@@ -198,7 +200,7 @@ const Listing = () => {
       <div className="flex flex-col items-center w-full py-[15px] gap-[5px]">
         <div
           id="rowType"
-          className="flex justify-center items-center md:grid md:grid-cols-4 gap-2.5 p-2.5 w-full bg-white border-1 border-border-white rounded-md"
+          className="flex justify-center items-center md:grid md:grid-cols-5 gap-2.5 p-2.5 w-full bg-white border-1 border-border-white rounded-md"
         >
           <div
             id="transactionCol"
@@ -218,6 +220,12 @@ const Listing = () => {
           >
             <span className="font-bold">Amount</span>
           </div>
+          <div
+            id="amountCol"
+            className="hidden md:flex items-center p-2.5 gap-[5px]"
+          >
+            <span className="font-bold">Status</span>
+          </div>
 
           {currentUser.id === uid && (
             <div
@@ -230,7 +238,10 @@ const Listing = () => {
         </div>
       </div>
 
-      <div id="itemsList-transaction" className="flex flex-col gap-2.5 w-full mb-5">
+      <div
+        id="itemsList-transaction"
+        className="flex flex-col gap-2.5 w-full mb-5"
+      >
         {filteredMotos.length === 0 ? (
           <div className="text-center py-10">No listings found</div>
         ) : (
@@ -238,7 +249,7 @@ const Listing = () => {
             .filter((motoItem) => motoItem.is_sold === false)
             .map((motoItem) => (
               <div key={motoItem.id}>
-                <div className="hidden md:grid grid-cols-4 gap-2.5 p-2.5 w-full bg-white border-1 border-border-white rounded-md">
+                <div className="hidden md:grid grid-cols-5 gap-2.5 p-2.5 w-full bg-white border-1 border-border-white rounded-md">
                   <div className="flex justify-start items-center p-1 gap-[10px]">
                     <img
                       src={motoItem.image_url?.[0] || "/img/R7_Sample.jpg"}
@@ -279,6 +290,23 @@ const Listing = () => {
                     <span className="font-bold">
                       ${motoItem.price?.toLocaleString()}
                     </span>
+                  </div>
+                  <div className="flex flex-col justify-center items-start">
+                    <div
+                      className={`flex flex-row justify-center items-center p-[5px] gap-[5px] rounded-sm w-fit ${
+                        motoItem.completed
+                          ? "bg-[#C4FFAE] text-[#1B7200]"
+                          : "bg-[#FFECAE] text-[#725C00]"
+                      }`}
+                    >
+                      <img
+                        src={`${motoItem.completed ? "/icons/CheckCircle.svg" : "/icons/PendingCircle.svg"}`}
+                        alt=""
+                      />
+                      <span className="font-light">
+                        {motoItem.completed ? "Sold" : "Selling"}
+                      </span>
+                    </div>
                   </div>
                   {currentUser.id === uid && (
                     <div className="relative flex items-center p-2.5 gap-[5px]">
@@ -383,6 +411,23 @@ const Listing = () => {
                     <div className="bg-grey w-full h-[1px]"></div>
                     <div>
                       <span>Listed on {formatDate(motoItem.created_at)}</span>
+                    </div>
+                    <div className="flex flex-col justify-center items-start">
+                      <div
+                        className={`flex flex-row justify-center items-center p-[5px] gap-[5px] rounded-sm w-fit ${
+                          motoItem.completed
+                            ? "bg-[#C4FFAE] text-[#1B7200]"
+                            : "bg-[#FFECAE] text-[#725C00]"
+                        }`}
+                      >
+                        <img
+                          src={`${motoItem.completed ? "/icons/CheckCircle.svg" : "/icons/PendingCircle.svg"}`}
+                          alt=""
+                        />
+                        <span className="font-bold">
+                          {motoItem.completed ? "Sold" : "Selling"}
+                        </span>
+                      </div>
                     </div>
                   </div>
                   {currentUser.id === uid && (
