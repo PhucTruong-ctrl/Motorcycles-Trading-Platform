@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
-import geodata from "../../data/US_States_and_Cities.json";
-import supabase from "../../lib/supabase-client";
+import geodata from "../../../data/US_States_and_Cities.json";
+import supabase from "../../../lib/supabase-client";
 
 const EditProfile = ({ user, onClose }) => {
   const [states, setStates] = useState([]);

@@ -1,16 +1,17 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
-import { formatNumber } from "../components/utils/FormatNumber";
-import { CapitalizeFirst } from "../components/utils/CapitalizeFirst";
+import supabase from "../lib/supabase-client";
+import DOMPurify from "dompurify";
 import queryString from "query-string";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import supabase from "../lib/supabase-client";
-import ProductCard from "../components/ProductCard";
-import { Message } from "./../components/Message";
-import LoadingFull from "../components/LoadingFull";
-import DOMPurify from "dompurify";
-import Loading from "./../components/Loading";
+
+import { formatNumber } from "../utils/FormatThings";
+import { CapitalizeFirst } from "../utils/CapitalizeFirst";
+import ProductCard from "../components/ui/ProductCard";
+import { Message } from "../components/forms/Message";
+import LoadingFull from "../components/ui/LoadingFull";
+import Loading from "../components/ui/Loading";
 
 const ProductDetail = () => {
   const location = useLocation();

@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import { formatNumber } from "./utils/FormatNumber";
+import { formatNumber } from "../../utils/FormatThings";
 
 const ProductCard = ({ moto }) => {
   const navigate = useNavigate();

@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import Banner from "../components/Home/Banner";
-import BrandList from "../components/Home/BrandList";
-import ProductList from "../components/Home/ProductList";
-import Sell from "../components/Home/Sell";
-import { Message } from "../components/Message";
+import Banner from "./components/Banner";
+import BrandList from "./components/BrandList";
+import ProductList from "./components/ProductList";
+import Sell from "./components/Sell";
+import { Message } from "../../components/forms/Message";
 
 const HomePage = () => {
   useEffect(() => {

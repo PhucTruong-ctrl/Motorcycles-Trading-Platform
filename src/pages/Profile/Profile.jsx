@@ -1,18 +1,18 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router";
-import supabase from "../lib/supabase-client";
+import supabase from "../../lib/supabase-client";
 import Select from "react-select";
 import Modal from "react-modal";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import ProductCard from "../components/ProductCard";
-import { ReputationMessage } from "../components/Profile/ReputationMessage";
-import EditProfile from "./../components/Profile/EditProfile";
-import { Message } from "../components/Message";
-import Reputation from "../components/Profile/Reputation";
-import LoadingFull from "./../components/LoadingFull";
-import Loading from "../components/Loading";
-import normalizeFileName from "../components/utils/normalizeFileName";
+import ProductCard from "../../components/ui/ProductCard";
+import { ReputationMessage } from "./components/ReputationMessage";
+import EditProfile from "./components/EditProfile";
+import { Message } from "../../components/forms/Message";
+import Reputation from "./components/Reputation";
+import LoadingFull from "../../components/ui/LoadingFull";
+import Loading from "../../components/ui/Loading";
+import normalizeFileName from "../../utils/normalizeFileName";
 
 Modal.setAppElement("#root");
 

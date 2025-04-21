@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
 import { NumericFormat } from "react-number-format";
-import motorcycleData from "../data/motorcycleData.json";
-import LoadingWhite from "./LoadingWhite";
-import QuillEditor from "./utils/QuillEditor";
-import { compressImage } from "../components/utils/imageCompresser";
-import Loading from "./Loading";
+import motorcycleData from "../../data/motorcycleData.json";
+import LoadingWhite from "../ui/LoadingWhite";
+import QuillEditor from "../../lib/QuillEditor";
+import { compressImage } from "../../utils/imageCompresser";
+import Loading from "../ui/Loading";
 
 const MotorcycleForm = ({
   initialData,

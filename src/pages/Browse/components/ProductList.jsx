@@ -3,9 +3,9 @@ import { useLocation, useNavigate } from "react-router";
 import queryString from "query-string";
 import ReactPaginate from "react-paginate";
 import Select from "react-select";
-import supabase from "../../lib/supabase-client";
+import supabase from "../../../lib/supabase-client";
 import Product from "./Product";
-import Loading from "../Loading";
+import Loading from "../../../components/ui/Loading";
 
 const BrowseProductList = () => {
   const [moto, setMoto] = useState([]);

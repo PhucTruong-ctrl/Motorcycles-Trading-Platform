@@ -3,9 +3,9 @@ import { useParams, Link } from "react-router";
 import Select from "react-select";
 import supabase from "../lib/supabase-client";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { formatDate } from "../components/utils/FormatDate";
-import LoadingFull from "../components/LoadingFull";
-import { Message } from "../components/Message";
+import { formatDate } from "../utils/FormatThings";
+import LoadingFull from "../components/ui/LoadingFull";
+import { Message } from "../components/forms/Message";
 
 const Listing = () => {
   const { uid } = useParams();

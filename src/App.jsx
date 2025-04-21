@@ -1,18 +1,18 @@
 import React from "react";
 import { Route, Routes } from "react-router";
-import Home from "./pages/Home";
+import Home from "./pages/Home/Home";
 import Sell from "./pages/Sell";
-import Browse from "./pages/Browse";
+import Browse from "./pages/Browse/Browse";
 import ProductDetail from "./pages/ProductDetail";
-import Profile from "./pages/Profile";
+import Profile from "./pages/Profile/Profile";
 import EditProduct from "./pages/EditProduct";
 import Listing from "./pages/Listing";
-import Transaction from "./pages/Transaction";
+import Transaction from "./pages/Transaction/Transaction";
 import WorkArea from "./pages/WorkArea";
 import LoginSignUp from "./pages/LoginSignUp";
 import AuthCallback from "./components/AuthCallback";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import Header from "./components/ui/Header";
+import Footer from "./components/ui/Footer";
 
 const App = () => {
   return (

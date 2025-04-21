@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { formatNumber } from "../utils/FormatNumber";
-import  motorcycleData from "../../data/motorcycleData.json";
 import queryString from "query-string";
+import { formatNumber } from "../../../utils/FormatThings";
+import motorcycleData from "../../../data/motorcycleData.json";
 import FilterRangeSlider from "./FilterRangeSlider";
 import FilterSelect from "./FilterSelect";
 

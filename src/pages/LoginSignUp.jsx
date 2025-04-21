@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { NumericFormat } from "react-number-format";
 import supabase from "../lib/supabase-client";
 import bcrypt from "bcryptjs";
-import { handleUserCreation } from "../components/utils/authUtils";
-import { Message } from "../components/Message";
+import { handleUserCreation } from "../utils/authUtils";
+import { Message } from "../components/forms/Message";
 
 const LoginSignUp = () => {
   const [atLogin, setAtLogin] = useState(true);
@@ -100,7 +100,7 @@ const LoginSignUp = () => {
             emailRedirectTo: `${window.location.origin}/auth-callback`,
           },
         });
-        
+
         if (error) throw error;
 
         await handleUserCreation(user, true, {

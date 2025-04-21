@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router";
-import supabase from "../../lib/supabase-client";
-import { formatDate } from "./../utils/FormatDate";
-import Loading from "../Loading";
+import supabase from "../../../lib/supabase-client";
+import { formatDate } from "../../../utils/FormatThings";
+import Loading from "../../../components/ui/Loading";
 
 export const ReputationMessage = ({ uid_send, created_at, message, type }) => {
   const [user, setUser] = useState(null);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import supabase from "../lib/supabase-client";
+import supabase from "../../lib/supabase-client";
 import UserMenu from "./UserMenu";
 import { Link } from "react-router";
 

@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import { formatDate } from "../utils/FormatDate";
-import { formatNumber } from "../utils/FormatNumber";
+import { formatDate, formatNumber } from "../../../utils/FormatThings";
 import DOMPurify from "dompurify";
 
 const Product = ({ moto, user }) => {

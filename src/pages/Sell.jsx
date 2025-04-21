@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import supabase from "../lib/supabase-client";
-import LoadingFull from "../components/LoadingFull";
-import MotorcycleForm from "../components/MotorcycleForm";
+import LoadingFull from "../components/ui/LoadingFull";
+import MotorcycleForm from "../components/forms/MotorcycleForm";
 import { useNavigate } from "react-router";
-import normalizeFileName from "../components/utils/normalizeFileName";
-import { Message } from "../components/Message";
+import normalizeFileName from "../utils/normalizeFileName";
+import { Message } from "../components/forms/Message";
 
 const Sell = () => {
   const navigate = useNavigate();
