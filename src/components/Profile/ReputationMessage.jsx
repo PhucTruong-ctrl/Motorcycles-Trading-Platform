@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router";
-import supabase from "../../supabase-client";
+import supabase from "../../lib/supabase-client";
 import { formatDate } from "./../utils/FormatDate";
 import Loading from "../Loading";
 

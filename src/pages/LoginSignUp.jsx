@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NumericFormat } from "react-number-format";
-import supabase from "../supabase-client";
+import supabase from "../lib/supabase-client";
 import bcrypt from "bcryptjs";
 import { handleUserCreation } from "../components/utils/authUtils";
 import { Message } from "../components/Message";

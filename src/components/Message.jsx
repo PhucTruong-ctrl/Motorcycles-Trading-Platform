@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import supabase from "../supabase-client";
+import supabase from "../lib/supabase-client";
 import Modal from "react-modal";
 import { formatDate } from "./utils/FormatDate";
 import Loading from "./Loading";

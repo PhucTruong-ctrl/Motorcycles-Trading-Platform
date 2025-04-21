@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import supabase from "../supabase-client";
+import supabase from "../lib/supabase-client";
 import { Message } from "../components/Message";
 import LoadingFull from "../components/LoadingFull";
 import MotorcycleForm from "../components/MotorcycleForm";

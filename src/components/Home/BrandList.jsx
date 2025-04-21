@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import Brand from "./Brand";
-import supabase from "../../supabase-client";
+import supabase from "../../lib/supabase-client";
 
 const BrandList = () => {
   const [brands, setBrands] = useState([]);

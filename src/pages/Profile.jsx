@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router";
-import supabase from "../supabase-client";
+import supabase from "../lib/supabase-client";
 import Select from "react-select";
 import Modal from "react-modal";
 import Carousel from "react-multi-carousel";

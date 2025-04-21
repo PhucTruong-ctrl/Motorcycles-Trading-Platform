@@ -5,7 +5,7 @@ import { CapitalizeFirst } from "../components/utils/CapitalizeFirst";
 import queryString from "query-string";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import supabase from "../supabase-client";
+import supabase from "../lib/supabase-client";
 import ProductCard from "../components/ProductCard";
 import { Message } from "./../components/Message";
 import LoadingFull from "../components/LoadingFull";

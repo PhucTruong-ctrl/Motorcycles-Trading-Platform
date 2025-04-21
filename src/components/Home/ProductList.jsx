@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import ProductCard from "../ProductCard";
-import supabase from "../../supabase-client";
+import supabase from "../../lib/supabase-client";
 
 const ProductList = ({ condition }) => {
   const [motorcycles, setMotorcycles] = useState([]);
