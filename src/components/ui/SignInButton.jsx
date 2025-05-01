@@ -9,23 +9,6 @@ const SignInButton = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
-  const signOut = async () => {
-    try {
-      localStorage.removeItem("sb-" + session?.user.id + "-auth-token");
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-
-      setSession(null);
-      setUser(null);
-      window.location.href = "/";
-    } catch (error) {
-      console.error("Sign out error:", error);
-      localStorage.clear();
-      sessionStorage.clear();
-      window.location.href = "/";
-    }
-  };
-
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -105,7 +88,7 @@ const SignInButton = () => {
             )}
           </span>
         </button>
-        {isMenuOpen && <UserMenu user={session.user} signOut={signOut} />}
+        {isMenuOpen && <UserMenu user={session.user} />}
       </div>
     );
   }
