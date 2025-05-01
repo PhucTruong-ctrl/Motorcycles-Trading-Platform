@@ -8,7 +8,7 @@ import "react-multi-carousel/lib/styles.css";
 import ProductCard from "../../components/ui/ProductCard";
 import { ReputationMessage } from "./components/ReputationMessage";
 import EditProfile from "./components/EditProfile";
-import { Message } from "../../components/forms/Message";
+import { Message } from "../../features/Chat/Message";
 import Reputation from "./components/Reputation";
 import LoadingFull from "../../components/ui/LoadingFull";
 import Loading from "../../components/ui/Loading";

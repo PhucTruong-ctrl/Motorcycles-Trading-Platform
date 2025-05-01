@@ -3,7 +3,7 @@ import { NumericFormat } from "react-number-format";
 import supabase from "../lib/supabase-client";
 import bcrypt from "bcryptjs";
 import { handleUserCreation } from "../utils/authUtils";
-import { Message } from "../components/forms/Message";
+import { Message } from "../features/Chat/Message";
 
 const LoginSignUp = () => {
   const [atLogin, setAtLogin] = useState(true);

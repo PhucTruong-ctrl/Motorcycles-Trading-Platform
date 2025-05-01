@@ -3,7 +3,7 @@ import Banner from "./components/Banner";
 import BrandList from "./components/BrandList";
 import ProductList from "./components/ProductList";
 import Sell from "./components/Sell";
-import { Message } from "../../components/forms/Message";
+import { Message } from "../../features/Chat/Message";
 
 const HomePage = () => {
   useEffect(() => {

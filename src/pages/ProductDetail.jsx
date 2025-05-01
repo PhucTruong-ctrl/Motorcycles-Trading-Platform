@@ -9,7 +9,7 @@ import "react-multi-carousel/lib/styles.css";
 import { formatNumber } from "../utils/FormatThings";
 import { CapitalizeFirst } from "../utils/CapitalizeFirst";
 import ProductCard from "../components/ui/ProductCard";
-import { Message } from "../components/forms/Message";
+import { Message } from "../features/Chat/Message";
 import LoadingFull from "../components/ui/LoadingFull";
 import Loading from "../components/ui/Loading";
 

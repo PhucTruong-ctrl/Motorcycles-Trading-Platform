@@ -5,7 +5,7 @@ import supabase from "../lib/supabase-client";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { formatDate } from "../utils/FormatThings";
 import LoadingFull from "../components/ui/LoadingFull";
-import { Message } from "../components/forms/Message";
+import { Message } from "../features/Chat/Message";
 
 const Listing = () => {
   const { uid } = useParams();

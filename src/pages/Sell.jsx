@@ -4,7 +4,7 @@ import LoadingFull from "../components/ui/LoadingFull";
 import MotorcycleForm from "../components/forms/MotorcycleForm";
 import { useNavigate } from "react-router";
 import normalizeFileName from "../utils/normalizeFileName";
-import { Message } from "../components/forms/Message";
+import { Message } from "../features/Chat/Message";
 
 const Sell = () => {
   const navigate = useNavigate();

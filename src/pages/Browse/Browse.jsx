@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import FilterBar from "./components/FilterBar";
 import ProductList from "./components/ProductList";
-import { Message } from "../../components/forms/Message";
+import { Message } from "../../features/Chat/Message";
 
 const BrowsingPage = () => {
   useEffect(() => {

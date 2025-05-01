@@ -4,7 +4,7 @@ import Select from "react-select";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import supabase from "../../lib/supabase-client";
 import { formatDate } from "../../utils/FormatThings";
-import { Message } from "../../components/forms/Message";
+import { Message } from "../../features/Chat/Message";
 import MonthlySalesBarChart from "./components/MonthlySalesBarChart";
 import MonthlySalesPieChart from "./components/MonthlySalesPieChart";
 import LoadingFull from "../../components/ui/LoadingFull";

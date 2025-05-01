@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import supabase from "../../lib/supabase-client";
 import Modal from "react-modal";
 import { formatDate } from "../../utils/FormatThings";
-import Loading from "../ui/Loading";
+import Loading from "../../components/ui/Loading"
 
 Modal.setAppElement("#root");
 
