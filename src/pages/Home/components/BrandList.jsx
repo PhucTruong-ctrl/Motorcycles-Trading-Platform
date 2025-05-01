@@ -41,12 +41,24 @@ const BrandList = () => {
         minimumTouchDrag={80}
        
         responsive={{
+          desktop: {
+            breakpoint: { max: 2560, min: 1920 },
+            items: 10,
+          },
           desktop1: {
-            breakpoint: { max: 3000, min: 1024 },
+            breakpoint: { max: 1920, min: 1440 },
             items: 8,
           },
+          desktop2: {
+            breakpoint: { max: 1440, min: 1024 },
+            items: 6,
+          },
           tablet: {
-            breakpoint: { max: 1024, min: 464 },
+            breakpoint: { max: 1024, min: 800 },
+            items: 5,
+          },
+          tablet1: {
+            breakpoint: { max: 800, min: 464 },
             items: 3,
           },
           mobile: {

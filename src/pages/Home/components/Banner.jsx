@@ -5,7 +5,7 @@ const Banner = () => {
   return (
     <div
       id="BannerGroup"
-      className="border-b-1 border-grey  mx-auto flex flex-col md:flex-row py-15 md:py-25 lg:py-35 gap-8 justify-center items-center"
+      className="border-b-1 border-grey  mx-auto flex flex-col md:flex-row py-15 md:py-25 lg:py-30 gap-8 justify-center items-center"
     >
       {/* Left Section */}
       <div
