@@ -522,7 +522,7 @@ export const Message = ({ newChatReceiver }) => {
                           ) : (
                             <div className="border-2 w-[35px] h-[35px] rounded-full bg-gray-200" />
                           )}
-                          <span>{selectedContact?.name}</span>
+                          <Link to={`/profile/${selectedContact?.uid}`}>{selectedContact?.name}</Link>
                         </div>
                       </div>
 
