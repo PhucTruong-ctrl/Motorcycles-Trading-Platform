@@ -13,10 +13,12 @@ import LoginSignUp from "./pages/LoginSignUp";
 import AuthCallback from "./components/AuthCallback";
 import Header from "./components/ui/Header";
 import Footer from "./components/ui/Footer";
+import ScrollTopButton from "./components/ui/ScrollTopButton";
 
 const App = () => {
   return (
     <div>
+      <ScrollTopButton />
       <main className="my-[15px] mx-[25px]">
         <div className="mb-5">
           <Header />
