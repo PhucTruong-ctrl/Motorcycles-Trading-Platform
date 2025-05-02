@@ -33,7 +33,7 @@ export const ReputationMessage = ({ uid_send, created_at, message, type }) => {
   }
 
   return (
-    <div className="flex flex-col justify-between items-start gap-5 bg-white rounded-xl shadow-md p-5">
+    <div className="flex flex-col justify-between items-start gap-5 bg-white rounded-xl shadow-md mb-5 p-5">
       <div className="flex flex-row gap-5">
         <img src={user.avatar_url} alt="" className="w-15 h-15 rounded-md" />
         <div className="flex flex-col">
