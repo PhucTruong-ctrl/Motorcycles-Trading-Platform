@@ -306,7 +306,7 @@ export const Message = ({ newChatReceiver }) => {
               <button
                 onClick={() => setCloseMessage((prev) => !prev)}
                 id="MobileMessageButton"
-                className="bg-white outline-1 outline-grey w-12 h-12 rounded-full flex justify-center items-center"
+                className="bg-white outline-1 outline-grey w-10 h-10 rounded-full flex justify-center items-center"
               >
                 <img src="/icons/BlackChat.svg" alt="" />
               </button>
