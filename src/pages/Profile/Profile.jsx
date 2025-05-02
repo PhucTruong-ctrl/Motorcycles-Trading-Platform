@@ -61,7 +61,8 @@ const Profile = () => {
       console.log("Reputation Data: ", rep_data);
 
       if (rep_error) throw rep_error;
-      alert("Rep sended");
+      window.location.reload();
+      setAtListing(false);
     } catch (error) {
       console.error("Rep send error", error);
     }

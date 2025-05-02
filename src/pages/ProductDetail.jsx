@@ -36,7 +36,8 @@ const ProductDetail = () => {
 
   const handleChat = () => {
     if (!currentUser || !user) {
-      alert("User data is not available yet.");
+      alert("Please login to chat.");
+      navigate("/account");
       return;
     }
     if (currentUser.id !== user.uid) {

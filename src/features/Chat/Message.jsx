@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router";
 import supabase from "../../lib/supabase-client";
 import Modal from "react-modal";
 import { formatDate } from "../../utils/FormatThings";
@@ -411,7 +412,7 @@ export const Message = ({ newChatReceiver }) => {
                       ) : (
                         <div className="border-2 w-[35px] h-[35px] rounded-full bg-gray-200" />
                       )}
-                      <span>{selectedContact?.name}</span>
+                      <Link to={`/profile/${selectedContact?.uid}`}>{selectedContact?.name}</Link>
                     </div>
                   </div>
                   <div
