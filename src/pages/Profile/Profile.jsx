@@ -13,7 +13,7 @@ import Reputation from "./components/Reputation";
 import LoadingFull from "../../components/ui/LoadingFull";
 import Loading from "../../components/ui/Loading";
 import normalizeFileName from "../../utils/normalizeFileName";
-import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
 
 Modal.setAppElement("#root");
 

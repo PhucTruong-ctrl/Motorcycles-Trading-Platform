@@ -72,7 +72,7 @@ const ProductList = ({ condition }) => {
             },
             desktop1: {
               breakpoint: { max: 1920, min: 1440 },
-              items: 10,
+              items: 9,
             },
             desktop2: {
               breakpoint: { max: 1440, min: 1024 },
