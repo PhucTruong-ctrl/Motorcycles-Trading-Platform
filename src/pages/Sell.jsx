@@ -5,10 +5,11 @@ import MotorcycleForm from "../components/forms/MotorcycleForm";
 import { useNavigate } from "react-router";
 import normalizeFileName from "../utils/normalizeFileName";
 import { Message } from "../features/Chat/Message";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 const Sell = () => {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(null);
+  const currentUser = useCurrentUser();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -125,26 +126,6 @@ const Sell = () => {
       setSubmitting(false);
     }
   };
-
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        setLoading(true);
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        const user = session?.user || null;
-        setCurrentUser(user);
-      } catch (error) {
-        console.error("Error fetching current user:", error);
-        setCurrentUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCurrentUser();
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {

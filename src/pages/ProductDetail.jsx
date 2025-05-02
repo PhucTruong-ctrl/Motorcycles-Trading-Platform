@@ -6,6 +6,7 @@ import queryString from "query-string";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
+import { useCurrentUser } from "../hooks/useCurrentUser";
 import { formatNumber } from "../utils/FormatThings";
 import { CapitalizeFirst } from "../utils/CapitalizeFirst";
 import ProductCard from "../components/ui/ProductCard";
@@ -20,7 +21,7 @@ const ProductDetail = () => {
   const [moto, setMoto] = useState(null);
   const [motoMore, setMotoMore] = useState([]);
   const [user, setUser] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
+  const currentUser = useCurrentUser();
   const [messageReceiver, setMessageReceiver] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isPurchasing, setIsPurchasing] = useState(false);
@@ -34,13 +35,15 @@ const ProductDetail = () => {
   const dealerCarouselRef = useRef(null);
 
   const handleChat = () => {
-    if (currentUser.id != user.uid) {
+    if (!currentUser || !user) {
+      alert("User data is not available yet.");
+      return;
+    }
+    if (currentUser.id !== user.uid) {
       setMessageReceiver(user);
     } else {
       alert("You cannot chat to yourself!");
     }
-    console.log(currentUser);
-    console.log(user);
   };
 
   const handleMainImageChange = (previousSlide, { currentSlide }) => {
@@ -62,8 +65,13 @@ const ProductDetail = () => {
       return;
     }
 
+    if (!user) {
+      alert("Seller information is not available.");
+      return;
+    }
+
     if (currentUser.id === user.uid) {
-      alert("You cannot buy from your self");
+      alert("You cannot buy from yourself.");
       return;
     }
 
@@ -101,16 +109,9 @@ const ProductDetail = () => {
   };
 
   const increaseViews = useCallback(async () => {
-    if (!moto) {
-      console.log("Moto is null, cannot increase views.");
-      return;
-    }
+    if (!moto || viewsIncreased) return;
 
     try {
-      console.log(
-        `Increasing views for moto ID: ${queryParams.id}, current views: ${moto.views}`
-      );
-
       const { data, error } = await supabase
         .from("MOTORCYCLE")
         .update({ views: moto.views + 1 })
@@ -118,21 +119,14 @@ const ProductDetail = () => {
         .select("*")
         .single();
 
-      if (error) {
-        console.error("Error updating views:", error);
-        return;
-      }
+      if (error) throw error;
 
-      if (data && data.length > 0) {
-        console.log(
-          `Views updated successfully. New views count: ${data[0].views}`
-        );
-        setMoto((prevMoto) => ({ ...prevMoto, views: data[0].views }));
-      }
+      setMoto((prevMoto) => ({ ...prevMoto, views: data.views }));
+      setViewsIncreased(true);
     } catch (error) {
       console.error("Error increasing views:", error);
     }
-  }, [moto, queryParams.id]);
+  }, [moto, queryParams.id, viewsIncreased]);
 
   useEffect(() => {
     if (moto && !viewsIncreased) {
@@ -140,17 +134,6 @@ const ProductDetail = () => {
       setViewsIncreased(true);
     }
   }, [moto, viewsIncreased, increaseViews]);
-
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setCurrentUser(session?.user || null);
-    };
-
-    fetchCurrentUser();
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -264,14 +247,14 @@ const ProductDetail = () => {
                   },
                 }}
               >
-                {moto.image_url.map((img, index) => (
+                {moto?.image_url?.map((img, index) => (
                   <img
                     key={index}
                     src={img}
                     className="w-full h-[250px] sm:h-[350px] md:h-[700px] rounded-sm object-cover border-1 border-grey"
                     alt={`Main ${index + 1}`}
                   />
-                ))}
+                )) || <div>No images available</div>}
               </Carousel>
             </div>
 

@@ -8,9 +8,10 @@ import { Message } from "../../features/Chat/Message";
 import MonthlySalesBarChart from "./components/MonthlySalesBarChart";
 import MonthlySalesPieChart from "./components/MonthlySalesPieChart";
 import LoadingFull from "../../components/ui/LoadingFull";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
 
 const Transaction = () => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const currentUser = useCurrentUser();
   const [transactions, setTransactions] = useState([]);
   const [messageReceiver, setMessageReceiver] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -194,17 +195,6 @@ const Transaction = () => {
       alert("Failed to cancel transaction");
     }
   };
-
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setCurrentUser(session?.user || null);
-    };
-
-    fetchCurrentUser();
-  }, []);
 
   useEffect(() => {
     const fetchTransactions = async () => {

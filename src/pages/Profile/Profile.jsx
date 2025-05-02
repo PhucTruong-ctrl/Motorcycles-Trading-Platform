@@ -13,13 +13,14 @@ import Reputation from "./components/Reputation";
 import LoadingFull from "../../components/ui/LoadingFull";
 import Loading from "../../components/ui/Loading";
 import normalizeFileName from "../../utils/normalizeFileName";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 Modal.setAppElement("#root");
 
 const Profile = () => {
   const { uid } = useParams();
   const [user, setUser] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
+  const currentUser = useCurrentUser();
   const [moto, setMoto] = useState(null);
   const [reps, setReps] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -172,18 +173,6 @@ const Profile = () => {
       setModalUploadBanIsOpen(false);
     }
   };
-
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (session?.user) {
-        setCurrentUser(session.user);
-      }
-    };
-    fetchCurrentUser();
-  }, []);
 
   useEffect(() => {
     if (!uid) return;

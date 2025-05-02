@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import supabase from "../../lib/supabase-client";
 import Modal from "react-modal";
 import { formatDate } from "../../utils/FormatThings";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
 import Loading from "../../components/ui/Loading"
 
 Modal.setAppElement("#root");
@@ -11,7 +12,7 @@ export const Message = ({ newChatReceiver }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [openMessage, setOpenMessage] = useState(false);
   const [closeMessage, setCloseMessage] = useState(true);
-  const [currentUser, setCurrentUser] = useState(null);
+  const currentUser = useCurrentUser();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [contacts, setContacts] = useState([]);
@@ -53,22 +54,6 @@ export const Message = ({ newChatReceiver }) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        setCurrentUser(session?.user || null);
-      } catch (error) {
-        console.error("Error fetching current user:", error);
-        setCurrentUser(null);
-      }
-    };
-
-    fetchCurrentUser();
-  }, []);
 
   useEffect(() => {
     const fetchContacts = async () => {

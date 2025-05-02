@@ -6,11 +6,12 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { formatDate } from "../utils/FormatThings";
 import LoadingFull from "../components/ui/LoadingFull";
 import { Message } from "../features/Chat/Message";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 const Listing = () => {
   const { uid } = useParams();
   const [moto, setMoto] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
+  const currentUser = useCurrentUser();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -112,13 +113,6 @@ const Listing = () => {
   }, []);
 
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setCurrentUser(session?.user || null);
-    };
-
     const fetchMotoData = async () => {
       try {
         const { data: motoData, error: motoError } = await supabase
@@ -135,8 +129,6 @@ const Listing = () => {
         setLoading(false);
       }
     };
-
-    fetchCurrentUser();
     fetchMotoData();
   }, [uid]);
 
