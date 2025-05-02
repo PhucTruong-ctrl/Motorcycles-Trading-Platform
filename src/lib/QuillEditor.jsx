@@ -16,7 +16,7 @@ const QuillEditor = ({ value, onChange, placeholder }) => {
             [{ font: ["serif", "sans", "monospace"] }],
             [{ header: 1 }, { header: 2 }],
             ["bold", "italic", "underline"],
-            [{ size: ["small", false, "large", "huge"] }],
+            [{ size: ["small", false] }],
             ["blockquote"],
             [{ list: "ordered" }, { list: "bullet" }],
             [{ align: [] }],

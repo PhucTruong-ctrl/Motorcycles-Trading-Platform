@@ -442,7 +442,7 @@ const MotorcycleForm = ({
         <div className="w-full flex flex-col">
           <label
             htmlFor="img_input"
-            className="flex flex-row justify-center items-center gap-1 font-bold text-xl p-2 text-center text-black rounded-sm border-1 border-black cursor-pointer disabled:opacity-75"
+            className="flex flex-row justify-center items-center gap-1 font-bold text-xl p-2 text-center text-black rounded-sm border-1 border-black cursor-pointer hover:scale-105 disabled:opacity-75 transition"
           >
             {imageLoading ? (
               <Loading></Loading>
