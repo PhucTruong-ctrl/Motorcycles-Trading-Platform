@@ -11,7 +11,7 @@ const Header = () => {
       {/* Right Section */}
       <div className="flex justify-center items-center gap-5">
         <Link to={"/browse"}>
-          <div className="text-[18px] md:text-2xl text-nowrap hover:underline hover:scale-105 hover:font-semibold transition">
+          <div className="text-[18px] md:text-2xl text-nowrap hover:underline hover:font-semibold transition">
             <img
               src="/icons/BlackSearch.svg"
               className="w-[39px] h-[42px] block md:hidden"
@@ -21,7 +21,7 @@ const Header = () => {
         </Link>
 
         <Link to={"/sell"}>
-          <div className="text-[18px] md:text-2xl text-nowrap hover:underline hover:scale-105 hover:font-semibold transition">
+          <div className="text-[18px] md:text-2xl text-nowrap hover:underline hover:font-semibold transition">
             <img
               src="/icons/Sell.svg"
               className="w-[39px] h-[42px] block md:hidden"
