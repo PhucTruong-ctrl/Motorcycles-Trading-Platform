@@ -60,6 +60,9 @@
   .react-dropdown-select-dropdown {
     @apply bg-white shadow-lg rounded mt-1;
   }
+  .ql-editor p {
+    @apply text-[18px]
+  }
 }
 
 @layer utility {

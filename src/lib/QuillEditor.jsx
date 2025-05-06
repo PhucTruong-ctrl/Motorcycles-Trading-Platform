@@ -14,12 +14,10 @@ const QuillEditor = ({ value, onChange, placeholder }) => {
         modules: {
           toolbar: [
             [{ font: ["serif", "sans", "monospace"] }],
-            [{ header: 1 }, { header: 2 }],
             ["bold", "italic", "underline"],
-            [{ size: ["small", false] }],
+            [{ size: ["small", false, "large"] }],
             ["blockquote"],
             [{ list: "ordered" }, { list: "bullet" }],
-            [{ align: [] }],
           ],
         },
       });
