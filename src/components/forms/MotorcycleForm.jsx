@@ -359,11 +359,11 @@ const MotorcycleForm = ({
               />
               <label
                 htmlFor="used"
-                className="inline-flex items-center justify-between w-full h-40 p-5 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition  "
+                className="inline-flex items-center justify-between w-full md:h-40 p-5 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition  "
               >
                 <div className="block">
                   <div className="w-full text-xl font-semibold">Used</div>
-                  <div className="w-full">
+                  <div className="w-full hidden md:block">
                     Pre-loved motorcycle with stories to tell
                   </div>
                 </div>
@@ -381,11 +381,11 @@ const MotorcycleForm = ({
               />
               <label
                 htmlFor="new"
-                className="inline-flex items-center justify-between w-full h-40 p-5 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition  "
+                className="inline-flex items-center justify-between w-full md:h-40 p-5 text-black border border-grey rounded-lg cursor-pointer peer-checked:bg-blue peer-checked:text-white hover:scale-105 active:scale-110 transition  "
               >
                 <div className="relative block overflow-hidden">
                   <div className="w-full text-xl font-semibold">New</div>
-                  <div className="w-full">
+                  <div className="w-full hidden md:block">
                     Brand new motorcycle without any thought!
                   </div>
                 </div>
@@ -396,7 +396,7 @@ const MotorcycleForm = ({
 
         <div className="flex flex-col gap-3 justify-start items-center w-full">
           <div className="font-bold text-xl p-2 text-center">Description *</div>
-          <div className="h-98 sm:h-70 md:h-52">
+          <div className="h-60 sm:h-70 md:h-52">
             <QuillEditor
               value={formData.desc}
               onChange={handleDescChange}
