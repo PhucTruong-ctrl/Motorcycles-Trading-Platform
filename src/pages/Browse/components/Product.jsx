@@ -78,7 +78,7 @@ const Product = ({ moto, user }) => {
         className="hidden md:block text-black w-full line-clamp-4 overflow-hidden"
       >
         <div
-          className="w-full ql-editor"
+          className="w-full"
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(moto.desc),
           }}
