@@ -6,61 +6,61 @@ import { formatDate } from "../../utils/FormatThings";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
 import Loading from "../../components/ui/Loading"
 
-Modal.setAppElement("#root");
+Modal.setAppElement("#root"); // Set the app element for accessibility
 
 export const Message = ({ newChatReceiver }) => {
-  const [loading, setLoading] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [openMessage, setOpenMessage] = useState(false);
-  const [closeMessage, setCloseMessage] = useState(true);
-  const currentUser = useCurrentUser();
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
-  const [contacts, setContacts] = useState([]);
-  const [selectedContact, setSelectedContact] = useState(null);
-  const messagesEndRef = useRef(null);
+  const [loading, setLoading] = useState(false); // Loading state for fetching messages
+  const [isMobile, setIsMobile] = useState(false); // State to check if the screen is mobile
+  const [openMessage, setOpenMessage] = useState(false); // State to control the visibility of the message window
+  const [closeMessage, setCloseMessage] = useState(true); // State to control the visibility of the message list
+  const currentUser = useCurrentUser(); // Get the current user from the custom hook
+  const [messages, setMessages] = useState([]); // State to store messages
+  const [newMessage, setNewMessage] = useState(""); // State to store the new message input
+  const [contacts, setContacts] = useState([]); // State to store contacts
+  const [selectedContact, setSelectedContact] = useState(null); // State to store the selected contact
+  const messagesEndRef = useRef(null); // Ref to scroll to the bottom of the message list
 
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-    if (!newMessage.trim() || !currentUser?.id || !selectedContact?.uid) return;
+  const handleSendMessage = async (e) => { // Handle sending a message
+    e.preventDefault(); // Prevent default form submission
+    if (!newMessage.trim() || !currentUser?.id || !selectedContact?.uid) return; // Check if message is empty or user/receiver is not selected
 
-    try {
+    try { // Send message to the database
       const { error } = await supabase.from("MESSAGE").insert({
         uid_send: currentUser.id,
         uid_recv: selectedContact.uid,
         message: newMessage,
       });
 
-      if (error) throw error;
+      if (error) throw error; // Check for errors
       setNewMessage("");
-    } catch (error) {
+    } catch (error) { // Handle errors
       console.error("Error sending message:", error);
     }
   };
 
-  const scrollToBottom = () => {
-    setTimeout(() => {
+  const scrollToBottom = () => { // Scroll to the bottom of the message list
+    setTimeout(() => { // Delay to ensure the messages are loaded
       if (messagesEndRef.current) {
         messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
       }
     }, 300);
   };
 
-  useEffect(() => {
+  useEffect(() => { // Scroll to the bottom when the message list is opened
     if (openMessage) {
       scrollToBottom();
     }
   }, [openMessage, selectedContact]);
 
-  useEffect(() => {
+  useEffect(() => { // Scroll to the bottom when new messages are received
     scrollToBottom();
   }, [messages]);
 
-  useEffect(() => {
+  useEffect(() => { // Fetch contacts when the component mounts or when currentUser changes
     const fetchContacts = async () => {
       if (!currentUser?.id) return;
 
-      const { data, error } = await supabase
+      const { data, error } = await supabase // Fetch messages where the current user is either sender or receiver
         .from("MESSAGE")
         .select("uid_send, uid_recv, message, created_at")
         .or(`uid_send.eq.${currentUser.id},uid_recv.eq.${currentUser.id}`)
@@ -70,19 +70,20 @@ export const Message = ({ newChatReceiver }) => {
         console.error("Error fetching messages for contacts:", error);
         return;
       }
-      const contactsMap = new Map();
+      
+      const contactsMap = new Map(); // to store unique contacts
 
       data.forEach((msg) => {
         const otherUserId =
-          msg.uid_send === currentUser.id ? msg.uid_recv : msg.uid_send;
+          msg.uid_send === currentUser.id ? msg.uid_recv : msg.uid_send; // get the other user id
 
-        if (
+        if ( // check if the contact is not already in the map
           !contactsMap.has(otherUserId) ||
           new Date(msg.created_at) >
-            new Date(contactsMap.get(otherUserId).lastMessageTime)
+            new Date(contactsMap.get(otherUserId).lastMessageTime) // compare the last message time
         ) {
-          contactsMap.set(otherUserId, {
-            uid: otherUserId,
+          contactsMap.set(otherUserId, { // add new contact
+            uid: otherUserId, 
             lastMessageTime: msg.created_at,
             lastMessage: msg.message,
             sender: msg.uid_send,
@@ -90,38 +91,38 @@ export const Message = ({ newChatReceiver }) => {
         }
       });
 
-      const contactIds = Array.from(contactsMap.keys());
+      const contactIds = Array.from(contactsMap.keys()); // get the unique contact ids
 
-      const { data: users, error: userError } = await supabase
+      const { data: users, error: userError } = await supabase // Fetch user details for the unique contact ids
         .from("USER")
         .select("uid, name, avatar_url")
-        .in("uid", contactIds);
+        .in("uid", contactIds); // use .in to fetch multiple users at once
 
       if (userError) {
         console.error("Error fetching users:", userError);
         return;
       }
 
-      const contactsWithLastMessage = users.map((user) => ({
+      const contactsWithLastMessage = users.map((user) => ({ // map user data to include last message
         ...user,
         lastMessage: contactsMap.get(user.uid)?.lastMessage,
         sender: contactsMap.get(user.uid)?.sender,
         lastMessageTime: contactsMap.get(user.uid)?.lastMessageTime,
       }));
 
-      setContacts(contactsWithLastMessage);
+      setContacts(contactsWithLastMessage); // set the contacts state
     };
 
-    fetchContacts();
+    fetchContacts(); // Fetch contacts when the component mounts or when currentUser changes
   }, [currentUser, messages]);
 
-  useEffect(() => {
-    const fetchMessages = async () => {
+  useEffect(() => { // Fetch messages when the selected contact changes
+    const fetchMessages = async () => { // Fetch messages for the selected contact
       if (!selectedContact?.uid || !currentUser?.id) return;
 
-      setLoading(true);
-      try {
-        const { data, error } = await supabase
+      setLoading(true); // Set loading state to true
+      try { // Fetch messages from the database
+        const { data, error } = await supabase // Fetch messages where the current user is either sender or receiver
           .from("MESSAGE")
           .select("*")
           .or(
@@ -141,63 +142,50 @@ export const Message = ({ newChatReceiver }) => {
     fetchMessages();
   }, [selectedContact, currentUser]);
 
-  useEffect(() => {
+  useEffect(() => { // Open message window if newChatReceiver is provided
     if (newChatReceiver) {
       setSelectedContact(newChatReceiver);
       setOpenMessage(true);
     }
   }, [newChatReceiver]);
 
-  useEffect(() => {
+  useEffect(() => { // Subscribe to message changes in the database
     const channel = supabase
-      .channel("messages_changes")
-      .on(
+      .channel("messages_changes") // Create a new channel for message changes
+      .on( // Listen for changes in the MESSAGE table
+        "postgres_changes", // Listen for changes in the MESSAGE table
+        {
+          event: "*",
+          schema: "public",
+          table: "MESSAGE",
+          filter: `uid_send=eq.${currentUser?.id}`, // Filter for messages sent by the current user
+        },
+        (payload) => { // Handle message changes
+          if (payload.eventType === "INSERT") { // If a new message is inserted
+            setMessages((prev) => [...prev, payload.new]); // Add the new message to the messages state
+          }
+        }
+      )
+      .on( // Listen for changes in the MESSAGE table
         "postgres_changes",
         {
           event: "*",
           schema: "public",
           table: "MESSAGE",
-          filter: `uid_send=eq.${currentUser?.id}`,
+          filter: `uid_recv=eq.${currentUser?.id}`, // Filter for messages received by the current user
         },
         (payload) => {
           if (payload.eventType === "INSERT") {
-            setMessages((prev) => [...prev, payload.new]);
+            setMessages((prev) => [...prev, payload.new]) // Add the new message to the messages state
           }
         }
       )
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "MESSAGE",
-          filter: `uid_recv=eq.${currentUser?.id}`,
-        },
-        (payload) => {
-          if (payload.eventType === "INSERT") {
-            console.log(payload)
-            setMessages((prev) => [...prev, payload.new]);
-            // const audio = document.getElementById("notification-sound");
-            // if (audio) {
-            //   audio
-            //     .play()
-            //     .catch((error) => console.error("Audio play failed:", error));
-            // }
-          }
-        }
-      )
-      .subscribe();
+      .subscribe(); // Subscribe to the channel
 
-    return () => supabase.removeChannel(channel);
+    return () => supabase.removeChannel(channel); // Unsubscribe from the channel when the component unmounts
   }, [currentUser?.id]);
 
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
-
-  useEffect(() => {
+  useEffect(() => { // Check if the screen size is mobile
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
@@ -211,7 +199,7 @@ export const Message = ({ newChatReceiver }) => {
     };
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { // Handle body overflow when the message window is open
     if ((!closeMessage && isMobile) || (openMessage && isMobile)) {
       document.body.style.overflow = "hidden";
       document.body.style.position = "fixed";
@@ -228,7 +216,7 @@ export const Message = ({ newChatReceiver }) => {
       document.body.style.width = "";
     };
   }, [closeMessage, openMessage, isMobile]);
-  return (
+  return ( // Render the message component
     currentUser !== null && (
       <div className="fixed z-1001 bottom-3 md:bottom-0 right-3 md:right-0">
         {/* <audio
