@@ -225,11 +225,11 @@ export const Message = ({ newChatReceiver }) => {
           preload="auto"
         ></audio> */}
         {openMessage === false ? (
-          <div>
-            <div
+          <div> {/* Message access */}
+            <div 
               id="MessageList"
               className={`bg-white w-[402px] ${closeMessage ? "h-[50px]" : "min-h-[428px]"} border-2 border-grey rounded-t-xl hidden md:block`}
-            >
+            > {/* Message access for desktop */}
               <div
                 id="MessageListHeader"
                 className="flex flex-row justify-between items-center border-b-1 border-grey bg-white w-full p-3 rounded-t-md"
@@ -244,7 +244,7 @@ export const Message = ({ newChatReceiver }) => {
                 <div
                   id="MessageListBody"
                   className="w-full overflow-y-scroll p-3 flex flex-col gap-2 "
-                >
+                > {/* Contact list for desktop*/}
                   {contacts.length === 0 ? (
                     <div>No conversations yet</div>
                   ) : (
@@ -291,7 +291,7 @@ export const Message = ({ newChatReceiver }) => {
                 </div>
               )}
             </div>
-            <div className="block md:hidden">
+            <div className="block md:hidden"> {/* Message access for mobile */}
               <button
                 onClick={() => setCloseMessage((prev) => !prev)}
                 id="MobileMessageButton"
@@ -299,7 +299,7 @@ export const Message = ({ newChatReceiver }) => {
               >
                 <img src="/icons/BlackChat.svg" alt="" />
               </button>
-              <Modal
+              <Modal 
                 isOpen={!closeMessage}
                 onRequestClose={() => {
                   setCloseMessage(true);
@@ -318,7 +318,7 @@ export const Message = ({ newChatReceiver }) => {
                     <div
                       id="MobileMessageListBody"
                       className="w-full overflow-y-scroll flex flex-col gap-2"
-                    >
+                    > {/* Contact list for mobile */}
                       {contacts.length === 0 ? (
                         <div>No conversations yet</div>
                       ) : (
@@ -370,9 +370,9 @@ export const Message = ({ newChatReceiver }) => {
             </div>
           </div>
         ) : (
-          <div>
+          <div> {/* Message window */}
             <div
-              id="Message"
+              id="DesktopMessage"
               className={`bg-white w-[402px] ${closeMessage ? "h-[55px]" : "h-[428px]"} border-2 border-grey rounded-t-xl hidden md:block`}
             >
               {loading ? (
@@ -465,7 +465,7 @@ export const Message = ({ newChatReceiver }) => {
                 </div>
               )}
             </div>
-            <div className="block md:hidden">
+            <div id="MobileMessage" className="block md:hidden">
               <button
                 onClick={() => setOpenMessage((prev) => !prev)}
                 id="MobileMessageButton"
