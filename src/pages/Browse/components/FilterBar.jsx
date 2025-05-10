@@ -19,24 +19,23 @@ const FilterBar = () => {
   const [year, setYear] = useState([1895, new Date().getFullYear()]);
   const [engineSize, setEngineSize] = useState([0, 3000]);
 
-  const [debouncedPrice, setDebouncedPrice] = useState(price);
-  const [debouncedMileage, setDebouncedMileage] = useState(mileage);
-  const [debouncedYear, setDebouncedYear] = useState(year);
-  const [debouncedEngineSize, setDebouncedEngineSize] = useState(engineSize);
+  const [debouncedPrice, setDebouncedPrice] = useState(price); // Debounced state for price
+  const [debouncedMileage, setDebouncedMileage] = useState(mileage); // Debounced state for mileage
+  const [debouncedYear, setDebouncedYear] = useState(year); // Debounced state for year
+  const [debouncedEngineSize, setDebouncedEngineSize] = useState(engineSize); // Debounced state for engine size
 
-  const [availableTypes, setAvailableTypes] = useState([]);
-  const [availableModels, setAvailableModels] = useState([]);
-  const [availableTrims, setAvailableTrims] = useState([]);
-
-  const [isInitialMount, setIsInitialMount] = useState(true);
-
-  const brandOptions = Object.keys(motorcycleData).map((brand) => ({
+  const brandOptions = Object.keys(motorcycleData).map((brand) => ({ // Map brand names to options
     label: brand,
     value: brand,
   }));
+  const [availableTypes, setAvailableTypes] = useState([]); // State for available types
+  const [availableModels, setAvailableModels] = useState([]); // State for available models
+  const [availableTrims, setAvailableTrims] = useState([]); // State for available trims
 
-  const updateURL = () => {
-    const queryParams = new Map([
+  const [isInitialMount, setIsInitialMount] = useState(true); // State to track if the component is mounted for the first time
+
+  const updateURL = () => { // Function to update the URL with query parameters
+    const queryParams = new Map([ // Create a map for query parameters
       ["page", 1],
       ["brand", selectedBrand || undefined],
       ["type", selectedType || undefined],
@@ -53,17 +52,17 @@ const FilterBar = () => {
       ["engine_size_max", engineSize[1] < 3000 ? engineSize[1] : undefined],
     ]);
 
-    for (let [key, value] of queryParams) {
-      if (value === undefined) {
-        queryParams.delete(key);
+    for (let [key, value] of queryParams) { // Iterate through query parameters
+      if (value === undefined) { // Remove undefined values
+        queryParams.delete(key); // Delete the key if the value is undefined
       }
     }
 
-    const query = new URLSearchParams(queryParams).toString();
-    navigate(`/browse?${query}`);
-  };
+    const query = new URLSearchParams(queryParams).toString(); // Convert to query string
+      navigate(`/browse?${query}`); // Update the URL
+    };
 
-  const handleBrandChange = (selectedOptions) => {
+  const handleBrandChange = (selectedOptions) => { // Handle brand selection
     const newBrand = selectedOptions.length > 0 ? selectedOptions[0].value : "";
     setSelectedBrand(newBrand);
 
@@ -75,7 +74,7 @@ const FilterBar = () => {
     updateURL();
   };
 
-  const handleTypeChange = (selectedOptions) => {
+  const handleTypeChange = (selectedOptions) => { // Handle type selection
     const newType = selectedOptions.length > 0 ? selectedOptions[0].value : "";
     setSelectedType(newType);
 
@@ -86,7 +85,7 @@ const FilterBar = () => {
     updateURL();
   };
 
-  const handleModelChange = (selectedOptions) => {
+  const handleModelChange = (selectedOptions) => { // Handle model selection
     const newModel = selectedOptions.length > 0 ? selectedOptions[0].value : "";
     setSelectedModel(newModel);
 
@@ -96,28 +95,28 @@ const FilterBar = () => {
     updateURL();
   };
 
-  const handleTrimChange = (selectedOptions) => {
+  const handleTrimChange = (selectedOptions) => { // Handle trim selection
     const newTrim = selectedOptions.length > 0 ? selectedOptions[0].value : "";
     setSelectedTrim(newTrim);
     updateURL();
   };
 
-  const handleConditionChange = (e) => {
+  const handleConditionChange = (e) => { // Handle condition selection
     const selectedCondition = e.target.value;
     setCondition(selectedCondition);
     updateURL();
   };
 
-  useEffect(() => {
+  useEffect(() => { // Effect to set initial state from URL parameters
     const params = queryString.parse(window.location.search);
     if (params.brand) {
       setSelectedBrand(params.brand);
     }
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { // Effect to set available types based on selected brand
     if (selectedBrand) {
-      const typesForBrand = Object.keys(motorcycleData[selectedBrand] || []);
+      const typesForBrand = Object.keys(motorcycleData[selectedBrand] || []); // Get types for the selected brand
       setAvailableTypes(
         typesForBrand.map((type) => ({
           label: type.charAt(0).toUpperCase() + type.slice(1).replace("_", " "),
@@ -137,7 +136,7 @@ const FilterBar = () => {
 
   useEffect(() => {
     if (selectedBrand && selectedType) {
-      const modelsForType = motorcycleData[selectedBrand]?.[selectedType] || [];
+      const modelsForType = motorcycleData[selectedBrand]?.[selectedType] || []; // Get models for the selected type
       setAvailableModels(
         modelsForType.map((model) => ({
           label: model.model,
@@ -155,7 +154,7 @@ const FilterBar = () => {
 
   useEffect(() => {
     if (selectedBrand && selectedType && selectedModel) {
-      const modelData = motorcycleData[selectedBrand]?.[selectedType]?.find(
+      const modelData = motorcycleData[selectedBrand]?.[selectedType]?.find( // Get model data for the selected model
         (m) => m.model === selectedModel
       );
       setAvailableTrims(
@@ -189,28 +188,28 @@ const FilterBar = () => {
     debouncedEngineSize,
   ]);
 
-  useEffect(() => {
+  useEffect(() => { // Effect to set debounced price
     const handler = setTimeout(() => {
       setDebouncedPrice(price);
     }, 500);
     return () => clearTimeout(handler);
   }, [price]);
 
-  useEffect(() => {
+  useEffect(() => { // Effect to set debounced mileage
     const handler = setTimeout(() => {
       setDebouncedMileage(mileage);
     }, 500);
     return () => clearTimeout(handler);
   }, [mileage]);
 
-  useEffect(() => {
+  useEffect(() => { // Effect to set debounced year
     const handler = setTimeout(() => {
       setDebouncedYear(year);
     }, 500);
     return () => clearTimeout(handler);
   }, [year]);
 
-  useEffect(() => {
+  useEffect(() => { // Effect to set debounced engine size
     const handler = setTimeout(() => {
       setDebouncedEngineSize(engineSize);
     }, 500);

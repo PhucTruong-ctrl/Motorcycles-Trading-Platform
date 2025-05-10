@@ -11,12 +11,12 @@ const BrowseProductList = () => {
   const [moto, setMoto] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const maxItems = 10;
+  const maxItems = 10; // Number of items per page
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
-  const currentPage = parseInt(queryParams.page) - 1 || 0;
-  const safeCurrentPage = Math.min(currentPage, Math.max(pageCount - 1, 0));
+  const currentPage = parseInt(queryParams.page) - 1 || 0; // Current page from query params, default to 0
+  const safeCurrentPage = Math.min(currentPage, Math.max(pageCount - 1, 0)); // Ensure current page is within bounds
 
   const [sortOption, setSortOption] = useState("");
 

@@ -13,13 +13,16 @@ const MotorcycleForm = ({
   isSubmitting,
   mode = "create",
   onDeleteImage,
+  initialBrands = [],
+  initialModels = [],
+  initialTrims = [],
 }) => {
   const [formData, setFormData] = useState(initialData);
   const [imageLoading, setImageLoading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [filteredBrands, setFilteredBrands] = useState([]);
-  const [filteredModels, setFilteredModels] = useState([]);
-  const [filteredTrims, setFilteredTrims] = useState([]);
+  const [filteredBrands, setFilteredBrands] = useState(initialBrands);
+  const [filteredModels, setFilteredModels] = useState(initialModels);
+  const [filteredTrims, setFilteredTrims] = useState(initialTrims);
 
   const typeOptions = [
     { value: "naked", label: "Naked" },

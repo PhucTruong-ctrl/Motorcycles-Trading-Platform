@@ -2,39 +2,39 @@ import React, { useEffect, useRef } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 
-const QuillEditor = ({ value, onChange, placeholder }) => {
-  const quillInstanceRef = useRef(null);
-  const editorRef = useRef(null);
+const QuillEditor = ({ value, onChange, placeholder }) => { // Functional component for the Quill editor
+  const quillInstanceRef = useRef(null); // Ref to hold the Quill instance
+  const editorRef = useRef(null); // Ref to hold the editor DOM element
 
-  useEffect(() => {
-    if (editorRef.current && !quillInstanceRef.current) {
-      const quill = new Quill(editorRef.current, {
-        theme: "snow",
-        placeholder: placeholder || "Enter description...",
-        modules: {
-          toolbar: [
-            [{ font: ["serif", "sans", "monospace"] }],
-            ["bold", "italic", "underline"],
-            [{ size: ["small", false, "large"] }],
-            ["blockquote"],
-            [{ list: "ordered" }, { list: "bullet" }],
+  useEffect(() => { // Effect to initialize the Quill editor
+    if (editorRef.current && !quillInstanceRef.current) { // Check if the editor is not already initialized
+      const quill = new Quill(editorRef.current, { // Initialize Quill
+        theme: "snow", // Theme for the editor
+        placeholder: placeholder || "Enter description...", // Placeholder text
+        modules: { // Quill modules
+          toolbar: [ // Toolbar options
+            [{ font: ["serif", "sans", "monospace"] }], // Font options
+            ["bold", "italic", "underline"], // Text formatting options
+            [{ size: ["small", false, "large"] }], // Size options
+            ["blockquote"], // Blockquote option
+            [{ list: "ordered" }, { list: "bullet" }], // List options
           ],
         },
       });
 
-      if (value) {
-        quill.clipboard.dangerouslyPasteHTML(value);
+      if (value) { // If there is initial value, set it in the editor
+        quill.clipboard.dangerouslyPasteHTML(value); // Set initial HTML content
       }
 
-      quill.on("text-change", () => {
-        const html = editorRef.current.querySelector(".ql-editor").innerHTML;
-        onChange(html);
+      quill.on("text-change", () => { // Listen for text changes in the editor
+        const html = editorRef.current.querySelector(".ql-editor").innerHTML; // Get the HTML content
+        onChange(html); // Call the onChange prop with the new HTML content
       });
 
-      quillInstanceRef.current = quill;
+      quillInstanceRef.current = quill; // Store the Quill instance in the ref
     }
 
-    return () => {
+    return () => { // Cleanup function to remove the Quill instance
       if (quillInstanceRef.current) {
         quillInstanceRef.current.off("text-change");
         if (editorRef.current) {
@@ -48,7 +48,7 @@ const QuillEditor = ({ value, onChange, placeholder }) => {
     };
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { // Effect to update the editor content when the value prop changes
     if (
       quillInstanceRef.current &&
       value !== quillInstanceRef.current.root.innerHTML
@@ -57,7 +57,7 @@ const QuillEditor = ({ value, onChange, placeholder }) => {
     }
   }, [value]);
 
-  return (
+  return ( // Render the editor
     <div className="h-40">
       <div ref={editorRef} />
     </div>
