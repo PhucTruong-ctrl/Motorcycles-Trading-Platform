@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import supabase from "../../lib/supabase-client";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
 import Loading from "./Loading";
 
 const UserMenu = () => {
   const currentUser = useCurrentUser();
   const [userDetail, setUserDetail] = useState(null);
-  const navigate = useNavigate();
   const signOut = async () => {
     try {
       localStorage.removeItem(
@@ -19,14 +18,14 @@ const UserMenu = () => {
 
       if (error) throw error;
 
-      navigate("/");
+      history.back();
       window.location.reload();
     } catch (error) {
       console.error("Error signing out:", error);
 
       localStorage.clear();
       sessionStorage.clear();
-      navigate("/");
+      history.back();
       window.location.reload();
     }
   };

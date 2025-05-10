@@ -5,10 +5,10 @@ import bcrypt from "bcryptjs";
 import { handleUserCreation } from "../utils/authUtils";
 import { Message } from "../features/Chat/Message";
 
-const LoginSignUp = () => {
-  const [atLogin, setAtLogin] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
-  const [newUser, setNewUser] = useState({
+const LoginSignUp = () => { // Login and Sign Up component
+  const [atLogin, setAtLogin] = useState(true); // State to determine if the user is at the login or sign up page
+  const [showPassword, setShowPassword] = useState(false); // State to show or hide password
+  const [newUser, setNewUser] = useState({ // State to store new user information
     email: "",
     password: "",
     name: "",
@@ -18,27 +18,27 @@ const LoginSignUp = () => {
     citizen_id: "",
   });
 
-  useEffect(() => {
+  useEffect(() => { // Check if user is already logged in
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
+      if (session) { // If user is logged in, handle user creation
         handleUserCreation(session.user);
       }
     });
 
-    const {
+    const { // Subscribe to auth state changes
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log("Auth state changed:", _event, session);
-      if (session) {
+    } = supabase.auth.onAuthStateChange((_event, session) => { // Listen for auth state changes
+      console.log("Auth state changed:", _event, session); // Log the auth state change
+      if (session) { // If user is logged in, handle user creation
         console.log("User from session:", session.user);
-        handleUserCreation(session.user);
+        handleUserCreation(session.user); // Handle user creation
       }
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { // Set the document title based on the current state
     if (atLogin) {
       document.title = "Login";
     } else {
@@ -46,31 +46,31 @@ const LoginSignUp = () => {
     }
   }, [atLogin]);
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const handleInputChange = (e) => { // Handle input changes
+    const { name, value, type, checked } = e.target; // Destructure the event target
 
-    if (type === "radio") {
-      setNewUser({
+    if (type === "radio") { // If the input is a radio button
+      setNewUser({ // Update the newUser state with the selected radio button value
         ...newUser,
-        is_man: value === "true" ? true : false,
+        is_man: value === "true" ? true : false, // Convert the value to a boolean
       });
     } else {
-      setNewUser({
-        ...newUser,
-        [name]: type === "checkbox" ? checked : value,
+      setNewUser({ // Update the newUser state with the input value
+        ...newUser, // Spread the existing newUser state
+        [name]: type === "checkbox" ? checked : value, // If the input is a checkbox, set the value to checked or unchecked else set the value to the input value
       });
     }
   };
 
-  const signUp = async () => {
+  const signUp = async () => { // Google Sign Up
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/auth-callback`,
-          queryParams: {
-            prompt: "select_account",
-            access_type: "offline",
+      const { error } = await supabase.auth.signInWithOAuth({ // Sign in with Google
+        provider: "google", // Use Google as the provider
+        options: { // Options for the sign in
+          redirectTo: `${window.location.origin}/auth-callback`, // Redirect to this URL after sign in
+          queryParams: { // Query parameters for the sign in
+            prompt: "select_account", // Prompt the user to select an account
+            access_type: "offline", // Request offline access
           },
         },
       });
@@ -81,67 +81,67 @@ const LoginSignUp = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => { // Login/SignUp
     e.preventDefault();
 
-    if (!atLogin) {
+    if (!atLogin) { // Sign Up
       try {
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newUser.password, salt);
+        const salt = await bcrypt.genSalt(10); // Generate a salt for hashing
+        const hashedPassword = await bcrypt.hash(newUser.password, salt); // Hash the password
 
         const {
           data: { user },
           error,
-        } = await supabase.auth.signUp({
-          email: newUser.email,
-          password: newUser.password,
-          options: {
-            data: { name: newUser.name },
-            emailRedirectTo: `${window.location.origin}/auth-callback`,
+        } = await supabase.auth.signUp({ // Sign up the user
+          email: newUser.email, // User's email
+          password: newUser.password, // User's password
+          options: { // Options for the sign up
+            data: { name: newUser.name }, // User's name
+            emailRedirectTo: `${window.location.origin}/auth-callback`, // Redirect to this URL after sign up 
           },
         });
 
         if (error) throw error;
 
-        await handleUserCreation(user, true, {
-          ...newUser,
-          password: hashedPassword,
+        await handleUserCreation(user, true, { // Handle user creation
+          ...newUser, // Spread the newUser state
+          password: hashedPassword, // Use the hashed password
         });
 
         alert("Sign up successful!");
-        window.location.href = "/";
+        history.back(); // Go back to the previous page
       } catch (error) {
         alert("Error signing up: " + error.message);
       }
-    } else {
+    } else { // Login
       try {
-        const { data: userData, error: userError } = await supabase
+        const { data: userData, error: userError } = await supabase // Fetch user data from the database
           .from("USER")
           .select("*")
-          .eq("email", newUser.email);
+          .eq("email", newUser.email); // Check if the email exists
 
         if (userError) throw userError;
         if (!userData || userData.length === 0)
-          throw new Error("User not found");
+          throw new Error("User not found"); // If user not found, throw an error
         if (userData.length > 1)
-          throw new Error("Multiple users found with this email");
+          throw new Error("Multiple users found with this email"); // If multiple users found, throw an error
 
-        const user = userData[0];
-        const isMatch = await bcrypt.compare(newUser.password, user.password);
+        const user = userData[0]; // Get the user data
+        const isMatch = await bcrypt.compare(newUser.password, user.password); // Compare the hashed password with the input password
 
         console.log(isMatch);
         console.log(newUser.password, user.password);
 
-        if (!isMatch) throw new Error("Invalid password");
+        if (!isMatch) throw new Error("Invalid password"); // If password doesn't match, throw an error
 
-        const { error } = await supabase.auth.signInWithPassword({
-          email: newUser.email,
-          password: newUser.password,
+        const { error } = await supabase.auth.signInWithPassword({ // Sign in the user
+          email: newUser.email, // User's email
+          password: newUser.password, // User's password
         });
 
         if (error) throw error;
         alert("Log in successful!");
-        window.location.href = "/";
+        history.back(); // Go back to the previous page
       } catch (error) {
         console.error("Login error:", error);
         alert("Login error: " + error.message);
@@ -161,7 +161,7 @@ const LoginSignUp = () => {
             >
               <button
                 onClick={() => {
-                  setAtLogin(false);
+                  setAtLogin(false); // Switch to sign up
                 }}
                 className={`text-[20px] ${atLogin ? "text-grey font-light" : "text-black font-bold"} text-nowrap`}
               >
@@ -170,7 +170,7 @@ const LoginSignUp = () => {
               <span className="font-bold text-[24px] text-black">/</span>
               <button
                 onClick={() => {
-                  setAtLogin(true);
+                  setAtLogin(true); // Switch to login
                 }}
                 className={`text-[20px] ${atLogin ? "text-black font-bold" : "text-grey font-light"} text-nowrap`}
               >
@@ -198,7 +198,7 @@ const LoginSignUp = () => {
                 className="flex items-center gap-[30px] w-full"
               >
                 <button
-                  onClick={signUp}
+                  onClick={signUp} // Google Sign Up
                   className="flex justify-center items-center gap-[10px] px-[30px] py-[10px] rounded-sm border-1 border-grey w-full"
                 >
                   <img
